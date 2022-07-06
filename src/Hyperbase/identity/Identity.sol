@@ -9,7 +9,7 @@ import './storage/Storage.sol';
  * @dev Implementation of the `IERC734` "KeyHolder" and the `IERC735` "ClaimHolder" interfaces into a common Identity Contract.
  * This implementation has a separate contract were it declares all storage, allowing for it to be used as an upgradable logic contract.
  */
-contract Identity is Storage, IIdentity, Version {
+contract Identity is IdentityClaims, Storage, IIdentity, Version {
     bool private initialized = false;
     bool private canInteract = true;
 
@@ -182,6 +182,84 @@ contract Identity is Storage, IIdentity, Version {
     }
 
     /**
+    * @notice Remove the purpose from a key.
+    */
+    function removeKey(bytes32 _key, uint256 _purpose)
+        public
+        delegatedOnly
+        override
+        returns (bool success)
+    {
+        require(keys[_key].key == _key, "NonExisting: Key isn't registered");
+
+        if (msg.sender != address(this)) {
+            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key"); // Sender has MANAGEMENT_KEY
+        }
+
+        require(keys[_key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
+
+        uint purposeIndex = 0;
+        while (keys[_key].purposes[purposeIndex] != _purpose) {
+            purposeIndex++;
+
+            if (purposeIndex >= keys[_key].purposes.length) {
+                break;
+            }
+        }
+
+        require(purposeIndex < keys[_key].purposes.length, "NonExisting: Key doesn't have such purpose");
+
+        keys[_key].purposes[purposeIndex] = keys[_key].purposes[keys[_key].purposes.length - 1];
+        keys[_key].purposes.pop();
+
+        uint keyIndex = 0;
+
+        while (keysByPurpose[_purpose][keyIndex] != _key) {
+            keyIndex++;
+        }
+
+        keysByPurpose[_purpose][keyIndex] = keysByPurpose[_purpose][keysByPurpose[_purpose].length - 1];
+        keysByPurpose[_purpose].pop();
+
+        uint keyType = keys[_key].keyType;
+
+        if (keys[_key].purposes.length == 0) {
+            delete keys[_key];
+        }
+
+        emit KeyRemoved(_key, _purpose, keyType);
+
+        return true;
+    }
+
+
+    /**
+    * @notice Returns true if the key has MANAGEMENT purpose or the specified purpose.
+    */
+    function keyHasPurpose(
+        bytes32 _key, 
+        uint256 _purpose
+    )
+        public
+        override
+        view
+        returns(bool result)
+    {
+        Key memory key = keys[_key];
+        if (key.key == 0) return false;
+
+        for (uint keyPurposeIndex = 0; keyPurposeIndex < key.purposes.length; keyPurposeIndex++) {
+            uint256 purpose = key.purposes[keyPurposeIndex];
+
+            if (purpose == 1 || purpose == _purpose) return true;
+        }
+
+        return false;
+    }
+
+    
+    
+    /**
      * @notice Approves an execution or claim addition.
      * This SHOULD require n of m approvals of keys purpose 1, if the _to of the execution is the identity contract itself, to successfully approve an execution.
      * And COULD require n of m approvals of keys purpose 2, if the _to of the execution is another contract, to successfully approve an execution.
@@ -264,83 +342,6 @@ contract Identity is Storage, IIdentity, Version {
         return executionNonce-1;
     }
 
-    /**
-    * @notice Remove the purpose from a key.
-    */
-    function removeKey(bytes32 _key, uint256 _purpose)
-        public
-        delegatedOnly
-        override
-        returns (bool success)
-    {
-        require(keys[_key].key == _key, "NonExisting: Key isn't registered");
-
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key"); // Sender has MANAGEMENT_KEY
-        }
-
-        require(keys[_key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
-
-        uint purposeIndex = 0;
-        while (keys[_key].purposes[purposeIndex] != _purpose) {
-            purposeIndex++;
-
-            if (purposeIndex >= keys[_key].purposes.length) {
-                break;
-            }
-        }
-
-        require(purposeIndex < keys[_key].purposes.length, "NonExisting: Key doesn't have such purpose");
-
-        keys[_key].purposes[purposeIndex] = keys[_key].purposes[keys[_key].purposes.length - 1];
-        keys[_key].purposes.pop();
-
-        uint keyIndex = 0;
-
-        while (keysByPurpose[_purpose][keyIndex] != _key) {
-            keyIndex++;
-        }
-
-        keysByPurpose[_purpose][keyIndex] = keysByPurpose[_purpose][keysByPurpose[_purpose].length - 1];
-        keysByPurpose[_purpose].pop();
-
-        uint keyType = keys[_key].keyType;
-
-        if (keys[_key].purposes.length == 0) {
-            delete keys[_key];
-        }
-
-        emit KeyRemoved(_key, _purpose, keyType);
-
-        return true;
-    }
-
-
-    /**
-    * @notice Returns true if the key has MANAGEMENT purpose or the specified purpose.
-    */
-    function keyHasPurpose(
-        bytes32 _key, 
-        uint256 _purpose
-    )
-        public
-        override
-        view
-        returns(bool result)
-    {
-        Key memory key = keys[_key];
-        if (key.key == 0) return false;
-
-        for (uint keyPurposeIndex = 0; keyPurposeIndex < key.purposes.length; keyPurposeIndex++) {
-            uint256 purpose = key.purposes[keyPurposeIndex];
-
-            if (purpose == 1 || purpose == _purpose) return true;
-        }
-
-        return false;
-    }
-
-    
 
     /**
     * @notice Implementation of the addClaim function from the ERC-735 standard
