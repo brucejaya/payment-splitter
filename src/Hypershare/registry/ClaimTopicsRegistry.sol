@@ -7,6 +7,7 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import '../../Interface/IClaimTopicsRegistry.sol';
 
 contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable {
+    
     /// @dev All required Claim Topics
     uint256[] private claimTopics;
 
