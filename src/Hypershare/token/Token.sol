@@ -6,7 +6,7 @@ import '../../Interface/IToken.sol';
 import '../../Interface/IERC734.sol';
 import '../../Interface/IERC735.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IHolderClaimsRequired.sol';
+import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IComplianceToken.sol';
 

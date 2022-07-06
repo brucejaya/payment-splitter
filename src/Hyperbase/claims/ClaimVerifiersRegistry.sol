@@ -19,39 +19,46 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     /**
      *  @dev See {IClaimVerifiersRegistry-addTrustedVerifier}.
      */
-    function addTrustedVerifier(IClaimIssuer _trustedIssuer, uint256[] calldata _claimsRequired) external override onlyOwner {
-        require(trustedIssuerClaimTopics[address(_trustedIssuer)].length == 0, 'trusted Issuer already exists');
+    function addTrustedVerifier(
+        IClaimIssuer _trustedVerifier,
+        uint256[] calldata _claimsRequired
+    )
+        external
+        override
+        onlyOwner
+    {
+        require(trustedIssuerClaimTopics[address(_trustedVerifier)].length == 0, 'trusted Issuer already exists');
         require(_claimsRequired.length > 0, 'trusted claim topics cannot be empty');
-        trustedVerifiers.push(_trustedIssuer);
-        trustedIssuerClaimTopics[address(_trustedIssuer)] = _claimsRequired;
-        emit TrustedVerifierAdded(_trustedIssuer, _claimsRequired);
+        trustedVerifiers.push(_trustedVerifier);
+        trustedIssuerClaimTopics[address(_trustedVerifier)] = _claimsRequired;
+        emit TrustedVerifierAdded(_trustedVerifier, _claimsRequired);
     }
 
     /**
      *  @dev See {IClaimVerifiersRegistry-removeTrustedVerifier}.
      */
-    function removeTrustedVerifier(IClaimIssuer _trustedIssuer) external override onlyOwner {
-        require(trustedIssuerClaimTopics[address(_trustedIssuer)].length != 0, 'trusted Issuer doesn\'t exist');
+    function removeTrustedVerifier(IClaimIssuer _trustedVerifier) external override onlyOwner {
+        require(trustedIssuerClaimTopics[address(_trustedVerifier)].length != 0, 'trusted Issuer doesn\'t exist');
         uint256 length = trustedVerifiers.length;
         for (uint256 i = 0; i < length; i++) {
-            if (trustedVerifiers[i] == _trustedIssuer) {
+            if (trustedVerifiers[i] == _trustedVerifier) {
                 trustedVerifiers[i] = trustedVerifiers[length - 1];
                 trustedVerifiers.pop();
                 break;
             }
         }
-        delete trustedIssuerClaimTopics[address(_trustedIssuer)];
-        emit TrustedVerifierRemoved(_trustedIssuer);
+        delete trustedIssuerClaimTopics[address(_trustedVerifier)];
+        emit TrustedVerifierRemoved(_trustedVerifier);
     }
 
     /**
      *  @dev See {IClaimVerifiersRegistry-updateIssuerClaimTopics}.
      */
-    function updateIssuerClaimTopics(IClaimIssuer _trustedIssuer, uint256[] calldata _claimsRequired) external override onlyOwner {
-        require(trustedIssuerClaimTopics[address(_trustedIssuer)].length != 0, 'trusted Issuer doesn\'t exist');
+    function updateIssuerClaimTopics(IClaimIssuer _trustedVerifier, uint256[] calldata _claimsRequired) external override onlyOwner {
+        require(trustedIssuerClaimTopics[address(_trustedVerifier)].length != 0, 'trusted Issuer doesn\'t exist');
         require(_claimsRequired.length > 0, 'claim topics cannot be empty');
-        trustedIssuerClaimTopics[address(_trustedIssuer)] = _claimsRequired;
-        emit ClaimTopicsUpdated(_trustedIssuer, _claimsRequired);
+        trustedIssuerClaimTopics[address(_trustedVerifier)] = _claimsRequired;
+        emit ClaimTopicsUpdated(_trustedVerifier, _claimsRequired);
     }
 
     /**
@@ -77,9 +84,9 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     /**
      *  @dev See {IClaimVerifiersRegistry-getTrustedVerifierClaimTopics}.
      */
-    function getTrustedVerifierClaimTopics(IClaimIssuer _trustedIssuer) external view override returns (uint256[] memory) {
-        require(trustedIssuerClaimTopics[address(_trustedIssuer)].length != 0, 'trusted Issuer doesn\'t exist');
-        return trustedIssuerClaimTopics[address(_trustedIssuer)];
+    function getTrustedVerifierClaimTopics(IClaimIssuer _trustedVerifier) external view override returns (uint256[] memory) {
+        require(trustedIssuerClaimTopics[address(_trustedVerifier)].length != 0, 'trusted Issuer doesn\'t exist');
+        return trustedIssuerClaimTopics[address(_trustedVerifier)];
     }
 
     /**

@@ -9,7 +9,7 @@ import '../../Interface/IComplianceTokenRegistry.sol';
 contract ComplianceTokenRegistryDefault is IComplianceTokenRegistry, Ownable {
 
     /// @dev Mapping between agents and their statuses
-    mapping(address => bool) private _tokenAgentsList;
+    mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
 
     /// @dev Mapping from id to tokens linked to the compliance contract
     mapping(uint256 => bool) private _tokensBound;
@@ -17,51 +17,77 @@ contract ComplianceTokenRegistryDefault is IComplianceTokenRegistry, Ownable {
     /**
      *  @dev See {ICompliance-isTokenAgent}.
      */
-    function isTokenAgent(address _agentAddress) public view override returns (bool) {
-        return (_tokenAgentsList[_agentAddress]);
-    }
-
-    /**
-     *  @dev See {ICompliance-isTokenBound}.
-     */
-    function isTokenBound(uint256 _id) public view override returns (bool) {
-        return (_tokensBound[_id]);
+    function isTokenAgent(
+		address agentAddress,
+		uint256 id
+	)
+		public
+		view
+		override
+		returns (bool)
+	{
+        return (_tokenAgentsList[id][agentAddress]);
     }
 
     /**
      *  @dev See {ICompliance-addTokenAgent}.
      */
-    function addTokenAgent(address _agentAddress) external override onlyOwner {
-        require(!_tokenAgentsList[_agentAddress], 'This Agent is already registered');
-        _tokenAgentsList[_agentAddress] = true;
-        emit TokenAgentAdded(_agentAddress);
+    function addTokenAgent(
+		address agentAddress,
+		uint256 id
+	)
+		external
+		override
+		onlyOwner
+	{
+        require(!_tokenAgentsList[id][agentAddress], 'This Agent is already registered');
+        _tokenAgentsList[id][agentAddress] = true;
+        emit TokenAgentAdded(agentAddress);
     }
 
     /**
      *  @dev See {ICompliance-isTokenAgent}.
      */
-    function removeTokenAgent(address _agentAddress) external override onlyOwner {
-        require(_tokenAgentsList[_agentAddress], 'This Agent is not registered yet');
-        _tokenAgentsList[_agentAddress] = false;
-        emit TokenAgentRemoved(_agentAddress);
+    function removeTokenAgent(
+		address agentAddress
+	)
+		external
+		override
+		onlyOwner
+	{
+        require(_tokenAgentsList[id][agentAddress], 'This Agent is not registered yet');
+        _tokenAgentsList[id][agentAddress] = false;
+        emit TokenAgentRemoved(agentAddress);
     }
 
     /**
      *  @dev See {ICompliance-isTokenAgent}.
      */
-    function bindToken(uint256 _id) external override onlyOwner {
-        require(!_tokensBound[_id], 'This token is already bound');
-        _tokensBound[_id] = true;
-        emit TokenBound(_id);
+    function bindToken(
+		uint256 id
+	)
+		external
+		override
+		onlyOwner
+	{
+        require(!_tokensBound[id], 'This token is already bound');
+        _tokensBound[id] = true;
+        emit TokenBound(id);
     }
 
     /**
      *  @dev See {ICompliance-isTokenAgent}.
      */
-    function unbindToken(uint256 _id) external override onlyOwner {
-        require(_tokensBound[_id], 'This token is not bound yet');
-        _tokensBound[_id] = false;
-        emit TokenUnbound(_id);
+    function unbindToken(
+		uint256 id
+	)
+		external
+		override
+		onlyOwner
+	{
+        require(_tokensBound[id], 'This token is not bound yet');
+        _tokensBound[id] = false;
+        emit TokenUnbound(id);
     }
 
     /**
@@ -97,7 +123,13 @@ contract ComplianceTokenRegistryDefault is IComplianceTokenRegistry, Ownable {
     /**
      *  @dev See {ICompliance-transferOwnershipOnComplianceContract}.
      */
-    function transferOwnershipOnComplianceContract(address newOwner) external override onlyOwner {
+    function transferOwnershipOnComplianceContract(
+		address newOwner
+	)
+		external
+		override
+		onlyOwner
+	{
         transferOwnership(newOwner);
     }
 }

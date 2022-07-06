@@ -28,7 +28,7 @@ Full folder structure is as follows:
 	│   │   ├── ComplianceTokenRegistry.sol
 	│   │   └── ComplianceToken.sol
 	│   ├── holder
-	│   │   ├── HolderClaimsRequired.sol
+	│   │   ├── ComplianceClaimsRequired.sol
 	│   │   ├── IdentityRegistry.sol
 	│   │   ├── IdentityRegistryStorage.sol
 	│   │   └── TrustedIssuersRegistry.sol

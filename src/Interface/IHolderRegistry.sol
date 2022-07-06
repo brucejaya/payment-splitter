@@ -3,18 +3,18 @@
 pragma solidity ^0.8.0;
 
 import './ITrustedIssuersRegistry.sol';
-import './IHolderClaimsRequired.sol';
+import './IComplianceClaimsRequired.sol';
 import './IIdentityRegistryStorage.sol';
 import './IClaimVerifier.sol';
 import './IIdentity.sol';
 
 interface IIdentityRegistry {
     /**
-     *  this event is emitted when the HolderClaimsRequired has been set for the IdentityRegistry
+     *  this event is emitted when the ComplianceClaimsRequired has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `HolderClaimsRequired` is the address of the Claim Topics Registry contract
+     *  `ComplianceClaimsRequired` is the address of the Claim Topics Registry contract
      */
-    event HolderClaimsRequiredSet(address indexed HolderClaimsRequired);
+    event ComplianceClaimsRequiredSet(address indexed ComplianceClaimsRequired);
 
     /**
      *  this event is emitted when the IdentityRegistryStorage has been set for the IdentityRegistry
@@ -24,7 +24,7 @@ interface IIdentityRegistry {
     event IdentityStorageSet(address indexed identityStorage);
 
     /**
-     *  this event is emitted when the HolderClaimsRequired has been set for the IdentityRegistry
+     *  this event is emitted when the ComplianceClaimsRequired has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
      *  `trustedIssuersRegistry` is the address of the Trusted Issuers Registry contract
      */
@@ -95,12 +95,12 @@ interface IIdentityRegistry {
     function setIdentityRegistryStorage(address _identityRegistryStorage) external;
 
     /**
-     *  @dev Replace the actual HolderClaimsRequired contract with a new one.
+     *  @dev Replace the actual ComplianceClaimsRequired contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _HolderClaimsRequired The address of the new claim Topics Registry
-     *  emits `HolderClaimsRequiredSet` event
+     *  @param _ComplianceClaimsRequired The address of the new claim Topics Registry
+     *  emits `ComplianceClaimsRequiredSet` event
      */
-    function setHolderClaimsRequired(address _HolderClaimsRequired) external;
+    function setComplianceClaimsRequired(address _ComplianceClaimsRequired) external;
 
     /**
      *  @dev Replace the actual trustedIssuersRegistry contract with a new one.
@@ -188,9 +188,9 @@ interface IIdentityRegistry {
     function issuersRegistry() external view returns (ITrustedIssuersRegistry);
 
     /**
-     *  @dev Returns the HolderClaimsRequired linked to the current IdentityRegistry.
+     *  @dev Returns the ComplianceClaimsRequired linked to the current IdentityRegistry.
      */
-    function topicsRegistry() external view returns (IHolderClaimsRequired);
+    function topicsRegistry() external view returns (IComplianceClaimsRequired);
 
     /**
      *  @notice Transfers the Ownership of the Holder Registry to a new Owner.
