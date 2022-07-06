@@ -81,11 +81,13 @@ contract Identity is Storage, IIdentity, Version {
      * @return keyType Returns the full key data, if present in the identity.
      * @return key Returns the full key data, if present in the identity.
      */
-    function getKey(bytes32 _key)
-    public
-    override
-    view
-    returns(uint256[] memory purposes, uint256 keyType, bytes32 key)
+    function getKey(
+        bytes32 _key
+    )
+        public
+        override
+        view
+        returns(uint256[] memory purposes, uint256 keyType, bytes32 key)
     {
         return (keys[_key].purposes, keys[_key].keyType, keys[_key].key);
     }
@@ -97,11 +99,13 @@ contract Identity is Storage, IIdentity, Version {
     *
     * @return _purposes Returns the purposes of the specified key
     */
-    function getKeyPurposes(bytes32 _key)
-    public
-    override
-    view
-    returns(uint256[] memory _purposes)
+    function getKeyPurposes(
+        bytes32 _key
+    )
+        public
+        override
+        view
+        returns(uint256[] memory _purposes)
     {
         return (keys[_key].purposes);
     }
@@ -113,11 +117,13 @@ contract Identity is Storage, IIdentity, Version {
         *
         * @return _keys Returns an array of public key bytes32 hold by this identity and having the specified purpose
         */
-    function getKeysByPurpose(uint256 _purpose)
-    public
-    override
-    view
-    returns(bytes32[] memory _keys)
+    function getKeysByPurpose(
+        uint256 _purpose
+    )
+        public
+        override
+        view
+        returns(bytes32[] memory _keys)
     {
         return keysByPurpose[_purpose];
     }
@@ -138,11 +144,15 @@ contract Identity is Storage, IIdentity, Version {
     *
     * @return success Returns TRUE if the addition was successful and FALSE if not
     */
-    function addKey(bytes32 _key, uint256 _purpose, uint256 _type)
-    public
-    delegatedOnly
-    override
-    returns (bool success)
+    function addKey(
+        bytes32 _key,
+        uint256 _purpose,
+        uint256 _type
+    )
+        public
+        delegatedOnly
+        override
+        returns (bool success)
     {
         if (msg.sender != address(this)) {
             require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
@@ -176,11 +186,14 @@ contract Identity is Storage, IIdentity, Version {
      * This SHOULD require n of m approvals of keys purpose 1, if the _to of the execution is the identity contract itself, to successfully approve an execution.
      * And COULD require n of m approvals of keys purpose 2, if the _to of the execution is another contract, to successfully approve an execution.
      */
-    function approve(uint256 _id, bool _approve)
-    public
-    delegatedOnly
-    override
-    returns (bool success)
+    function approve(
+        uint256 _id,
+        bool _approve
+    )
+        public
+        delegatedOnly
+        override
+        returns (bool success)
     {
         require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), "Sender does not have action key");
 
@@ -225,12 +238,16 @@ contract Identity is Storage, IIdentity, Version {
      *
      * @return executionId SHOULD be sent to the approve function, to approve or reject this execution.
      */
-    function execute(address _to, uint256 _value, bytes memory _data)
-    public
-    delegatedOnly
-    override
-    payable
-    returns (uint256 executionId)
+    function execute(
+        address _to, 
+        uint256 _value, 
+        bytes memory _data
+    )
+        public
+        delegatedOnly
+        override
+        payable
+        returns (uint256 executionId)
     {
         require(!executions[executionNonce].executed, "Already executed");
         executions[executionNonce].to = _to;
@@ -251,10 +268,10 @@ contract Identity is Storage, IIdentity, Version {
     * @notice Remove the purpose from a key.
     */
     function removeKey(bytes32 _key, uint256 _purpose)
-    public
-    delegatedOnly
-    override
-    returns (bool success)
+        public
+        delegatedOnly
+        override
+        returns (bool success)
     {
         require(keys[_key].key == _key, "NonExisting: Key isn't registered");
 
@@ -302,11 +319,14 @@ contract Identity is Storage, IIdentity, Version {
     /**
     * @notice Returns true if the key has MANAGEMENT purpose or the specified purpose.
     */
-    function keyHasPurpose(bytes32 _key, uint256 _purpose)
-    public
-    override
-    view
-    returns(bool result)
+    function keyHasPurpose(
+        bytes32 _key, 
+        uint256 _purpose
+    )
+        public
+        override
+        view
+        returns(bool result)
     {
         Key memory key = keys[_key];
         if (key.key == 0) return false;
@@ -345,10 +365,10 @@ contract Identity is Storage, IIdentity, Version {
         bytes memory _data,
         string memory _uri
     )
-    public
-    delegatedOnly
-    override
-    returns (bytes32 claimRequestId)
+        public
+        delegatedOnly
+        override
+        returns (bytes32 claimRequestId)
     {
         bytes32 claimId = keccak256(abi.encode(_issuer, _topic));
 
@@ -406,7 +426,14 @@ contract Identity is Storage, IIdentity, Version {
     * @return success Returns TRUE when the claim was removed.
     * triggers ClaimRemoved event
     */
-    function removeClaim(bytes32 _claimId) public delegatedOnly override returns (bool success) {
+    function removeClaim(
+        bytes32 _claimId
+    )
+        public
+        delegatedOnly
+        override
+        returns (bool success)
+    {
         if (msg.sender != address(this)) {
             require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 3), "Permissions: Sender does not have CLAIM key");
         }
@@ -451,17 +478,17 @@ contract Identity is Storage, IIdentity, Version {
     * @return uri Returns all the parameters of the claim for the specified _claimId (topic, scheme, signature, issuer, data, uri) .
     */
     function getClaim(bytes32 _claimId)
-    public
-    override
-    view
-    returns(
-        uint256 topic,
-        uint256 scheme,
-        address issuer,
-        bytes memory signature,
-        bytes memory data,
-        string memory uri
-    )
+        public
+        override
+        view
+        returns(
+            uint256 topic,
+            uint256 scheme,
+            address issuer,
+            bytes memory signature,
+            bytes memory data,
+            string memory uri
+        )
     {
         return (
             claims[_claimId].topic,
@@ -481,11 +508,13 @@ contract Identity is Storage, IIdentity, Version {
     *
     * @return claimIds Returns an array of claim IDs by topic.
     */
-    function getClaimIdsByTopic(uint256 _topic)
-    public
-    override
-    view
-    returns(bytes32[] memory claimIds)
+    function getClaimIdsByTopic(
+        uint256 _topic
+    )
+        public
+        override
+        view
+        returns(bytes32[] memory claimIds)
     {
         return claimsByTopic[_topic];
     }

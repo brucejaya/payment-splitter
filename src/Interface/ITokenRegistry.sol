@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol';
 
 import './IIdentityRegistry.sol';
-import './IComplianceTokenRegistry.sol';
+import './ICompliance.sol';
 
 interface ITokenRegistry is IERC1155 {
 
@@ -20,11 +20,11 @@ interface ITokenRegistry is IERC1155 {
     event UpdatedTokenInformation(string _newName, string _newSymbol, uint8 _newDecimals, string _newVersion, address _newIdentity);
 
     /**
-     *  this event is emitted when the HolderRegistry has been set for the token
-     *  the event is emitted by the token constructor and by the setHolderRegistry function
-     *  `_holderRegistry` is the address of the Identity Registry of the token
+     *  this event is emitted when the IdentityRegistry has been set for the token
+     *  the event is emitted by the token constructor and by the setIdentityRegistry function
+     *  `_identityRegistry` is the address of the Identity Registry of the token
      */
-    event HolderRegistryAdded(address indexed _holderRegistry);
+    event IdentityRegistryAdded(address indexed _identityRegistry);
 
     /**
      *  this event is emitted when the Compliance has been set for the token
@@ -34,18 +34,18 @@ interface ITokenRegistry is IERC1155 {
     event ComplianceAdded(address indexed _compliance);
 
     /**
-     *  this event is emitted when an investor successfully recovers his tokens
+     *  this event is emitted when an holder successfully recovers his tokens
      *  the event is emitted by the recoveryAddress function
-     *  `_lostWallet` is the address of the wallet that the investor lost access to
-     *  `_newWallet` is the address of the wallet that the investor provided for the recovery
-     *  `_investorIdentity` is the address of the Identity of the investor who asked for a recovery
+     *  `_lostWallet` is the address of the wallet that the holder lost access to
+     *  `_newWallet` is the address of the wallet that the holder provided for the recovery
+     *  `_holderIdentity` is the address of the Identity of the holder who asked for a recovery
      */
-    event RecoverySuccess(address _lostWallet, address _newWallet, address _investorIdentity);
+    event RecoverySuccess(address _lostWallet, address _newWallet, address _holderIdentity);
 
     /**
-     *  this event is emitted when the wallet of an investor is frozen or unfrozen
+     *  this event is emitted when the wallet of an holder is frozen or unfrozen
      *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_isFrozen` is the freezing status of the wallet
      *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
      *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
@@ -56,7 +56,7 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
      *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are frozen
      */
     event TokensFrozen(address indexed _account, uint256 _amount);
@@ -64,7 +64,7 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
      *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are unfrozen
      */
     event TokensUnfrozen(address indexed _account, uint256 _amount);
@@ -98,13 +98,13 @@ interface ITokenRegistry is IERC1155 {
     function version() external view override returns (string memory);
     
     /**
-     *  @dev See {ITokenRegistry-holderRegistry}.
+     *  @dev See {ITokenRegistry-identityRegistry}.
      */
-    function holderRegistry() external view override returns (IIdentityRegistry);
+    function identityRegistry() external view override returns (IIdentityRegistry);
     /**
      *  @dev See {ITokenRegistry-compliance}.
      */
-    function compliance() external view override returns (IComplianceTokenRegistry);
+    function compliance() external view override returns (ICompliance);
     /**
      *  @dev See {ITokenRegistry-paused}.
      */
@@ -170,9 +170,9 @@ interface ITokenRegistry is IERC1155 {
     function unpause() external override;
     
     /**
-     *  @dev See {ITokenRegistry-setHolderRegistry}.
+     *  @dev See {ITokenRegistry-setIdentityRegistry}.
      */
-    function setHolderRegistry(address holderRegistryAddress) external override;
+    function setIdentityRegistry(address identityRegistryAddress) external override;
 
     /**
      *  @dev See {ITokenRegistry-setCompliance}.
@@ -354,7 +354,7 @@ interface ITokenRegistry is IERC1155 {
         address lostWallet,
         address newWallet,
         uint256 id,
-        address investorIdentity,
+        address holderIdentity,
         bytes memory data
     ) external override returns (bool);
 

@@ -4,9 +4,9 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IComplianceTokenRegistry.sol';
+import '../../Interface/ICompliance.sol';
 
-contract ComplianceTokenRegistryDefault is IComplianceTokenRegistry, Ownable {
+contract ComplianceDefault is ICompliance, Ownable {
 
     /// @dev Mapping between agents and their statuses
     mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
@@ -49,7 +49,8 @@ contract ComplianceTokenRegistryDefault is IComplianceTokenRegistry, Ownable {
      *  @dev See {ICompliance-isTokenAgent}.
      */
     function removeTokenAgent(
-		address agentAddress
+		address agentAddress,
+        uint256 id
 	)
 		external
 		override

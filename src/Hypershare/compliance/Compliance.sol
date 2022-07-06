@@ -4,17 +4,17 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IComplianceTokenRegistry.sol';
+import '../../Interface/ICompliance.sol';
 import '../../Interface/ITokenRegistry.sol';
-import '../../Interface/IHolderRegistry.sol';
+import '../../Interface/IIdentityRegistry.sol';
 
-contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
+contract Compliance is ICompliance, Ownable  {
 
     // @dev the token on which this compliance contract is applied
     ITokenRegistry public _tokenRegistry;
 
     // @dev the Identity registry contract linked to `token`
-    IHolderRegistry private _holderRegistry;
+    IIdentityRegistry private _identityRegistry;
     
     // @dev Mapping from token id to agents and their statuses
     mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
@@ -35,14 +35,6 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     mapping(uint256 => address[]) private _shareholders;
 
     /**
-     * @dev Throws if called by any address that is not a token bound to the compliance.
-     */
-    modifier onlyToken() {
-        require(isToken(), 'error : this address is not a token bound to the compliance contract');
-        _;
-    }
-
-    /**
      *  @dev the constructor initiates the smart contract with the initial state variables
      *  @param tokenRegistry the address of the token registry contract
      */
@@ -50,7 +42,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
         address tokenRegistry
     ) {
         _tokenRegistry = ITokenRegistry(tokenRegistry);
-        _holderRegistry = _tokenRegistry.holderRegistry();
+        _identityRegistry = _tokenRegistry.identityRegistry();
     }
 
 
@@ -64,7 +56,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
 
 
     /**
-     *  @dev See {IComplianceTokenRegistry-isTokenAgent}.
+     *  @dev See {ICompliance-isTokenAgent}.
      */
     function isTokenAgent(
         address agentAddress,
@@ -74,10 +66,11 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-addTokenAgent}.
+     *  @dev See {ICompliance-addTokenAgent}.
      */
     function addTokenAgent(
-        address agentAddress
+        address agentAddress,
+        uint256 id
     )
         external
         override
@@ -89,7 +82,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-isTokenAgent}.
+     *  @dev See {ICompliance-isTokenAgent}.
      */
     function removeTokenAgent(
         address agentAddress,
@@ -112,8 +105,8 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
      *  emits a `HolderLimitSet` event
      */
     function setHolderLimit(
-        uint256 id,
-        uint256 holderLimit
+        uint256 holderLimit,
+        uint256 id
     )
         external
         onlyOwner
@@ -181,7 +174,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
         if (_holderIndices[id][account] == 0) {
             _shareholders[id].push(account);
             _holderIndices[id][account] = _shareholders[id].length;
-            uint16 country = _holderRegistry.investorCountry(account);
+            uint16 country = _identityRegistry.holderCountry(account);
             _countryShareHolders[id][country]++;
         }
     }
@@ -211,7 +204,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
         _holderIndices[id][lastHolder] = _holderIndices[id][account];
         _shareholders[id].pop();
         _holderIndices[id][account] = 0;
-        uint16 country = _holderRegistry.investorCountry(account);
+        uint16 country = _identityRegistry.holderCountry(account);
         _countryShareHolders[id][country]--;
     }
 
@@ -231,7 +224,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-canTransfer}.
+     *  @dev See {ICompliance-canTransfer}.
      *  @return true if the amount of holders post-transfer is less or
      *  equal to the maximum amount of token holders
      */
@@ -256,7 +249,7 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-transferred}.
+     *  @dev See {ICompliance-transferred}.
      *  updates the counter of shareholders if necessary
      */
     function transferred(
@@ -268,14 +261,14 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     )
         external
         override
-        onlyToken
     {
+        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
         updateShareholders(to, id);
         pruneShareholders(from, id);
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-created}.
+     *  @dev See {ICompliance-created}.
      *  updates the counter of shareholders if necessary
      */
     function created(
@@ -286,14 +279,14 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     )
         external
         override
-        onlyToken
     {
+        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
         require(amount > 0, 'No token created');
         updateShareholders(to, id);
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-destroyed}.
+     *  @dev See {ICompliance-destroyed}.
      *  updates the counter of shareholders if necessary
      */
     function destroyed(
@@ -303,13 +296,13 @@ contract ComplianceTokenRegistry is IComplianceTokenRegistry, Ownable  {
     )
         external
         override
-        onlyToken
     {
+        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
         pruneShareholders(from, id);
     }
 
     /**
-     *  @dev See {IComplianceTokenRegistry-transferOwnershipOnComplianceContract}.
+     *  @dev See {ICompliance-transferOwnershipOnComplianceContract}.
      */
     function transferOwnershipOnComplianceContract(
         address _newOwner

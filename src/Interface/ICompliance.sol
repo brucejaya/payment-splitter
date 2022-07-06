@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 // TODO UPDATE
 
-interface IComplianceTokenRegistry {
+interface ICompliance {
     
     /**
      *  this event is emitted when the Agent has been added on the allowedList of this Compliance.

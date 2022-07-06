@@ -7,18 +7,18 @@ interface IIdentityRegistryStorage {
     /**
      *  this event is emitted when an Identity is registered into the storage contract.
      *  the event is emitted by the 'registerIdentity' function
-     *  `investorAddress` is the address of the investor's wallet
+     *  `holderAddress` is the address of the holder's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityStored(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityStored(address indexed holderAddress, IIdentity indexed identity);
 
     /**
      *  this event is emitted when an Identity is removed from the storage contract.
      *  the event is emitted by the 'deleteIdentity' function
-     *  `investorAddress` is the address of the investor's wallet
+     *  `holderAddress` is the address of the holder's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityUnstored(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityUnstored(address indexed holderAddress, IIdentity indexed identity);
 
     /**
      *  this event is emitted when an Identity has been updated
@@ -31,10 +31,10 @@ interface IIdentityRegistryStorage {
     /**
      *  this event is emitted when an Identity's country has been updated
      *  the event is emitted by the 'updateCountry' function
-     *  `investorAddress` is the address on which the country has been updated
+     *  `holderAddress` is the address on which the country has been updated
      *  `country` is the numeric code (ISO 3166-1) of the new country
      */
-    event CountryModified(address indexed investorAddress, uint16 indexed country);
+    event CountryModified(address indexed holderAddress, uint16 indexed country);
 
     /**
      *  this event is emitted when an Identity Registry is bound to the storage contract
@@ -56,16 +56,16 @@ interface IIdentityRegistryStorage {
     function linkedIdentityRegistries() external view returns (address[] memory);
 
     /**
-     *  @dev Returns the onchainID of an investor.
-     *  @param _account The wallet of the investor
+     *  @dev Returns the onchainID of an holder.
+     *  @param _account The wallet of the holder
      */
     function storedIdentity(address _account) external view returns (IIdentity);
 
     /**
-     *  @dev Returns the country code of an investor.
-     *  @param _account The wallet of the investor
+     *  @dev Returns the country code of an holder.
+     *  @param _account The wallet of the holder
      */
-    function storedInvestorCountry(address _account) external view returns (uint16);
+    function storedHolderCountry(address _account) external view returns (uint16);
 
     /**
      *  @dev adds an identity contract corresponding to a user address in the storage.
@@ -73,7 +73,7 @@ interface IIdentityRegistryStorage {
      *  This function can only be called by an address set as agent of the smart contract
      *  @param _account The address of the user
      *  @param _identity The address of the user's identity contract
-     *  @param _country The country of the investor
+     *  @param _country The country of the holder
      *  emits `IdentityStored` event
      */
     function addIdentityToStorage(
@@ -99,7 +99,7 @@ interface IIdentityRegistryStorage {
      *  @param _country The new country of the user
      *  emits `CountryModified` event
      */
-    function modifyStoredInvestorCountry(address _account, uint16 _country) external;
+    function modifyStoredHolderCountry(address _account, uint16 _country) external;
 
     /**
      *  @dev Updates an identity contract corresponding to a user address.

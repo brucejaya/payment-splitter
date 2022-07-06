@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import '../roles/agent/AgentRole.sol';
+import '../../Role/agent/AgentRole.sol';
 
 import '../../Interface/IIdentityRegistryStorage.sol';
 import '../../Interface/IIdentity.sol';
@@ -11,7 +11,7 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
     /// @dev struct containing the identity contract and the country of the user
     struct Identity {
         IIdentity identityContract;
-        uint16 investorCountry;
+        uint16 holderCountry;
     }
 
     /// @dev mapping between a user address and the corresponding identity
@@ -35,10 +35,10 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistryStorage-storedInvestorCountry}.
+     *  @dev See {IIdentityRegistryStorage-storedHolderCountry}.
      */
-    function storedInvestorCountry(address _account) external view override returns (uint16) {
-        return identities[_account].investorCountry;
+    function storedHolderCountry(address _account) external view override returns (uint16) {
+        return identities[_account].holderCountry;
     }
 
     /**
@@ -52,7 +52,7 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         require(address(_identity) != address(0), 'contract address can\'t be a zero address');
         require(address(identities[_account].identityContract) == address(0), 'identity contract already exists, please use update');
         identities[_account].identityContract = _identity;
-        identities[_account].investorCountry = _country;
+        identities[_account].holderCountry = _country;
         emit IdentityStored(_account, _identity);
     }
 
@@ -68,11 +68,11 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistryStorage-modifyStoredInvestorCountry}.
+     *  @dev See {IIdentityRegistryStorage-modifyStoredHolderCountry}.
      */
-    function modifyStoredInvestorCountry(address _account, uint16 _country) external override onlyAgent {
+    function modifyStoredHolderCountry(address _account, uint16 _country) external override onlyAgent {
         require(address(identities[_account].identityContract) != address(0), 'this user has no identity registered');
-        identities[_account].investorCountry = _country;
+        identities[_account].holderCountry = _country;
         emit CountryModified(_account, _country);
     }
 

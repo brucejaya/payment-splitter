@@ -11,4 +11,6 @@ contract Storage is Structs {
     mapping(uint256 => Execution) internal executions;
     mapping(bytes32 => Claim) internal claims;
     mapping(uint256 => bytes32[]) internal claimsByTopic;
+
+    // create a mapping from a key to an identifier i.e. iPhone, John Doe, etc.
 }

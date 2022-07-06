@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-import '../../Interface/IComplianceTokenRegistry.sol';
+import '../../Interface/ICompliance.sol';
 import '../../Interface/IIdentityRegistry.sol';
 
 contract TokenRegistryStorage {
@@ -33,14 +33,14 @@ contract TokenRegistryStorage {
     // @dev Mapping from user address to freeze bool
     mapping(address => bool) internal _frozenAll;
 
-    // 
-    bool internal _tokenPaused = false;
+    // @dev Mapping from token id to pause
+    mapping(address => bool) internal _tokenPaused;
 
     // @dev Identity Registry contract used by the onchain validator system
-    IIdentityRegistry internal _tokenIdentityRegistry;
+    IIdentityRegistry internal _identityRegistry;
 
     // @dev Compliance contract linked to the onchain validator system
-    IComplianceTokenRegistry internal _tokenCompliance;
+    ICompliance internal _compliance;
 
     
     /**
@@ -69,18 +69,18 @@ contract TokenRegistryStorage {
     event ComplianceAdded(address indexed _compliance);
 
     /**
-     *  this event is emitted when an investor successfully recovers his tokens
+     *  this event is emitted when an holder successfully recovers his tokens
      *  the event is emitted by the recoveryAddress function
-     *  `_lostWallet` is the address of the wallet that the investor lost access to
-     *  `_newWallet` is the address of the wallet that the investor provided for the recovery
-     *  `_investorIdentity` is the address of the Identity of the investor who asked for a recovery
+     *  `_lostWallet` is the address of the wallet that the holder lost access to
+     *  `_newWallet` is the address of the wallet that the holder provided for the recovery
+     *  `_holderIdentity` is the address of the Identity of the holder who asked for a recovery
      */
-    event RecoverySuccess(address _lostWallet, address _newWallet, address _investorIdentity);
+    event RecoverySuccess(address _lostWallet, address _newWallet, address _holderIdentity);
 
     /**
-     *  this event is emitted when the wallet of an investor is frozen or unfrozen
+     *  this event is emitted when the wallet of an holder is frozen or unfrozen
      *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_isFrozen` is the freezing status of the wallet
      *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
      *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
@@ -91,7 +91,7 @@ contract TokenRegistryStorage {
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
      *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are frozen
      */
     event TokensFrozen(address indexed _account, uint256 _amount);
@@ -99,7 +99,7 @@ contract TokenRegistryStorage {
     /**
      *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
      *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `_account` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are unfrozen
      */
     event TokensUnfrozen(address indexed _account, uint256 _amount);

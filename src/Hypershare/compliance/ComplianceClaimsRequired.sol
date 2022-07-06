@@ -9,14 +9,14 @@ import '../../Interface/IComplianceClaimsRequired.sol';
 contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     
     // @dev Mapping from token id to required Claim Topics
-    mapping(uint256 => uint256[]) private claimTopics[id];
+    mapping(uint256 => uint256[]) private claimTopics;
 
     /**
      *  @dev See {IComplianceClaimsRequired-addClaimTopic}.
      */
     function addClaimTopic(
         uint256 claimTopic,
-        uint256 id,
+        uint256 id
     )
         external
         override
@@ -34,7 +34,8 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
      *  @dev See {IComplianceClaimsRequired-removeClaimTopic}.
      */
     function removeClaimTopic(
-        uint256 claimTopic
+        uint256 claimTopic,
+        uint256 id
     )
         external
         override
@@ -54,7 +55,9 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     /**
      *  @dev See {IComplianceClaimsRequired-getClaimTopics}.
      */
-    function getClaimTopics()
+    function getClaimTopics(
+        uint256 id
+    )
         external
         view
         override

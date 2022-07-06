@@ -70,7 +70,7 @@ interface IClaimVerifiersRegistry {
      *  @param _issuer the address of the ClaimVerifier contract
      *  @return true if the issuer is trusted, false otherwise.
      */
-    function isTrustedVerifier(address _issuer) external view returns (bool);
+    function isVerifier(address _issuer) external view returns (bool);
 
     /**
      *  @dev Function for getting all the claim topic of trusted claim issuer

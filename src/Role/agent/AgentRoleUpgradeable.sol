@@ -19,16 +19,32 @@ contract AgentRoleUpgradeable is OwnableUpgradeable {
         _;
     }
 
-    function isAgent(address _agent) public view returns (bool) {
+    function isAgent(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _agents.has(_agent);
     }
 
-    function addAgent(address _agent) public onlyOwner {
+    function addAgent(
+        address _agent
+    ) 
+        public 
+        onlyOwner 
+    {
         _agents.add(_agent);
         emit AgentAdded(_agent);
     }
 
-    function removeAgent(address _agent) public onlyOwner {
+    function removeAgent(
+        address _agent
+    )
+        public
+        onlyOwner
+    {
         _agents.remove(_agent);
         emit AgentRemoved(_agent);
     }

@@ -7,6 +7,7 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import '../Roles.sol';
 
 contract AgentRole is Ownable {
+    
     using Roles for Roles.Role;
 
     event AgentAdded(address indexed _agent);

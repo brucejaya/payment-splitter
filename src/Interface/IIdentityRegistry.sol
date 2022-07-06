@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import './ITrustedIssuersRegistry.sol';
+import './IClaimVerifiersRegistry.sol';
 import './IClaimTopicsRegistry.sol';
 import './IIdentityRegistryStorage.sol';
 import './IClaimVerifier.sol';
@@ -33,18 +33,18 @@ interface IIdentityRegistry {
     /**
      *  this event is emitted when an Identity is registered into the Identity Registry.
      *  the event is emitted by the 'registerIdentity' function
-     *  `investorAddress` is the address of the investor's wallet
+     *  `holderAddress` is the address of the holder's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityRegistered(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityRegistered(address indexed holderAddress, IIdentity indexed identity);
 
     /**
      *  this event is emitted when an Identity is removed from the Identity Registry.
      *  the event is emitted by the 'deleteIdentity' function
-     *  `investorAddress` is the address of the investor's wallet
+     *  `holderAddress` is the address of the holder's wallet
      *  `identity` is the address of the Identity smart contract (onchainID)
      */
-    event IdentityRemoved(address indexed investorAddress, IIdentity indexed identity);
+    event IdentityRemoved(address indexed holderAddress, IIdentity indexed identity);
 
     /**
      *  this event is emitted when an Identity has been updated
@@ -57,10 +57,10 @@ interface IIdentityRegistry {
     /**
      *  this event is emitted when an Identity's country has been updated
      *  the event is emitted by the 'updateCountry' function
-     *  `investorAddress` is the address on which the country has been updated
+     *  `holderAddress` is the address on which the country has been updated
      *  `country` is the numeric code (ISO 3166-1) of the new country
      */
-    event CountryUpdated(address indexed investorAddress, uint16 indexed country);
+    event CountryUpdated(address indexed holderAddress, uint16 indexed country);
 
     /**
      *  @dev Register an identity contract corresponding to a user address.
@@ -68,7 +68,7 @@ interface IIdentityRegistry {
      *  This function can only be called by a wallet set as agent of the smart contract
      *  @param _account The address of the user
      *  @param _identity The address of the user's identity contract
-     *  @param _country The country of the investor
+     *  @param _country The country of the holder
      *  emits `IdentityRegistered` event
      */
     function registerIdentity(
@@ -135,15 +135,15 @@ interface IIdentityRegistry {
      *  @dev function allowing to register identities in batch
      *  This function can only be called by a wallet set as agent of the smart contract
      *  Requires that none of the users has an identity contract already registered.
-     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_accountes.length` IS TOO HIGH,
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_accounts.length` IS TOO HIGH,
      *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
-     *  @param _accountes The addresses of the users
+     *  @param _accounts The addresses of the users
      *  @param _identities The addresses of the corresponding identity contracts
-     *  @param _countries The countries of the corresponding investors
-     *  emits _accountes.length `IdentityRegistered` events
+     *  @param _countries The countries of the corresponding holders
+     *  emits _accounts.length `IdentityRegistered` events
      */
     function batchRegisterIdentity(
-        address[] calldata _accountes,
+        address[] calldata _accounts,
         IIdentity[] calldata _identities,
         uint16[] calldata _countries
     ) external;
@@ -166,16 +166,16 @@ interface IIdentityRegistry {
     function isVerified(address _account) external view returns (bool);
 
     /**
-     *  @dev Returns the onchainID of an investor.
-     *  @param _account The wallet of the investor
+     *  @dev Returns the onchainID of an holder.
+     *  @param _account The wallet of the holder
      */
     function identity(address _account) external view returns (IIdentity);
 
     /**
-     *  @dev Returns the country code of an investor.
-     *  @param _account The wallet of the investor
+     *  @dev Returns the country code of an holder.
+     *  @param _account The wallet of the holder
      */
-    function investorCountry(address _account) external view returns (uint16);
+    function holderCountry(address _account) external view returns (uint16);
 
     /**
      *  @dev Returns the IdentityRegistryStorage linked to the current IdentityRegistry.
@@ -185,7 +185,7 @@ interface IIdentityRegistry {
     /**
      *  @dev Returns the TrustedIssuersRegistry linked to the current IdentityRegistry.
      */
-    function issuersRegistry() external view returns (ITrustedIssuersRegistry);
+    function issuersRegistry() external view returns (IClaimVerifiersRegistry);
 
     /**
      *  @dev Returns the ClaimTopicsRegistry linked to the current IdentityRegistry.

@@ -6,9 +6,8 @@ import 'openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.s
 
 import '../Roles.sol';
 
-contract OwnerRolesUpgradeable is OwnableUpgradeable
-
- {
+contract OwnerRolesUpgradeable is OwnableUpgradeable {
+    
     using Roles for Roles.Role;
 
     event RoleAdded(address indexed _owner, string _role);
@@ -27,108 +26,198 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
     }
 
     /// @dev OwnerAdmin Role _ownerAdmin
-
-    function isOwnerAdmin(address _owner) public view returns (bool) {
+    function isOwnerAdmin(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _ownerAdmin.has(_owner);
     }
 
-    function addOwnerAdmin(address _owner) external onlyAdmin {
+    function addOwnerAdmin(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _ownerAdmin.add(_owner);
         string memory _role = 'OwnerAdmin';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeOwnerAdmin(address _owner) external onlyAdmin {
+    function removeOwnerAdmin(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _ownerAdmin.remove(_owner);
         string memory _role = 'OwnerAdmin';
         emit RoleRemoved(_owner, _role);
     }
 
     /// @dev RegistryAddressSetter Role _registryAddressSetter
-
-    function isRegistryAddressSetter(address _owner) public view returns (bool) {
+    function isRegistryAddressSetter(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _registryAddressSetter.has(_owner);
     }
 
-    function addRegistryAddressSetter(address _owner) external onlyAdmin {
+    function addRegistryAddressSetter(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _registryAddressSetter.add(_owner);
         string memory _role = 'RegistryAddressSetter';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeRegistryAddressSetter(address _owner) external onlyAdmin {
+    function removeRegistryAddressSetter(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _registryAddressSetter.remove(_owner);
         string memory _role = 'RegistryAddressSetter';
         emit RoleRemoved(_owner, _role);
     }
 
     /// @dev ComplianceSetter Role _complianceSetter
-
-    function isComplianceSetter(address _owner) public view returns (bool) {
+    function isComplianceSetter(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _complianceSetter.has(_owner);
     }
 
-    function addComplianceSetter(address _owner) external onlyAdmin {
+    function addComplianceSetter(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _complianceSetter.add(_owner);
         string memory _role = 'ComplianceSetter';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeComplianceSetter(address _owner) external onlyAdmin {
+    function removeComplianceSetter(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _complianceSetter.remove(_owner);
         string memory _role = 'ComplianceSetter';
         emit RoleRemoved(_owner, _role);
     }
 
     /// @dev ClaimRegistryManager Role _claimRegistryManager
-
-    function isClaimRegistryManager(address _owner) public view returns (bool) {
+    function isClaimRegistryManager(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _claimRegistryManager.has(_owner);
     }
 
-    function addClaimRegistryManager(address _owner) external onlyAdmin {
+    function addClaimRegistryManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _claimRegistryManager.add(_owner);
         string memory _role = 'ClaimRegistryManager';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeClaimRegistryManager(address _owner) external onlyAdmin {
+    function removeClaimRegistryManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _claimRegistryManager.remove(_owner);
         string memory _role = 'ClaimRegistryManager';
         emit RoleRemoved(_owner, _role);
     }
 
     /// @dev IssuersRegistryManager Role _issuersRegistryManager
-
-    function isIssuersRegistryManager(address _owner) public view returns (bool) {
+    function isIssuersRegistryManager(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _issuersRegistryManager.has(_owner);
     }
 
-    function addIssuersRegistryManager(address _owner) external onlyAdmin {
+    function addIssuersRegistryManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _issuersRegistryManager.add(_owner);
         string memory _role = 'IssuersRegistryManager';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeIssuersRegistryManager(address _owner) external onlyAdmin {
+    function removeIssuersRegistryManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _issuersRegistryManager.remove(_owner);
         string memory _role = 'IssuersRegistryManager';
         emit RoleRemoved(_owner, _role);
     }
 
     /// @dev TokenInfoManager Role _tokenInfoManager
-
-    function isTokenInfoManager(address _owner) public view returns (bool) {
+    function isTokenInfoManager(
+        address _owner
+    )
+        public
+        view
+        returns (bool)
+    {
         return _tokenInfoManager.has(_owner);
     }
 
-    function addTokenInfoManager(address _owner) external onlyAdmin {
+    function addTokenInfoManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _tokenInfoManager.add(_owner);
         string memory _role = 'TokenInfoManager';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeTokenInfoManager(address _owner) external onlyAdmin {
+    function removeTokenInfoManager(
+        address _owner
+    )
+        external
+        onlyAdmin
+    {
         _tokenInfoManager.remove(_owner);
         string memory _role = 'TokenInfoManager';
         emit RoleRemoved(_owner, _role);

@@ -6,9 +6,8 @@ import 'openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.s
 
 import '../Roles.sol';
 
-contract AgentRolesUpgradeable is OwnableUpgradeable
+contract AgentRolesUpgradeable is OwnableUpgradeable {
 
- {
     using Roles for Roles.Role;
 
     event RoleAdded(address indexed _agent, string _role);
@@ -28,126 +27,231 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
     }
 
     /// @dev AgentAdmin Role _agentAdmin
-
-    function isAgentAdmin(address _agent) public view returns (bool) {
+    function isAgentAdmin(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _agentAdmin.has(_agent);
     }
 
-    function addAgentAdmin(address _agent) external onlyAdmin {
+    function addAgentAdmin(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _agentAdmin.add(_agent);
         string memory _role = 'AgentAdmin';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeAgentAdmin(address _agent) external onlyAdmin {
+    function removeAgentAdmin(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _agentAdmin.remove(_agent);
         string memory _role = 'AgentAdmin';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev SupplyModifier Role _supplyModifiers
-
-    function isSupplyModifier(address _agent) public view returns (bool) {
+    function isSupplyModifier(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _supplyModifiers.has(_agent);
     }
 
-    function addSupplyModifier(address _agent) external onlyAdmin {
+    function addSupplyModifier(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _supplyModifiers.add(_agent);
         string memory _role = 'SupplyModifier';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeSupplyModifier(address _agent) external onlyAdmin {
+    function removeSupplyModifier(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _supplyModifiers.remove(_agent);
         string memory _role = 'SupplyModifier';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev Freezer Role _freezers
-
-    function isFreezer(address _agent) public view returns (bool) {
+    function isFreezer(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _freezers.has(_agent);
     }
 
-    function addFreezer(address _agent) external onlyAdmin {
+    function addFreezer(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _freezers.add(_agent);
         string memory _role = 'Freezer';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeFreezer(address _agent) external onlyAdmin {
+    function removeFreezer(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _freezers.remove(_agent);
         string memory _role = 'Freezer';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev TransferManager Role _transferManagers
-
-    function isTransferManager(address _agent) public view returns (bool) {
+    function isTransferManager(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _transferManagers.has(_agent);
     }
 
-    function addTransferManager(address _agent) external onlyAdmin {
+    function addTransferManager(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _transferManagers.add(_agent);
         string memory _role = 'TransferManager';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeTransferManager(address _agent) external onlyAdmin {
+    function removeTransferManager(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _transferManagers.remove(_agent);
         string memory _role = 'TransferManager';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev RecoveryAgent Role _recoveryAgents
-
-    function isRecoveryAgent(address _agent) public view returns (bool) {
+    function isRecoveryAgent(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _recoveryAgents.has(_agent);
     }
 
-    function addRecoveryAgent(address _agent) external onlyAdmin {
+    function addRecoveryAgent(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _recoveryAgents.add(_agent);
         string memory _role = 'RecoveryAgent';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeRecoveryAgent(address _agent) external onlyAdmin {
+    function removeRecoveryAgent(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _recoveryAgents.remove(_agent);
         string memory _role = 'RecoveryAgent';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev ComplianceAgent Role _complianceAgents
-
-    function isComplianceAgent(address _agent) public view returns (bool) {
+    function isComplianceAgent(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _complianceAgents.has(_agent);
     }
 
-    function addComplianceAgent(address _agent) external onlyAdmin {
+    function addComplianceAgent(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _complianceAgents.add(_agent);
         string memory _role = 'ComplianceAgent';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeComplianceAgent(address _agent) external onlyAdmin {
+    function removeComplianceAgent(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _complianceAgents.remove(_agent);
         string memory _role = 'ComplianceAgent';
         emit RoleRemoved(_agent, _role);
     }
 
     /// @dev WhiteListManager Role _whiteListManagers
-
-    function isWhiteListManager(address _agent) public view returns (bool) {
+    function isWhiteListManager(
+        address _agent
+    )
+        public
+        view
+        returns (bool)
+    {
         return _whiteListManagers.has(_agent);
     }
 
-    function addWhiteListManager(address _agent) external onlyAdmin {
+    function addWhiteListManager(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _whiteListManagers.add(_agent);
         string memory _role = 'WhiteListManager';
         emit RoleAdded(_agent, _role);
     }
 
-    function removeWhiteListManager(address _agent) external onlyAdmin {
+    function removeWhiteListManager(
+        address _agent
+    )
+        external
+        onlyAdmin
+    {
         _whiteListManagers.remove(_agent);
         string memory _role = 'WhiteListManager';
         emit RoleRemoved(_agent, _role);

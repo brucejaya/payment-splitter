@@ -25,7 +25,7 @@ Full folder structure is as follows:
 	├── Hypershare
 	│   ├── compliance
 	│   │   ├── ComplianceTokenDefault.sol
-	│   │   ├── ComplianceTokenRegistry.sol
+	│   │   ├── Compliance.sol
 	│   │   └── ComplianceToken.sol
 	│   ├── holder
 	│   │   ├── ComplianceClaimsRequired.sol
@@ -64,7 +64,7 @@ Hypershare is the home of all things **equity** related.
 
 1.1. [token](https://github.com/blit-man/hypersurface-forge/src/Hypershare/token) is a multi-token permissioned implementation that has been restructured with the ERC-1155 as its core standard. This important distinction strips away all unnecessary logic to create a lean, efficient, and flexible equity token implementation which is deployed one-per-organisation (rather than one per asset). By virtue of its ERC-1155 compliance the token also embeds agreements and agreement metadata in it's URI tag.
 
-1.2. [compliance](https://github.com/blit-man/hypersurface-forge/src/Hypershare/compliance) enforces on-chain transfer controls. Unlike other crypto assets, Hypershare transactions can fail for a variety of reasons. These reasons include the receiver not having verified KYC information, assets having been locked or frozen, and economic and jurisdictional constraints such as investor, acquisition, and geographic limits.
+1.2. [compliance](https://github.com/blit-man/hypersurface-forge/src/Hypershare/compliance) enforces on-chain transfer controls. Unlike other crypto assets, Hypershare transactions can fail for a variety of reasons. These reasons include the receiver not having verified KYC information, assets having been locked or frozen, and economic and jurisdictional constraints such as holder, acquisition, and geographic limits.
 
 1.3. [holder](https://github.com/blit-man/hypersurface-forge/src/Hypershare/holder) records shareholder ownership. In essence, it is the on-chain access point for the shareholder register. As a cap table that offers sophisticated functionality it also allows issuers to use advanced controls such as freezing, force transfers, etc.   
 
