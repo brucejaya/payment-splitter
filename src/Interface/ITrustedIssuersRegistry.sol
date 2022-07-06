@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import './IClaimIssuer.sol';
+import './IClaimVerifier.sol';
 
 interface ITrustedIssuersRegistry {
     /**

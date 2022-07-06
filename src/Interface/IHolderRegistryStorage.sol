@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import './IIdentity.sol';
 
-interface IIdentityRegistryStorage {
+interface IHolderRegistryStorage {
     /**
      *  this event is emitted when an Identity is registered into the storage contract.
      *  the event is emitted by the 'registerIdentity' function

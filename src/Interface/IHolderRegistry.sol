@@ -3,59 +3,59 @@
 pragma solidity ^0.8.0;
 
 import './ITrustedIssuersRegistry.sol';
-import './IClaimTopicsRegistry.sol';
+import './IHolderClaimsRequired.sol';
 import './IIdentityRegistryStorage.sol';
 import './IClaimVerifier.sol';
 import './IIdentity.sol';
 
 interface IIdentityRegistry {
     /**
-     *  this event is emitted when the ClaimTopicsRegistry has been set for the IdentityRegistry
+     *  this event is emitted when the HolderClaimsRequired has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `claimTopicsRegistry` is the address of the Claim Topics Registry contract
+     *  `HolderClaimsRequired` is the address of the Claim Topics Registry contract
      */
-    event ClaimTopicsRegistrySet(address indexed claimTopicsRegistry);
+    event HolderClaimsRequiredSet(address indexed HolderClaimsRequired);
 
     /**
      *  this event is emitted when the IdentityRegistryStorage has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `identityStorage` is the address of the Identity Registry Storage contract
+     *  `identityStorage` is the address of the Holder Registry Storage contract
      */
     event IdentityStorageSet(address indexed identityStorage);
 
     /**
-     *  this event is emitted when the ClaimTopicsRegistry has been set for the IdentityRegistry
+     *  this event is emitted when the HolderClaimsRequired has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
      *  `trustedIssuersRegistry` is the address of the Trusted Issuers Registry contract
      */
     event TrustedIssuersRegistrySet(address indexed trustedIssuersRegistry);
 
     /**
-     *  this event is emitted when an Identity is registered into the Identity Registry.
+     *  this event is emitted when an Holder is registered into the Holder Registry.
      *  the event is emitted by the 'registerIdentity' function
      *  `investorAddress` is the address of the investor's wallet
-     *  `identity` is the address of the Identity smart contract (onchainID)
+     *  `identity` is the address of the Holder smart contract (onchainID)
      */
     event IdentityRegistered(address indexed investorAddress, IIdentity indexed identity);
 
     /**
-     *  this event is emitted when an Identity is removed from the Identity Registry.
+     *  this event is emitted when an Holder is removed from the Holder Registry.
      *  the event is emitted by the 'deleteIdentity' function
      *  `investorAddress` is the address of the investor's wallet
-     *  `identity` is the address of the Identity smart contract (onchainID)
+     *  `identity` is the address of the Holder smart contract (onchainID)
      */
     event IdentityRemoved(address indexed investorAddress, IIdentity indexed identity);
 
     /**
-     *  this event is emitted when an Identity has been updated
+     *  this event is emitted when an Holder has been updated
      *  the event is emitted by the 'updateIdentity' function
-     *  `oldIdentity` is the old Identity contract's address to update
-     *  `newIdentity` is the new Identity contract's
+     *  `oldIdentity` is the old Holder contract's address to update
+     *  `newIdentity` is the new Holder contract's
      */
     event IdentityUpdated(IIdentity indexed oldIdentity, IIdentity indexed newIdentity);
 
     /**
-     *  this event is emitted when an Identity's country has been updated
+     *  this event is emitted when an Holder's country has been updated
      *  the event is emitted by the 'updateCountry' function
      *  `investorAddress` is the address on which the country has been updated
      *  `country` is the numeric code (ISO 3166-1) of the new country
@@ -89,18 +89,18 @@ interface IIdentityRegistry {
     /**
      *  @dev Replace the actual identityRegistryStorage contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _identityRegistryStorage The address of the new Identity Registry Storage
+     *  @param _identityRegistryStorage The address of the new Holder Registry Storage
      *  emits `IdentityStorageSet` event
      */
     function setIdentityRegistryStorage(address _identityRegistryStorage) external;
 
     /**
-     *  @dev Replace the actual claimTopicsRegistry contract with a new one.
+     *  @dev Replace the actual HolderClaimsRequired contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _claimTopicsRegistry The address of the new claim Topics Registry
-     *  emits `ClaimTopicsRegistrySet` event
+     *  @param _HolderClaimsRequired The address of the new claim Topics Registry
+     *  emits `HolderClaimsRequiredSet` event
      */
-    function setClaimTopicsRegistry(address _claimTopicsRegistry) external;
+    function setHolderClaimsRequired(address _HolderClaimsRequired) external;
 
     /**
      *  @dev Replace the actual trustedIssuersRegistry contract with a new one.
@@ -149,10 +149,10 @@ interface IIdentityRegistry {
     ) external;
 
     /**
-     *  @dev This functions checks whether a wallet has its Identity registered or not
-     *  in the Identity Registry.
+     *  @dev This functions checks whether a wallet has its Holder registered or not
+     *  in the Holder Registry.
      *  @param _userAddress The address of the user to be checked.
-     *  @return 'True' if the address is contained in the Identity Registry, 'false' if not.
+     *  @return 'True' if the address is contained in the Holder Registry, 'false' if not.
      */
     function contains(address _userAddress) external view returns (bool);
 
@@ -188,26 +188,26 @@ interface IIdentityRegistry {
     function issuersRegistry() external view returns (ITrustedIssuersRegistry);
 
     /**
-     *  @dev Returns the ClaimTopicsRegistry linked to the current IdentityRegistry.
+     *  @dev Returns the HolderClaimsRequired linked to the current IdentityRegistry.
      */
-    function topicsRegistry() external view returns (IClaimTopicsRegistry);
+    function topicsRegistry() external view returns (IHolderClaimsRequired);
 
     /**
-     *  @notice Transfers the Ownership of the Identity Registry to a new Owner.
+     *  @notice Transfers the Ownership of the Holder Registry to a new Owner.
      *  This function can only be called by the wallet set as owner of the smart contract
      *  @param _newOwner The new owner of this contract.
      */
     function transferOwnershipOnIdentityRegistryContract(address _newOwner) external;
 
     /**
-     *  @notice Adds an address as _agent of the Identity Registry Contract.
+     *  @notice Adds an address as _agent of the Holder Registry Contract.
      *  This function can only be called by the wallet set as owner of the smart contract
      *  @param _agent The _agent's address to add.
      */
     function addAgentOnIdentityRegistryContract(address _agent) external;
 
     /**
-     *  @notice Removes an address from being _agent of the Identity Registry Contract.
+     *  @notice Removes an address from being _agent of the Holder Registry Contract.
      *  This function can only be called by the wallet set as owner of the smart contract
      *  @param _agent The _agent's address to remove.
      */

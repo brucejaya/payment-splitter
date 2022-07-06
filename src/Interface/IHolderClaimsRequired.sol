@@ -2,16 +2,16 @@
 
 pragma solidity ^0.8.0;
 
-interface IHolderTokenRequiredClaims {
+interface IHolderClaimsRequired {
     /**
-     *  this event is emitted when a claim topic has been added to the HolderTokenRequiredClaims
+     *  this event is emitted when a claim topic has been added to the HolderClaimsRequired
      *  the event is emitted by the 'addClaimTopic' function
      *  `claimTopic` is the required claim added to the Claim Topics Registry
      */
     event ClaimTopicAdded(uint256 indexed claimTopic);
 
     /**
-     *  this event is emitted when a claim topic has been removed from the HolderTokenRequiredClaims
+     *  this event is emitted when a claim topic has been removed from the HolderClaimsRequired
      *  the event is emitted by the 'removeClaimTopic' function
      *  `claimTopic` is the required claim removed from the Claim Topics Registry
      */
@@ -44,5 +44,5 @@ interface IHolderTokenRequiredClaims {
      *  Only owner can call.
      *  @param _newOwner The new owner of this contract.
      */
-    function transferOwnershipOnHolderTokenRequiredClaimsContract(address _newOwner) external;
+    function transferOwnershipOnHolderClaimsRequiredContract(address _newOwner) external;
 }

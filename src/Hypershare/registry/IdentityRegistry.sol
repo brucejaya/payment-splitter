@@ -2,9 +2,10 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Interface/IClaimIssuer.sol';
+import '../../Interface/IClaimVerifier.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IHolderTokenRequiredClaims.sol';
+
+import '../../Interface/IClaimTopicsRegistry.sol';
 import '../../Interface/ITrustedIssuersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IIdentityRegistryStorage.sol';
@@ -12,9 +13,8 @@ import '../../Interface/IIdentityRegistryStorage.sol';
 import '../roles/agent/AgentRole.sol';
 
 contract IdentityRegistry is IIdentityRegistry, AgentRole {
-    
-    /// @dev Address of the HolderTokenRequiredClaims Contract
-    IHolderTokenRequiredClaims private tokenTopicsRegistry;
+    /// @dev Address of the ClaimTopicsRegistry Contract
+    IClaimTopicsRegistry private tokenTopicsRegistry;
 
     /// @dev Address of the TrustedIssuersRegistry Contract
     ITrustedIssuersRegistry private tokenIssuersRegistry;
@@ -25,21 +25,21 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /**
      *  @dev the constructor initiates the Identity Registry smart contract
      *  @param _trustedIssuersRegistry the trusted issuers registry linked to the Identity Registry
-     *  @param _HolderTokenRequiredClaims the claim topics registry linked to the Identity Registry
+     *  @param _claimTopicsRegistry the claim topics registry linked to the Identity Registry
      *  @param _identityStorage the identity registry storage linked to the Identity Registry
-     *  emits a `HolderTokenRequiredClaimsSet` event
+     *  emits a `ClaimTopicsRegistrySet` event
      *  emits a `TrustedIssuersRegistrySet` event
      *  emits an `IdentityStorageSet` event
      */
     constructor(
         address _trustedIssuersRegistry,
-        address _HolderTokenRequiredClaims,
+        address _claimTopicsRegistry,
         address _identityStorage
     ) {
-        tokenTopicsRegistry = IHolderTokenRequiredClaims(_HolderTokenRequiredClaims);
+        tokenTopicsRegistry = IClaimTopicsRegistry(_claimTopicsRegistry);
         tokenIssuersRegistry = ITrustedIssuersRegistry(_trustedIssuersRegistry);
         tokenIdentityStorage = IIdentityRegistryStorage(_identityStorage);
-        emit HolderTokenRequiredClaimsSet(_HolderTokenRequiredClaims);
+        emit ClaimTopicsRegistrySet(_claimTopicsRegistry);
         emit TrustedIssuersRegistrySet(_trustedIssuersRegistry);
         emit IdentityStorageSet(_identityStorage);
     }
@@ -68,7 +68,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /**
      *  @dev See {IIdentityRegistry-topicsRegistry}.
      */
-    function topicsRegistry() external view override returns (IHolderTokenRequiredClaims) {
+    function topicsRegistry() external view override returns (IClaimTopicsRegistry) {
         return tokenTopicsRegistry;
     }
 
@@ -192,11 +192,11 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistry-setHolderTokenRequiredClaims}.
+     *  @dev See {IIdentityRegistry-setClaimTopicsRegistry}.
      */
-    function setHolderTokenRequiredClaims(address _HolderTokenRequiredClaims) external override onlyOwner {
-        tokenTopicsRegistry = IHolderTokenRequiredClaims(_HolderTokenRequiredClaims);
-        emit HolderTokenRequiredClaimsSet(_HolderTokenRequiredClaims);
+    function setClaimTopicsRegistry(address _claimTopicsRegistry) external override onlyOwner {
+        tokenTopicsRegistry = IClaimTopicsRegistry(_claimTopicsRegistry);
+        emit ClaimTopicsRegistrySet(_claimTopicsRegistry);
     }
 
     /**

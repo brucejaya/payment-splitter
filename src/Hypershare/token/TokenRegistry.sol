@@ -15,8 +15,8 @@ import '../../Interface/ITokenRegistry.sol';
 import '../../Interface/IERC734.sol';
 import '../../Interface/IERC735.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IHolderTokenRequiredClaims.sol';
-import '../../Interface/IIdentityRegistry.sol';
+import '../../Interface/IHolderClaimsRequired.sol';
+import '../../Interface/IHolderRegistry.sol';
 import '../../Interface/IComplianceTokenRegistry.sol';
 
 import './TokenRegistryStorage.sol';
@@ -30,23 +30,23 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      *  @dev the constructor initiates the token contract
      *  _msgSender() is set automatically as the owner of the smart contract
      *  @param uri_ @dev See {setURI}.
-     *  @param _identityRegistry the address of the Identity registry linked to the token
+     *  @param _holderRegistry the address of the Identity registry linked to the token
      *  @param _compliance the address of the compliance contract linked to the token
      *  @param _ownerIdentity the address of the Identity of the token
      *  emits an `UpdatedTokenInformation` event
-     *  emits an `_identityRegistryAdded` event
+     *  emits an `_holderRegistryAdded` event
      *  emits a `ComplianceAdded` event
      */
     function init(
         string memory uri_,
-        address _identityRegistry,
+        address _holderRegistry,
         address _compliance,
-        bytes32 _ownerIdentity
+        address _ownerIdentity
     ) public initializer {
         _uri = uri_;
         _tokenIdentity = _ownerIdentity;
-        _tokenIdentityRegistry = IIdentityRegistry(_identityRegistry);
-        emit IdentityRegistryAdded(_identityRegistry);
+        _tokenHolderRegistry = IHolderRegistry(_holderRegistry);
+        emit HolderRegistryAdded(_holderRegistry);
         _tokenCompliance = IComplianceTokenRegistry(_compliance);
         emit ComplianceAdded(_compliance);
         // emit UpdatedTokenInformation(uri, _tokenIdentity); TODO: update event
@@ -106,10 +106,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
     
     /**
-     *  @dev See {ITokenRegistry-identityRegistry}.
+     *  @dev See {ITokenRegistry-holderRegistry}.
      */
-    function identityRegistry() external view override returns (IIdentityRegistry) {
-        return _tokenIdentityRegistry;
+    function holderRegistry() external view override returns (IHolderRegistry) {
+        return _tokenHolderRegistry;
     }
 
     /**
@@ -206,11 +206,11 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
     
     /**
-     *  @dev See {ITokenRegistry-setidentityRegistry}.
+     *  @dev See {ITokenRegistry-setholderRegistry}.
      */
-    function setidentityRegistry(address identityRegistry) external override onlyOwner {
-        _tokenIdentityRegistry = IIdentityRegistry(identityRegistry);
-        emit IdentityRegistryAdded(identityRegistry);
+    function setholderRegistry(address holderRegistry) external override onlyOwner {
+        _tokenHolderRegistry = IHolderRegistry(holderRegistry);
+        emit HolderRegistryAdded(holderRegistry);
     }
 
     /**
@@ -317,7 +317,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         );
         require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
         require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-        if (_tokenIdentityRegistry.isVerified(to) && _tokenCompliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
+        if (_tokenHolderRegistry.isVerified(to) && _tokenCompliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
             _tokenCompliance.transferred(from, to, id, amount);
             safeTransferFrom(from, to, id, amount, data);
             // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
@@ -342,7 +342,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             _frozenTokens[id][from] = _frozenTokens[id][from] - (tokensToUnfreeze);
             emit TokensUnfrozen(from, tokensToUnfreeze);
         }
-        if (_tokenIdentityRegistry.isVerified(to)) {
+        if (_tokenHolderRegistry.isVerified(to)) {
             _tokenCompliance.transferred(from, to, id, amount, data); // TODO update to relect extended fields
             safeTransferFrom(from, to, id, amount, data); // TODO update to relect extended fields
             return true;
@@ -376,7 +376,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             
             require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
             require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-            if (_tokenIdentityRegistry.isVerified(to) && _tokenCompliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
+            if (_tokenHolderRegistry.isVerified(to) && _tokenCompliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
                 _tokenCompliance.transferred(from, to, id, amount);
                 safeTransferFrom(from, to, id, amount, data);
                 // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
@@ -462,7 +462,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         uint256 amount,
         bytes memory data
     ) public override onlyAgent {
-        require(_tokenIdentityRegistry.isVerified(to), 'Identity is not verified.');
+        require(_tokenHolderRegistry.isVerified(to), 'Identity is not verified.');
         require(_tokenCompliance.canTransfer(to, id, amount, data), 'Compliance not followed');
         mint(to, id, amount, data);
         _tokenCompliance.created(to, id, amount, data);
@@ -486,7 +486,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             uint256 amount = amounts[i];
             bytes memory data = dataList[i];
             
-            require(_tokenIdentityRegistry.isVerified(to), 'Identity is not verified.');
+            require(_tokenHolderRegistry.isVerified(to), 'Identity is not verified.');
             require(_tokenCompliance.canTransfer(to, id, amount, data), 'Compliance not followed');
             mint(to, id, amount, data);
             _tokenCompliance.created(to, id, amount, data);
@@ -734,13 +734,13 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         bytes memory data
     ) external override onlyAgent returns (bool) {
         require(balanceOf(lostWallet, id) != 0, 'no tokens to recover');
-        IIdentityRegistry _ownerIdentity = IIdentityRegistry(investorIdentity);
+        IHolderRegistry _ownerIdentity = IHolderRegistry(investorIdentity);
         bytes32 key = keccak256(abi.encode(newWallet));
         if (_ownerIdentity.keyHasPurpose(key, 1)) {
             uint256 investorTokens = balanceOf(lostWallet, id);
             uint256 frozenTokens = _frozenTokens[id][lostWallet];
-            _tokenIdentityRegistry.registerIdentity(newWallet, _ownerIdentity, _tokenIdentityRegistry.investorCountry(lostWallet));
-            _tokenIdentityRegistry.deleteIdentity(lostWallet);
+            _tokenHolderRegistry.registerIdentity(newWallet, _ownerIdentity, _tokenHolderRegistry.investorCountry(lostWallet));
+            _tokenHolderRegistry.deleteIdentity(lostWallet);
             forcedTransferFrom(lostWallet, newWallet, id, investorTokens, data);
             if (frozenTokens > 0) {
                 freezePartialTokens(newWallet, id, frozenTokens);

@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
-import '../../Interface/IClaimIssuer.sol';
+import '../../Interface/IClaimVerifier.sol';
 import './Identity.sol';
 
-contract ClaimIssuer is IClaimIssuer, Identity {
+contract ClaimVerifier is IClaimVerifier, Identity {
+    
     mapping (bytes => bool) public revokedClaims;
 
     constructor(address initialManagementKey) Identity(initialManagementKey, false) {}

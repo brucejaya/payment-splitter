@@ -12,7 +12,7 @@ Full folder structure is as follows:
 	├── Hyperbase
 	│   ├── claims
 	│   ├── identity
-	│   │   ├── ClaimIssuer.sol
+	│   │   ├── ClaimVerifier.sol
 	│   │   ├── Identity.sol
 	│   │   ├── storage
 	│   │   │   ├── Storage.sol
@@ -27,8 +27,8 @@ Full folder structure is as follows:
 	│   │   ├── ComplianceTokenDefault.sol
 	│   │   ├── ComplianceTokenRegistry.sol
 	│   │   └── ComplianceToken.sol
-	│   ├── registry
-	│   │   ├── HolderTokenRequiredClaims.sol
+	│   ├── holder
+	│   │   ├── HolderClaimsRequired.sol
 	│   │   ├── IdentityRegistry.sol
 	│   │   ├── IdentityRegistryStorage.sol
 	│   │   └── TrustedIssuersRegistry.sol
