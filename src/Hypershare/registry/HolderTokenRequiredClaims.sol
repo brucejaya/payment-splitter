@@ -4,15 +4,15 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IClaimTopicsRegistry.sol';
+import '../../Interface/IHolderTokenRequiredClaims.sol';
 
-contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable {
+contract HolderTokenRequiredClaims is IHolderTokenRequiredClaims, Ownable {
     
     /// @dev All required Claim Topics
     uint256[] private claimTopics;
 
     /**
-     *  @dev See {IClaimTopicsRegistry-addClaimTopic}.
+     *  @dev See {IHolderTokenRequiredClaims-addClaimTopic}.
      */
     function addClaimTopic(uint256 _claimTopic) external override onlyOwner {
         uint256 length = claimTopics.length;
@@ -24,7 +24,7 @@ contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable {
     }
 
     /**
-     *  @dev See {IClaimTopicsRegistry-removeClaimTopic}.
+     *  @dev See {IHolderTokenRequiredClaims-removeClaimTopic}.
      */
     function removeClaimTopic(uint256 _claimTopic) external override onlyOwner {
         uint256 length = claimTopics.length;
@@ -39,16 +39,16 @@ contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable {
     }
 
     /**
-     *  @dev See {IClaimTopicsRegistry-getClaimTopics}.
+     *  @dev See {IHolderTokenRequiredClaims-getClaimTopics}.
      */
     function getClaimTopics() external view override returns (uint256[] memory) {
         return claimTopics;
     }
 
     /**
-     *  @dev See {IClaimTopicsRegistry-transferOwnershipOnClaimTopicsRegistryContract}.
+     *  @dev See {IHolderTokenRequiredClaims-transferOwnershipOnHolderTokenRequiredClaimsContract}.
      */
-    function transferOwnershipOnClaimTopicsRegistryContract(address _newOwner) external override onlyOwner {
+    function transferOwnershipOnHolderTokenRequiredClaimsContract(address _newOwner) external override onlyOwner {
         transferOwnership(_newOwner);
     }
 }

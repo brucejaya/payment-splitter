@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceToken.sol';
 import '../../Interface/IIdentityRegistry.sol';
 
 contract TokenStorage {
@@ -28,5 +28,5 @@ contract TokenStorage {
     IIdentityRegistry internal tokenIdentityRegistry;
 
     /// @dev Compliance contract linked to the onchain validator system
-    ICompliance internal tokenCompliance;
+    IComplianceToken internal tokenCompliance;
 }

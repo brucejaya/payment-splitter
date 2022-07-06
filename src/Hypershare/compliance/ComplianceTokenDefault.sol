@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
-
 pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceToken.sol';
 
-contract DefaultCompliance is ICompliance, Ownable {
+contract ComplianceTokenDefault is IComplianceToken, Ownable {
     /// @dev Mapping between agents and their statuses
     mapping(address => bool) private _tokenAgentsList;
 

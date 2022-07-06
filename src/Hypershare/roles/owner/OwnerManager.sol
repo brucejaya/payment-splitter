@@ -5,8 +5,8 @@ pragma solidity ^0.8.0;
 import '../../../Interface/IToken.sol';
 import '../../../Interface/IIdentityRegistry.sol';
 import '../../../Interface/ITrustedIssuersRegistry.sol';
-import '../../../Interface/IClaimTopicsRegistry.sol';
-import '../../../Interface/ICompliance.sol';
+import '../../../Interface/IHolderTokenRequiredClaims.sol';
+import '../../../Interface/IComplianceToken.sol';
 import '../../../Interface/IIdentity.sol';
 import '../../../Interface/IClaimIssuer.sol';
 import './OwnerRoles.sol';
@@ -174,19 +174,19 @@ contract OwnerManager is OwnerRoles {
     }
 
     /**
-     *  @dev calls the `setClaimTopicsRegistry` function on the Identity Registry contract
+     *  @dev calls the `setHolderTokenRequiredClaims` function on the Identity Registry contract
      *  OwnerManager has to be set as owner on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-setClaimTopicsRegistry}.
+     *  See {IIdentityRegistry-setHolderTokenRequiredClaims}.
      *  Requires that `_onchainID` is set as RegistryAddressSetter on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_onchainID`
      *  @param _onchainID the _onchainID contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callSetClaimTopicsRegistry(address _claimTopicsRegistry, IIdentity _onchainID) external {
+    function callSetHolderTokenRequiredClaims(address _HolderTokenRequiredClaims, IIdentity _onchainID) external {
         require(
             isRegistryAddressSetter(address(_onchainID)) && _onchainID.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Registry Address Setter'
         );
-        token.identityRegistry().setClaimTopicsRegistry(_claimTopicsRegistry);
+        token.identityRegistry().setHolderTokenRequiredClaims(_HolderTokenRequiredClaims);
     }
 
     /**
@@ -264,7 +264,7 @@ contract OwnerManager is OwnerRoles {
     /**
      *  @dev calls the `addClaimTopic` function on the Claim Topics Registry contract
      *  OwnerManager has to be set as owner on the Claim Topics Registry smart contract to process this function
-     *  See {IClaimTopicsRegistry-addClaimTopic}.
+     *  See {IHolderTokenRequiredClaims-addClaimTopic}.
      *  Requires that `_onchainID` is set as ClaimRegistryManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_onchainID`
      *  @param _onchainID the _onchainID contract of the caller, e.g. "i call this function and i am Bob"
@@ -280,7 +280,7 @@ contract OwnerManager is OwnerRoles {
     /**
      *  @dev calls the `removeClaimTopic` function on the Claim Topics Registry contract
      *  OwnerManager has to be set as owner on the Claim Topics Registry smart contract to process this function
-     *  See {IClaimTopicsRegistry-removeClaimTopic}.
+     *  See {IHolderTokenRequiredClaims-removeClaimTopic}.
      *  Requires that `_onchainID` is set as ClaimRegistryManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_onchainID`
      *  @param _onchainID the _onchainID contract of the caller, e.g. "i call this function and i am Bob"
@@ -324,13 +324,13 @@ contract OwnerManager is OwnerRoles {
     }
 
     /**
-     *  @dev calls the `transferOwnershipOnClaimTopicsRegistryContract` function on the Claim Topics Registry contract
+     *  @dev calls the `transferOwnershipOnHolderTokenRequiredClaimsContract` function on the Claim Topics Registry contract
      *  OwnerManager has to be set as owner on the Claim Topics registry smart contract to process this function
-     *  See {IClaimTopicsRegistry-transferOwnershipOnClaimTopicsRegistryContract}.
+     *  See {IHolderTokenRequiredClaims-transferOwnershipOnHolderTokenRequiredClaimsContract}.
      *  Requires that msg.sender is an Admin of the OwnerManager contract
      */
-    function callTransferOwnershipOnClaimTopicsRegistryContract(address _newOwner) external onlyAdmin {
-        token.identityRegistry().topicsRegistry().transferOwnershipOnClaimTopicsRegistryContract(_newOwner);
+    function callTransferOwnershipOnHolderTokenRequiredClaimsContract(address _newOwner) external onlyAdmin {
+        token.identityRegistry().topicsRegistry().transferOwnershipOnHolderTokenRequiredClaimsContract(_newOwner);
     }
 
     /**

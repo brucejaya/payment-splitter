@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 
-
 pragma solidity ^0.8.0;
 
-interface ICompliance {
+// TODO UPDATE
+
+interface IComplianceTokenRegistry {
+    
     /**
      *  this event is emitted when the Agent has been added on the allowedList of this Compliance.
      *  the event is emitted by the Compliance constructor and by the addTokenAgent function

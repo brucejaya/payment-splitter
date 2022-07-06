@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-// imports here are just for testing purpose
-
-import '../Hyperbase/identity/ClaimIssuer.sol';
-import '../Hyperbase/identity/Identity.sol';
-
 contract Migrations {
     address public owner;
     uint256 public lastCompletedMigration;

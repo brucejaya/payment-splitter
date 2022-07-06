@@ -5,13 +5,11 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceToken.sol';
 import '../../Interface/IToken.sol';
 import '../../Interface/IIdentityRegistry.sol';
 
-contract LimitHolder is ICompliance, Ownable
-
- {
+contract ComplianceToken is IComplianceToken, Ownable {
     /// @dev the token on which this compliance contract is applied
     IToken public token;
 

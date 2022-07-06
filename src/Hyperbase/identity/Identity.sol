@@ -320,6 +320,8 @@ contract Identity is Storage, IIdentity, Version {
         return false;
     }
 
+    
+
     /**
     * @notice Implementation of the addClaim function from the ERC-735 standard
     *  Require that the msg.sender has claim signer key.

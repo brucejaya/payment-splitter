@@ -6,11 +6,11 @@ import '../../Interface/IToken.sol';
 import '../../Interface/IERC734.sol';
 import '../../Interface/IERC735.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IClaimTopicsRegistry.sol';
+import '../../Interface/IHolderTokenRequiredClaims.sol';
 import '../../Interface/IIdentityRegistry.sol';
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceToken.sol';
 
-import './Storage.sol';
+import './TokenStorage.sol';
 import '../roles/agent/AgentRoleUpgradeable.sol';
 
 contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
@@ -42,7 +42,7 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
         tokenOnchainID = _onchainID;
         tokenIdentityRegistry = IIdentityRegistry(_identityRegistry);
         emit IdentityRegistryAdded(_identityRegistry);
-        tokenCompliance = ICompliance(_compliance);
+        tokenCompliance = IComplianceToken(_compliance);
         emit ComplianceAdded(_compliance);
         emit UpdatedTokenInformation(tokenName, tokenSymbol, tokenDecimals, TOKEN_VERSION, tokenOnchainID);
         __Ownable_init();
@@ -299,7 +299,7 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IToken-compliance}.
      */
-    function compliance() external view override returns (ICompliance) {
+    function compliance() external view override returns (IComplianceToken) {
         return tokenCompliance;
     }
 
@@ -483,7 +483,7 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
      *  @dev See {IToken-setCompliance}.
      */
     function setCompliance(address _compliance) external override onlyOwner {
-        tokenCompliance = ICompliance(_compliance);
+        tokenCompliance = IComplianceToken(_compliance);
         emit ComplianceAdded(_compliance);
     }
 

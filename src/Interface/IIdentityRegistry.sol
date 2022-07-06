@@ -3,18 +3,18 @@
 pragma solidity ^0.8.0;
 
 import './ITrustedIssuersRegistry.sol';
-import './IClaimTopicsRegistry.sol';
+import './IHolderTokenRequiredClaims.sol';
 import './IIdentityRegistryStorage.sol';
 import './IClaimIssuer.sol';
 import './IIdentity.sol';
 
 interface IIdentityRegistry {
     /**
-     *  this event is emitted when the ClaimTopicsRegistry has been set for the IdentityRegistry
+     *  this event is emitted when the HolderTokenRequiredClaims has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `claimTopicsRegistry` is the address of the Claim Topics Registry contract
+     *  `HolderTokenRequiredClaims` is the address of the Claim Topics Registry contract
      */
-    event ClaimTopicsRegistrySet(address indexed claimTopicsRegistry);
+    event HolderTokenRequiredClaimsSet(address indexed HolderTokenRequiredClaims);
 
     /**
      *  this event is emitted when the IdentityRegistryStorage has been set for the IdentityRegistry
@@ -24,7 +24,7 @@ interface IIdentityRegistry {
     event IdentityStorageSet(address indexed identityStorage);
 
     /**
-     *  this event is emitted when the ClaimTopicsRegistry has been set for the IdentityRegistry
+     *  this event is emitted when the HolderTokenRequiredClaims has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
      *  `trustedIssuersRegistry` is the address of the Trusted Issuers Registry contract
      */
@@ -95,12 +95,12 @@ interface IIdentityRegistry {
     function setIdentityRegistryStorage(address _identityRegistryStorage) external;
 
     /**
-     *  @dev Replace the actual claimTopicsRegistry contract with a new one.
+     *  @dev Replace the actual HolderTokenRequiredClaims contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _claimTopicsRegistry The address of the new claim Topics Registry
-     *  emits `ClaimTopicsRegistrySet` event
+     *  @param _HolderTokenRequiredClaims The address of the new claim Topics Registry
+     *  emits `HolderTokenRequiredClaimsSet` event
      */
-    function setClaimTopicsRegistry(address _claimTopicsRegistry) external;
+    function setHolderTokenRequiredClaims(address _HolderTokenRequiredClaims) external;
 
     /**
      *  @dev Replace the actual trustedIssuersRegistry contract with a new one.
@@ -188,9 +188,9 @@ interface IIdentityRegistry {
     function issuersRegistry() external view returns (ITrustedIssuersRegistry);
 
     /**
-     *  @dev Returns the ClaimTopicsRegistry linked to the current IdentityRegistry.
+     *  @dev Returns the HolderTokenRequiredClaims linked to the current IdentityRegistry.
      */
-    function topicsRegistry() external view returns (IClaimTopicsRegistry);
+    function topicsRegistry() external view returns (IHolderTokenRequiredClaims);
 
     /**
      *  @notice Transfers the Ownership of the Identity Registry to a new Owner.
