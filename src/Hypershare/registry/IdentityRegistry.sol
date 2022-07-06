@@ -47,15 +47,15 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /**
      *  @dev See {IIdentityRegistry-identity}.
      */
-    function identity(address _userAddress) public view override returns (IIdentity) {
-        return tokenIdentityStorage.storedIdentity(_userAddress);
+    function identity(address _account) public view override returns (IIdentity) {
+        return tokenIdentityStorage.storedIdentity(_account);
     }
 
     /**
      *  @dev See {IIdentityRegistry-investorCountry}.
      */
-    function investorCountry(address _userAddress) external view override returns (uint16) {
-        return tokenIdentityStorage.storedInvestorCountry(_userAddress);
+    function investorCountry(address _account) external view override returns (uint16) {
+        return tokenIdentityStorage.storedInvestorCountry(_account);
     }
 
     /**
@@ -83,57 +83,57 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
      *  @dev See {IIdentityRegistry-registerIdentity}.
      */
     function registerIdentity(
-        address _userAddress,
+        address _account,
         IIdentity _identity,
         uint16 _country
     ) public override onlyAgent {
-        tokenIdentityStorage.addIdentityToStorage(_userAddress, _identity, _country);
-        emit IdentityRegistered(_userAddress, _identity);
+        tokenIdentityStorage.addIdentityToStorage(_account, _identity, _country);
+        emit IdentityRegistered(_account, _identity);
     }
 
     /**
      *  @dev See {IIdentityRegistry-batchRegisterIdentity}.
      */
     function batchRegisterIdentity(
-        address[] calldata _userAddresses,
+        address[] calldata _accountes,
         IIdentity[] calldata _identities,
         uint16[] calldata _countries
     ) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            registerIdentity(_userAddresses[i], _identities[i], _countries[i]);
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            registerIdentity(_accountes[i], _identities[i], _countries[i]);
         }
     }
 
     /**
      *  @dev See {IIdentityRegistry-updateIdentity}.
      */
-    function updateIdentity(address _userAddress, IIdentity _identity) external override onlyAgent {
-        IIdentity oldIdentity = identity(_userAddress);
-        tokenIdentityStorage.modifyStoredIdentity(_userAddress, _identity);
+    function updateIdentity(address _account, IIdentity _identity) external override onlyAgent {
+        IIdentity oldIdentity = identity(_account);
+        tokenIdentityStorage.modifyStoredIdentity(_account, _identity);
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
     /**
      *  @dev See {IIdentityRegistry-updateCountry}.
      */
-    function updateCountry(address _userAddress, uint16 _country) external override onlyAgent {
-        tokenIdentityStorage.modifyStoredInvestorCountry(_userAddress, _country);
-        emit CountryUpdated(_userAddress, _country);
+    function updateCountry(address _account, uint16 _country) external override onlyAgent {
+        tokenIdentityStorage.modifyStoredInvestorCountry(_account, _country);
+        emit CountryUpdated(_account, _country);
     }
 
     /**
      *  @dev See {IIdentityRegistry-deleteIdentity}.
      */
-    function deleteIdentity(address _userAddress) external override onlyAgent {
-        tokenIdentityStorage.removeIdentityFromStorage(_userAddress);
-        emit IdentityRemoved(_userAddress, identity(_userAddress));
+    function deleteIdentity(address _account) external override onlyAgent {
+        tokenIdentityStorage.removeIdentityFromStorage(_account);
+        emit IdentityRemoved(_account, identity(_account));
     }
 
     /**
      *  @dev See {IIdentityRegistry-isVerified}.
      */
-    function isVerified(address _userAddress) external view override returns (bool) {
-        if (address(identity(_userAddress)) == address(0)) {
+    function isVerified(address _account) external view override returns (bool) {
+        if (address(identity(_account)) == address(0)) {
             return false;
         }
         uint256[] memory requiredClaimTopics = tokenTopicsRegistry.getClaimTopics();
@@ -147,14 +147,14 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         bytes memory data;
         uint256 claimTopic;
         for (claimTopic = 0; claimTopic < requiredClaimTopics.length; claimTopic++) {
-            bytes32[] memory claimIds = identity(_userAddress).getClaimIdsByTopic(requiredClaimTopics[claimTopic]);
+            bytes32[] memory claimIds = identity(_account).getClaimIdsByTopic(requiredClaimTopics[claimTopic]);
             if (claimIds.length == 0) {
                 return false;
             }
             for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_userAddress).getClaim(claimIds[j]);
+                (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_account).getClaim(claimIds[j]);
 
-                try IClaimIssuer(issuer).isClaimValid(identity(_userAddress), requiredClaimTopics[claimTopic], sig,
+                try IClaimIssuer(issuer).isClaimValid(identity(_account), requiredClaimTopics[claimTopic], sig,
                 data) returns(bool _validity){
                     if (
                         _validity
@@ -210,8 +210,8 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /**
      *  @dev See {IIdentityRegistry-contains}.
      */
-    function contains(address _userAddress) external view override returns (bool) {
-        if (address(identity(_userAddress)) == address(0)) {
+    function contains(address _account) external view override returns (bool) {
+        if (address(identity(_account)) == address(0)) {
             return false;
         }
         return true;

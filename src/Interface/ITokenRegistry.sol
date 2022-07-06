@@ -45,43 +45,43 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when the wallet of an investor is frozen or unfrozen
      *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the investor that is concerned by the freezing status
      *  `_isFrozen` is the freezing status of the wallet
      *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
      *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
      *  `_owner` is the address of the agent who called the function to freeze the wallet
      */
-    event AddressFrozen(address indexed _userAddress, bool indexed _isFrozen, address indexed _owner);
+    event AddressFrozen(address indexed _account, bool indexed _isFrozen, address indexed _owner);
 
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
      *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the investor that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are frozen
      */
-    event TokensFrozen(address indexed _userAddress, uint256 _amount);
+    event TokensFrozen(address indexed _account, uint256 _amount);
 
     /**
      *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
      *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_account` is the wallet of the investor that is concerned by the freezing status
      *  `_amount` is the amount of tokens that are unfrozen
      */
-    event TokensUnfrozen(address indexed _userAddress, uint256 _amount);
+    event TokensUnfrozen(address indexed _account, uint256 _amount);
 
     /**
      *  this event is emitted when the token is paused
      *  the event is emitted by the pause function
-     *  `_userAddress` is the address of the wallet that called the pause function
+     *  `_account` is the address of the wallet that called the pause function
      */
-    event Paused(address _userAddress);
+    event Paused(address _account);
 
     /**
      *  this event is emitted when the token is unpaused
      *  the event is emitted by the unpause function
-     *  `_userAddress` is the address of the wallet that called the unpause function
+     *  `_account` is the address of the wallet that called the unpause function
      */
-    event Unpaused(address _userAddress);
+    event Unpaused(address _account);
 
     /**
      *  @dev TODO

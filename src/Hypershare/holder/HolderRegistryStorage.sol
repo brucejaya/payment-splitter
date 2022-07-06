@@ -31,46 +31,46 @@ contract HolderRegistryStorage is IHolderRegistryStorage, AgentRole {
      *  @dev See {IHolderRegistryStorage-storedHolder}.
      */
     function storedHolder(
-        address _userAddress
+        address _account
     ) external view override returns (IIdentity) {
-        return identities[_userAddress].holderContract;
+        return identities[_account].holderContract;
     }
 
     /**
      *  @dev See {IHolderRegistryStorage-storedInvestorCountry}.
      */
     function storedInvestorCountry(
-        address _userAddress
+        address _account
     ) external view override returns (uint16) {
-        return identities[_userAddress].investorCountry;
+        return identities[_account].investorCountry;
     }
 
     /**
      *  @dev See {IHolderRegistryStorage-addHolderToStorage}.
      */
     function addHolderToStorage(
-        address _userAddress,
+        address _account,
         bytes32 _identity,
         uint16 _country
     ) external override onlyOperator {
         require(address(_identity) != address(0), 'contract address can\'t be a zero address');
-        require(address(identities[_userAddress].holderContract) == address(0), 'holder contract already exists, please use update');
-        identities[_userAddress].holderContract = _identity;
-        identities[_userAddress].investorCountry = _country;
-        emit HolderStored(_userAddress, _identity);
+        require(address(identities[_account].holderContract) == address(0), 'holder contract already exists, please use update');
+        identities[_account].holderContract = _identity;
+        identities[_account].investorCountry = _country;
+        emit HolderStored(_account, _identity);
     }
 
     /**
      *  @dev See {IHolderRegistryStorage-modifyStoredHolder}.
      */
     function modifyStoredHolder(
-        address _userAddress,
+        address _account,
         bytes32 _identity
     ) external override onlyOperator {
-        require(address(identities[_userAddress].holderContract) != address(0), 'this user has no holder registered');
+        require(address(identities[_account].holderContract) != address(0), 'this user has no holder registered');
         require(address(_identity) != address(0), 'contract address can\'t be a zero address');
-        IIdentity oldHolder = identities[_userAddress].holderContract;
-        identities[_userAddress].holderContract = _identity;
+        IIdentity oldHolder = identities[_account].holderContract;
+        identities[_account].holderContract = _identity;
         emit HolderModified(oldHolder, _identity);
     }
 
@@ -78,23 +78,23 @@ contract HolderRegistryStorage is IHolderRegistryStorage, AgentRole {
      *  @dev See {IHolderRegistryStorage-modifyStoredInvestorCountry}.
      */
     function modifyStoredInvestorCountry(
-        address _userAddress,
+        address _account,
         uint16 _country
     ) external override onlyOperator {
-        require(address(identities[_userAddress].holderContract) != address(0), 'this user has no holder registered');
-        identities[_userAddress].investorCountry = _country;
-        emit CountryModified(_userAddress, _country);
+        require(address(identities[_account].holderContract) != address(0), 'this user has no holder registered');
+        identities[_account].investorCountry = _country;
+        emit CountryModified(_account, _country);
     }
 
     /**
      *  @dev See {IHolderRegistryStorage-removeHolderFromStorage}.
      */
     function removeHolderFromStorage(
-        address _userAddress
+        address _account
     ) external override onlyOperator {
-        require(address(identities[_userAddress].holderContract) != address(0), 'you haven\'t registered an holder yet');
-        delete identities[_userAddress];
-        emit HolderUnstored(_userAddress, identities[_userAddress].holderContract);
+        require(address(identities[_account].holderContract) != address(0), 'you haven\'t registered an holder yet');
+        delete identities[_account];
+        emit HolderUnstored(_account, identities[_account].holderContract);
     }
 
     /**

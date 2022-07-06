@@ -47,18 +47,18 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
      *  @dev See {IHolderRegistry-holder}.
      */
     function holder(
-        address _userAddress
+        address _account
     ) public view override returns (IIdentityRegistry) {
-        return tokenHolderStorage.storedIdentity(_userAddress);
+        return tokenHolderStorage.storedIdentity(_account);
     }
 
     /**
      *  @dev See {IHolderRegistry-investorCountry}.
      */
     function investorCountry(
-        address _userAddress
+        address _account
     ) external view override returns (uint16) {
-        return tokenHolderStorage.storedInvestorCountry(_userAddress);
+        return tokenHolderStorage.storedInvestorCountry(_account);
     }
 
     /**
@@ -86,24 +86,24 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
      *  @dev See {IHolderRegistry-registerIdentity}.
      */
     function registerIdentity(
-        address _userAddress,
+        address _account,
         IIdentityRegistry _holder,
         uint16 _country
     ) public override onlyOperator {
-        tokenHolderStorage.addIdentityToStorage(_userAddress, _holder, _country);
-        emit IdentityRegistered(_userAddress, _holder);
+        tokenHolderStorage.addIdentityToStorage(_account, _holder, _country);
+        emit IdentityRegistered(_account, _holder);
     }
 
     /**
      *  @dev See {IHolderRegistry-batchRegisterIdentity}.
      */
     function batchRegisterIdentity(
-        address[] calldata _userAddresses,
+        address[] calldata _accountes,
         IIdentityRegistry[] calldata _identities,
         uint16[] calldata _countries
     ) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            registerIdentity(_userAddresses[i], _identities[i], _countries[i]);
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            registerIdentity(_accountes[i], _identities[i], _countries[i]);
         }
     }
 
@@ -111,11 +111,11 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
      *  @dev See {IHolderRegistry-updateIdentity}.
      */
     function updateIdentity(
-        address _userAddress,
+        address _account,
         IIdentityRegistry _holder
     ) external override onlyOperator {
-        IIdentityRegistry oldIdentity = holder(_userAddress);
-        tokenHolderStorage.modifyStoredIdentity(_userAddress, _holder);
+        IIdentityRegistry oldIdentity = holder(_account);
+        tokenHolderStorage.modifyStoredIdentity(_account, _holder);
         emit IdentityUpdated(oldIdentity, _holder);
     }
 
@@ -123,30 +123,30 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
      *  @dev See {IHolderRegistry-updateCountry}.
      */
     function updateCountry(
-        address _userAddress,
+        address _account,
         uint16 _country
     ) external override onlyOperator {
-        tokenHolderStorage.modifyStoredInvestorCountry(_userAddress, _country);
-        emit CountryUpdated(_userAddress, _country);
+        tokenHolderStorage.modifyStoredInvestorCountry(_account, _country);
+        emit CountryUpdated(_account, _country);
     }
 
     /**
      *  @dev See {IHolderRegistry-deleteIdentity}.
      */
     function deleteIdentity(
-        address _userAddress
+        address _account
     ) external override onlyOperator {
-        tokenHolderStorage.removeIdentityFromStorage(_userAddress);
-        emit IdentityRemoved(_userAddress, holder(_userAddress));
+        tokenHolderStorage.removeIdentityFromStorage(_account);
+        emit IdentityRemoved(_account, holder(_account));
     }
 
     /**
      *  @dev See {IHolderRegistry-isVerified}.
      */
     function isVerified(
-        address _userAddress
+        address _account
     ) external view override returns (bool) {
-        if (address(holder(_userAddress)) == address(0)) {
+        if (address(holder(_account)) == address(0)) {
             return false;
         }
         uint256[] memory requiredClaimTopics = tokenClaimsRequired.getClaimTopics();
@@ -160,14 +160,14 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
         bytes memory data;
         uint256 claimTopic;
         for (claimTopic = 0; claimTopic < requiredClaimTopics.length; claimTopic++) {
-            bytes32[] memory claimIds = holder(_userAddress).getClaimIdsByTopic(requiredClaimTopics[claimTopic]);
+            bytes32[] memory claimIds = holder(_account).getClaimIdsByTopic(requiredClaimTopics[claimTopic]);
             if (claimIds.length == 0) {
                 return false;
             }
             for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = holder(_userAddress).getClaim(claimIds[j]);
+                (foundClaimTopic, scheme, issuer, sig, data, ) = holder(_account).getClaim(claimIds[j]);
 
-                try IClaimIssuer(issuer).isClaimValid(holder(_userAddress), requiredClaimTopics[claimTopic], sig,
+                try IClaimIssuer(issuer).isClaimValid(holder(_account), requiredClaimTopics[claimTopic], sig,
                 data) returns(bool _validity){
                     if (
                         _validity
@@ -230,9 +230,9 @@ contract HolderRegistry is IHolderRegistry, AgentRole {
      *  @dev See {IHolderRegistry-contains}.
      */
     function contains(
-        address _userAddress
+        address _account
     ) external view override returns (bool) {
-        if (address(holder(_userAddress)) == address(0)) {
+        if (address(holder(_account)) == address(0)) {
             return false;
         }
         return true;

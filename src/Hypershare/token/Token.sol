@@ -70,8 +70,8 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IERC20-balanceOf}.
      */
-    function balanceOf(address _userAddress) public view override returns (uint256) {
-        return _balances[_userAddress];
+    function balanceOf(address _account) public view override returns (uint256) {
+        return _balances[_account];
     }
 
     /**
@@ -126,27 +126,27 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {ERC20-_mint}.
      */
-    function _mint(address _userAddress, uint256 _amount) internal virtual {
-        require(_userAddress != address(0), 'ERC20: mint to the zero address');
+    function _mint(address _account, uint256 _amount) internal virtual {
+        require(_account != address(0), 'ERC20: mint to the zero address');
 
-        _beforeTokenTransfer(address(0), _userAddress, _amount);
+        _beforeTokenTransfer(address(0), _account, _amount);
 
         _totalSupply = _totalSupply + _amount;
-        _balances[_userAddress] = _balances[_userAddress] + _amount;
-        emit Transfer(address(0), _userAddress, _amount);
+        _balances[_account] = _balances[_account] + _amount;
+        emit Transfer(address(0), _account, _amount);
     }
 
     /**
      *  @dev See {ERC20-_burn}.
      */
-    function _burn(address _userAddress, uint256 _amount) internal virtual {
-        require(_userAddress != address(0), 'ERC20: burn from the zero address');
+    function _burn(address _account, uint256 _amount) internal virtual {
+        require(_account != address(0), 'ERC20: burn from the zero address');
 
-        _beforeTokenTransfer(_userAddress, address(0), _amount);
+        _beforeTokenTransfer(_account, address(0), _amount);
 
-        _balances[_userAddress] = _balances[_userAddress] - _amount;
+        _balances[_account] = _balances[_account] - _amount;
         _totalSupply = _totalSupply - _amount;
-        emit Transfer(_userAddress, address(0), _amount);
+        emit Transfer(_account, address(0), _amount);
     }
 
     /**
@@ -242,15 +242,15 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IToken-isFrozen}.
      */
-    function isFrozen(address _userAddress) external view override returns (bool) {
-        return frozen[_userAddress];
+    function isFrozen(address _account) external view override returns (bool) {
+        return frozen[_account];
     }
 
     /**
      *  @dev See {IToken-getFrozenTokens}.
      */
-    function getFrozenTokens(address _userAddress) external view override returns (uint256) {
-        return frozenTokens[_userAddress];
+    function getFrozenTokens(address _account) external view override returns (uint256) {
+        return frozenTokens[_account];
     }
 
     /**
@@ -396,78 +396,78 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IToken-burn}.
      */
-    function burn(address _userAddress, uint256 _amount) public override onlyAgent {
-        uint256 freeBalance = balanceOf(_userAddress) - frozenTokens[_userAddress];
+    function burn(address _account, uint256 _amount) public override onlyAgent {
+        uint256 freeBalance = balanceOf(_account) - frozenTokens[_account];
         if (_amount > freeBalance) {
             uint256 tokensToUnfreeze = _amount - (freeBalance);
-            frozenTokens[_userAddress] = frozenTokens[_userAddress] - (tokensToUnfreeze);
-            emit TokensUnfrozen(_userAddress, tokensToUnfreeze);
+            frozenTokens[_account] = frozenTokens[_account] - (tokensToUnfreeze);
+            emit TokensUnfrozen(_account, tokensToUnfreeze);
         }
-        _burn(_userAddress, _amount);
-        tokenCompliance.destroyed(_userAddress, _amount);
+        _burn(_account, _amount);
+        tokenCompliance.destroyed(_account, _amount);
     }
 
     /**
      *  @dev See {IToken-batchBurn}.
      */
-    function batchBurn(address[] calldata _userAddresses, uint256[] calldata _amounts) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            burn(_userAddresses[i], _amounts[i]);
+    function batchBurn(address[] calldata _accountes, uint256[] calldata _amounts) external override {
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            burn(_accountes[i], _amounts[i]);
         }
     }
 
     /**
      *  @dev See {IToken-setAddressFrozen}.
      */
-    function setAddressFrozen(address _userAddress, bool _freeze) public override onlyAgent {
-        frozen[_userAddress] = _freeze;
+    function setAddressFrozen(address _account, bool _freeze) public override onlyAgent {
+        frozen[_account] = _freeze;
 
-        emit AddressFrozen(_userAddress, _freeze, msg.sender);
+        emit AddressFrozen(_account, _freeze, msg.sender);
     }
 
     /**
      *  @dev See {IToken-batchSetAddressFrozen}.
      */
-    function batchSetAddressFrozen(address[] calldata _userAddresses, bool[] calldata _freeze) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            setAddressFrozen(_userAddresses[i], _freeze[i]);
+    function batchSetAddressFrozen(address[] calldata _accountes, bool[] calldata _freeze) external override {
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            setAddressFrozen(_accountes[i], _freeze[i]);
         }
     }
 
     /**
      *  @dev See {IToken-freezePartialTokens}.
      */
-    function freezePartialTokens(address _userAddress, uint256 _amount) public override onlyAgent {
-        uint256 balance = balanceOf(_userAddress);
-        require(balance >= frozenTokens[_userAddress] + _amount, 'Amount exceeds available balance');
-        frozenTokens[_userAddress] = frozenTokens[_userAddress] + (_amount);
-        emit TokensFrozen(_userAddress, _amount);
+    function freezePartialTokens(address _account, uint256 _amount) public override onlyAgent {
+        uint256 balance = balanceOf(_account);
+        require(balance >= frozenTokens[_account] + _amount, 'Amount exceeds available balance');
+        frozenTokens[_account] = frozenTokens[_account] + (_amount);
+        emit TokensFrozen(_account, _amount);
     }
 
     /**
      *  @dev See {IToken-batchFreezePartialTokens}.
      */
-    function batchFreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            freezePartialTokens(_userAddresses[i], _amounts[i]);
+    function batchFreezePartialTokens(address[] calldata _accountes, uint256[] calldata _amounts) external override {
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            freezePartialTokens(_accountes[i], _amounts[i]);
         }
     }
 
     /**
      *  @dev See {IToken-unfreezePartialTokens}.
      */
-    function unfreezePartialTokens(address _userAddress, uint256 _amount) public override onlyAgent {
-        require(frozenTokens[_userAddress] >= _amount, 'Amount should be less than or equal to frozen tokens');
-        frozenTokens[_userAddress] = frozenTokens[_userAddress] - (_amount);
-        emit TokensUnfrozen(_userAddress, _amount);
+    function unfreezePartialTokens(address _account, uint256 _amount) public override onlyAgent {
+        require(frozenTokens[_account] >= _amount, 'Amount should be less than or equal to frozen tokens');
+        frozenTokens[_account] = frozenTokens[_account] - (_amount);
+        emit TokensUnfrozen(_account, _amount);
     }
 
     /**
      *  @dev See {IToken-batchUnfreezePartialTokens}.
      */
-    function batchUnfreezePartialTokens(address[] calldata _userAddresses, uint256[] calldata _amounts) external override {
-        for (uint256 i = 0; i < _userAddresses.length; i++) {
-            unfreezePartialTokens(_userAddresses[i], _amounts[i]);
+    function batchUnfreezePartialTokens(address[] calldata _accountes, uint256[] calldata _amounts) external override {
+        for (uint256 i = 0; i < _accountes.length; i++) {
+            unfreezePartialTokens(_accountes[i], _amounts[i]);
         }
     }
 

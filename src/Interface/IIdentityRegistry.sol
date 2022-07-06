@@ -66,13 +66,13 @@ interface IIdentityRegistry {
      *  @dev Register an identity contract corresponding to a user address.
      *  Requires that the user doesn't have an identity contract already registered.
      *  This function can only be called by a wallet set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _identity The address of the user's identity contract
      *  @param _country The country of the investor
      *  emits `IdentityRegistered` event
      */
     function registerIdentity(
-        address _userAddress,
+        address _account,
         IIdentity _identity,
         uint16 _country
     ) external;
@@ -81,10 +81,10 @@ interface IIdentityRegistry {
      *  @dev Removes an user from the identity registry.
      *  Requires that the user have an identity contract already deployed that will be deleted.
      *  This function can only be called by a wallet set as agent of the smart contract
-     *  @param _userAddress The address of the user to be removed
+     *  @param _account The address of the user to be removed
      *  emits `IdentityRemoved` event
      */
-    function deleteIdentity(address _userAddress) external;
+    function deleteIdentity(address _account) external;
 
     /**
      *  @dev Replace the actual identityRegistryStorage contract with a new one.
@@ -114,36 +114,36 @@ interface IIdentityRegistry {
      *  @dev Updates the country corresponding to a user address.
      *  Requires that the user should have an identity contract already deployed that will be replaced.
      *  This function can only be called by a wallet set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _country The new country of the user
      *  emits `CountryUpdated` event
      */
-    function updateCountry(address _userAddress, uint16 _country) external;
+    function updateCountry(address _account, uint16 _country) external;
 
     /**
      *  @dev Updates an identity contract corresponding to a user address.
      *  Requires that the user address should be the owner of the identity contract.
      *  Requires that the user should have an identity contract already deployed that will be replaced.
      *  This function can only be called by a wallet set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _identity The address of the user's new identity contract
      *  emits `IdentityUpdated` event
      */
-    function updateIdentity(address _userAddress, IIdentity _identity) external;
+    function updateIdentity(address _account, IIdentity _identity) external;
 
     /**
      *  @dev function allowing to register identities in batch
      *  This function can only be called by a wallet set as agent of the smart contract
      *  Requires that none of the users has an identity contract already registered.
-     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_userAddresses.length` IS TOO HIGH,
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_accountes.length` IS TOO HIGH,
      *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
-     *  @param _userAddresses The addresses of the users
+     *  @param _accountes The addresses of the users
      *  @param _identities The addresses of the corresponding identity contracts
      *  @param _countries The countries of the corresponding investors
-     *  emits _userAddresses.length `IdentityRegistered` events
+     *  emits _accountes.length `IdentityRegistered` events
      */
     function batchRegisterIdentity(
-        address[] calldata _userAddresses,
+        address[] calldata _accountes,
         IIdentity[] calldata _identities,
         uint16[] calldata _countries
     ) external;
@@ -151,31 +151,31 @@ interface IIdentityRegistry {
     /**
      *  @dev This functions checks whether a wallet has its Identity registered or not
      *  in the Identity Registry.
-     *  @param _userAddress The address of the user to be checked.
+     *  @param _account The address of the user to be checked.
      *  @return 'True' if the address is contained in the Identity Registry, 'false' if not.
      */
-    function contains(address _userAddress) external view returns (bool);
+    function contains(address _account) external view returns (bool);
 
     /**
      *  @dev This functions checks whether an identity contract
      *  corresponding to the provided user address has the required claims or not based
      *  on the data fetched from trusted issuers registry and from the claim topics registry
-     *  @param _userAddress The address of the user to be verified.
+     *  @param _account The address of the user to be verified.
      *  @return 'True' if the address is verified, 'false' if not.
      */
-    function isVerified(address _userAddress) external view returns (bool);
+    function isVerified(address _account) external view returns (bool);
 
     /**
      *  @dev Returns the onchainID of an investor.
-     *  @param _userAddress The wallet of the investor
+     *  @param _account The wallet of the investor
      */
-    function identity(address _userAddress) external view returns (IIdentity);
+    function identity(address _account) external view returns (IIdentity);
 
     /**
      *  @dev Returns the country code of an investor.
-     *  @param _userAddress The wallet of the investor
+     *  @param _account The wallet of the investor
      */
-    function investorCountry(address _userAddress) external view returns (uint16);
+    function investorCountry(address _account) external view returns (uint16);
 
     /**
      *  @dev Returns the IdentityRegistryStorage linked to the current IdentityRegistry.

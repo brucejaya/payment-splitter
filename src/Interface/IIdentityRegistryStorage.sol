@@ -57,27 +57,27 @@ interface IIdentityRegistryStorage {
 
     /**
      *  @dev Returns the onchainID of an investor.
-     *  @param _userAddress The wallet of the investor
+     *  @param _account The wallet of the investor
      */
-    function storedIdentity(address _userAddress) external view returns (IIdentity);
+    function storedIdentity(address _account) external view returns (IIdentity);
 
     /**
      *  @dev Returns the country code of an investor.
-     *  @param _userAddress The wallet of the investor
+     *  @param _account The wallet of the investor
      */
-    function storedInvestorCountry(address _userAddress) external view returns (uint16);
+    function storedInvestorCountry(address _account) external view returns (uint16);
 
     /**
      *  @dev adds an identity contract corresponding to a user address in the storage.
      *  Requires that the user doesn't have an identity contract already registered.
      *  This function can only be called by an address set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _identity The address of the user's identity contract
      *  @param _country The country of the investor
      *  emits `IdentityStored` event
      */
     function addIdentityToStorage(
-        address _userAddress,
+        address _account,
         IIdentity _identity,
         uint16 _country
     ) external;
@@ -86,31 +86,31 @@ interface IIdentityRegistryStorage {
      *  @dev Removes an user from the storage.
      *  Requires that the user have an identity contract already deployed that will be deleted.
      *  This function can only be called by an address set as agent of the smart contract
-     *  @param _userAddress The address of the user to be removed
+     *  @param _account The address of the user to be removed
      *  emits `IdentityUnstored` event
      */
-    function removeIdentityFromStorage(address _userAddress) external;
+    function removeIdentityFromStorage(address _account) external;
 
     /**
      *  @dev Updates the country corresponding to a user address.
      *  Requires that the user should have an identity contract already deployed that will be replaced.
      *  This function can only be called by an address set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _country The new country of the user
      *  emits `CountryModified` event
      */
-    function modifyStoredInvestorCountry(address _userAddress, uint16 _country) external;
+    function modifyStoredInvestorCountry(address _account, uint16 _country) external;
 
     /**
      *  @dev Updates an identity contract corresponding to a user address.
      *  Requires that the user address should be the owner of the identity contract.
      *  Requires that the user should have an identity contract already deployed that will be replaced.
      *  This function can only be called by an address set as agent of the smart contract
-     *  @param _userAddress The address of the user
+     *  @param _account The address of the user
      *  @param _identity The address of the user's new identity contract
      *  emits `IdentityModified` event
      */
-    function modifyStoredIdentity(address _userAddress, IIdentity _identity) external;
+    function modifyStoredIdentity(address _account, IIdentity _identity) external;
 
     /**
      *  @notice Transfers the Ownership of the Identity Registry Storage to a new Owner.
