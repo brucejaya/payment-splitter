@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol';
 
-import './Roles.sol';
+import '../Roles.sol';
 
 contract OwnerRolesUpgradeable is OwnableUpgradeable
 

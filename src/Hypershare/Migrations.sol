@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 // imports here are just for testing purpose
 
-import '../Hyperbase/ClaimIssuer.sol';
-import '../Hyperbase/Identity.sol';
+import '../Hyperbase/identity/ClaimIssuer.sol';
+import '../Hyperbase/identity/Identity.sol';
 
 contract Migrations {
     address public owner;

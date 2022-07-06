@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import '../roles/AgentRole.sol';
+import '../roles/agent/AgentRole.sol';
 
 import '../../Interface/IIdentityRegistryStorage.sol';
 import '../../Interface/IIdentity.sol';

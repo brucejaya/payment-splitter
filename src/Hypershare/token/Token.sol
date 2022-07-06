@@ -11,7 +11,7 @@ import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/ICompliance.sol';
 
 import './Storage.sol';
-import '../roles/AgentRoleUpgradeable.sol';
+import '../roles/agent/AgentRoleUpgradeable.sol';
 
 contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
 

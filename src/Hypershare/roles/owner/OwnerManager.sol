@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Interface/IToken.sol';
-import '../../Interface/IIdentityRegistry.sol';
-import '../../Interface/ITrustedIssuersRegistry.sol';
-import '../../Interface/IClaimTopicsRegistry.sol';
-import '../../Interface/ICompliance.sol';
-import '../../Interface/IIdentity.sol';
-import '../../Interface/IClaimIssuer.sol';
+import '../../../Interface/IToken.sol';
+import '../../../Interface/IIdentityRegistry.sol';
+import '../../../Interface/ITrustedIssuersRegistry.sol';
+import '../../../Interface/IClaimTopicsRegistry.sol';
+import '../../../Interface/ICompliance.sol';
+import '../../../Interface/IIdentity.sol';
+import '../../../Interface/IClaimIssuer.sol';
 import './OwnerRoles.sol';
 
 contract OwnerManager is OwnerRoles {

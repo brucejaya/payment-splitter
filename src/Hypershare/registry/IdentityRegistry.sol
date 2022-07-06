@@ -9,7 +9,7 @@ import '../../Interface/ITrustedIssuersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IIdentityRegistryStorage.sol';
 
-import '../roles/AgentRole.sol';
+import '../roles/agent/AgentRole.sol';
 
 contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /// @dev Address of the ClaimTopicsRegistry Contract

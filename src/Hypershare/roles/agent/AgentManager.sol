@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Interface/IIdentity.sol';
-import '../../Interface/IToken.sol';
-import '../../Interface/IIdentityRegistry.sol';
+import '../../../Interface/IIdentity.sol';
+import '../../../Interface/IToken.sol';
+import '../../../Interface/IIdentityRegistry.sol';
 import './AgentRoles.sol';
 
 contract AgentManager is AgentRoles {
