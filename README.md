@@ -7,58 +7,57 @@ The Hypersurface Protocol primarily consists of two core components with several
 
 Full folder structure is as follows:
 
-Hypersurface (src)
-│
-│
-├── Hyperbase
-│   ├── claims
-│   ├── identity
-│   │   ├── ClaimIssuer.sol
-│   │   ├── Identity.sol
-│   │   ├── storage
-│   │   │   ├── Storage.sol
-│   │   │   └── Structs.sol
-│   │   └── version
-│   │       └── Version.sol
-│   └── subdomain
-│       └── notes.md
-│
-├── Hypershare
-│   ├── compliance
-│   │   ├── ComplianceTokenDefault.sol
-│   │   ├── ComplianceTokenRegistry.sol
-│   │   └── ComplianceToken.sol
-│   ├── registry
-│   │   ├── HolderTokenRequiredClaims.sol
-│   │   ├── IdentityRegistry.sol
-│   │   ├── IdentityRegistryStorage.sol
-│   │   └── TrustedIssuersRegistry.sol
-│   ├── roles
-│   │   ├── agent
-│   │   │   ├── AgentManager.sol
-│   │   │   ├── AgentRole.sol
-│   │   │   ├── AgentRoles.sol
-│   │   │   ├── AgentRolesUpgradeable.sol
-│   │   │   └── AgentRoleUpgradeable.sol
-│   │   ├── owner
-│   │   │   ├── OwnerManager.sol
-│   │   │   ├── OwnerRoles.sol
-│   │   │   └── OwnerRolesUpgradeable.sol
-│   │   └── Roles.sol
-│   ├── token
-│   │   ├── TokenRegistry.sol
-│   │   ├── TokenRegistryStorage.sol
-│   │   ├── Token.sol
-│   │   └── TokenStorage.sol
-│   └── wrapper
-│       ├── WrapperFactory.sol
-│       └── Wrapper.sol
-│
-├── Interface
-│   └── ...
-│
-└── Proxy
-    └── ...
+	Hypersurface (src)
+	│
+	├── Hyperbase
+	│   ├── claims
+	│   ├── identity
+	│   │   ├── ClaimIssuer.sol
+	│   │   ├── Identity.sol
+	│   │   ├── storage
+	│   │   │   ├── Storage.sol
+	│   │   │   └── Structs.sol
+	│   │   └── version
+	│   │       └── Version.sol
+	│   └── subdomain
+	│       └── notes.md
+	│
+	├── Hypershare
+	│   ├── compliance
+	│   │   ├── ComplianceTokenDefault.sol
+	│   │   ├── ComplianceTokenRegistry.sol
+	│   │   └── ComplianceToken.sol
+	│   ├── registry
+	│   │   ├── HolderTokenRequiredClaims.sol
+	│   │   ├── IdentityRegistry.sol
+	│   │   ├── IdentityRegistryStorage.sol
+	│   │   └── TrustedIssuersRegistry.sol
+	│   ├── roles
+	│   │   ├── agent
+	│   │   │   ├── AgentManager.sol
+	│   │   │   ├── AgentRole.sol
+	│   │   │   ├── AgentRoles.sol
+	│   │   │   ├── AgentRolesUpgradeable.sol
+	│   │   │   └── AgentRoleUpgradeable.sol
+	│   │   ├── owner
+	│   │   │   ├── OwnerManager.sol
+	│   │   │   ├── OwnerRoles.sol
+	│   │   │   └── OwnerRolesUpgradeable.sol
+	│   │   └── Roles.sol
+	│   ├── token
+	│   │   ├── TokenRegistry.sol
+	│   │   ├── TokenRegistryStorage.sol
+	│   │   ├── Token.sol
+	│   │   └── TokenStorage.sol
+	│   └── wrapper
+	│       ├── WrapperFactory.sol
+	│       └── Wrapper.sol
+	│
+	├── Interface
+	│   └── ...
+	│
+	└── Proxy
+		└── ...
 
 ### 1. Hypershare 
 Hypershare is the home of all things **equity** related. 
