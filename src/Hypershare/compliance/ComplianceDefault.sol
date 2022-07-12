@@ -62,36 +62,6 @@ contract ComplianceDefault is ICompliance, Ownable {
     }
 
     /**
-     *  @dev See {ICompliance-isTokenAgent}.
-     */
-    function bindToken(
-		uint256 id
-	)
-		external
-		override
-		onlyOwner
-	{
-        require(!_tokensBound[id], 'This token is already bound');
-        _tokensBound[id] = true;
-        emit TokenBound(id);
-    }
-
-    /**
-     *  @dev See {ICompliance-isTokenAgent}.
-     */
-    function unbindToken(
-		uint256 id
-	)
-		external
-		override
-		onlyOwner
-	{
-        require(_tokensBound[id], 'This token is not bound yet');
-        _tokensBound[id] = false;
-        emit TokenUnbound(id);
-    }
-
-    /**
      *  @dev See {ICompliance-canTransfer}.
      */
     function canTransfer(

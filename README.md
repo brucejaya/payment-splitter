@@ -3,60 +3,53 @@
 Welcome to Hypersurface. A protocol for lightweight, accessible and open digital equity on the blockchain. Hypersurface makes the issuance, management, and transfer of digital equity as easy as sending email. 
 
 ## Structure
-The Hypersurface Protocol primarily consists of two core components with several sub-components split into folders.
+The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders.
 
 Full folder structure is as follows:
 
 	Hypersurface (src)
-	│
 	├── Hyperbase
 	│   ├── claims
-	│   ├── identity
 	│   │   ├── ClaimVerifier.sol
-	│   │   ├── Identity.sol
-	│   │   ├── storage
-	│   │   │   ├── Storage.sol
-	│   │   │   └── Structs.sol
-	│   │   └── version
-	│   │       └── Version.sol
-	│   └── subdomain
-	│       └── notes.md
-	│
+	│   │   └── ClaimVerifiersRegistry.sol
+	│   └── identity
+	│       ├── IdentityRegistry.sol
+	│       ├── IdentityRegistryStorage.sol
+	│       ├── Identity.sol
+	│       ├── storage
+	│       │   ├── Storage.sol
+	│       │   └── Structs.sol
+	│       └── version
+	│           └── Version.sol
 	├── Hypershare
 	│   ├── compliance
-	│   │   ├── ComplianceTokenDefault.sol
-	│   │   ├── Compliance.sol
-	│   │   └── ComplianceToken.sol
-	│   ├── holder
 	│   │   ├── ComplianceClaimsRequired.sol
-	│   │   ├── IdentityRegistry.sol
-	│   │   ├── IdentityRegistryStorage.sol
-	│   │   └── TrustedIssuersRegistry.sol
-	│   ├── roles
-	│   │   ├── agent
-	│   │   │   ├── AgentManager.sol
-	│   │   │   ├── AgentRole.sol
-	│   │   │   ├── AgentRoles.sol
-	│   │   │   ├── AgentRolesUpgradeable.sol
-	│   │   │   └── AgentRoleUpgradeable.sol
-	│   │   ├── owner
-	│   │   │   ├── OwnerManager.sol
-	│   │   │   ├── OwnerRoles.sol
-	│   │   │   └── OwnerRolesUpgradeable.sol
-	│   │   └── Roles.sol
+	│   │   ├── ComplianceDefault.sol
+	│   │   └── Compliance.sol
 	│   ├── token
 	│   │   ├── TokenRegistry.sol
-	│   │   ├── TokenRegistryStorage.sol
-	│   │   ├── Token.sol
-	│   │   └── TokenStorage.sol
+	│   │   └── TokenRegistryStorage.sol
 	│   └── wrapper
-	│       ├── WrapperFactory.sol
 	│       └── Wrapper.sol
-	│
+	├── Role
+	│	├── agent
+	│	│   ├── AgentManager.sol
+	│	│   ├── AgentRole.sol
+	│	│   ├── AgentRoles.sol
+	│	│   ├── AgentRolesUpgradeable.sol
+	│	│   └── AgentRoleUpgradeable.sol
+	│	├── owner
+	│	│   ├── OwnerManager.sol
+	│	│   ├── OwnerRoles.sol
+	│	│   └── OwnerRolesUpgradeable.sol
+	│	└── Roles.sol
 	├── Interface
+	│   ├── ...
+	│   ├── ...
 	│   └── ...
-	│
 	└── Proxy
+		├── ...
+		├── ...
 		└── ...
 
 ### 1. Hypershare 

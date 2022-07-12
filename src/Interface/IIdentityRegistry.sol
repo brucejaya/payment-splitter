@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import './IClaimVerifiersRegistry.sol';
-import './IClaimTopicsRegistry.sol';
+import './IComplianceClaimsRequired.sol';
 import './IIdentityRegistryStorage.sol';
 import './IClaimVerifier.sol';
 import './IIdentity.sol';
@@ -14,7 +14,7 @@ interface IIdentityRegistry {
      *  the event is emitted by the IdentityRegistry constructor
      *  `claimTopicsRegistry` is the address of the Claim Topics Registry contract
      */
-    event ClaimTopicsRegistrySet(address indexed claimTopicsRegistry);
+    event ComplianceClaimsRequiredSet(address indexed claimTopicsRegistry);
 
     /**
      *  this event is emitted when the IdentityRegistryStorage has been set for the IdentityRegistry
@@ -26,9 +26,9 @@ interface IIdentityRegistry {
     /**
      *  this event is emitted when the ClaimTopicsRegistry has been set for the IdentityRegistry
      *  the event is emitted by the IdentityRegistry constructor
-     *  `trustedIssuersRegistry` is the address of the Trusted Issuers Registry contract
+     *  `trustedVerifiersRegistry` is the address of the Trusted Verifiers Registry contract
      */
-    event TrustedIssuersRegistrySet(address indexed trustedIssuersRegistry);
+    event ClaimVerifiersRegistrySet(address indexed trustedVerifiersRegistry);
 
     /**
      *  this event is emitted when an Identity is registered into the Identity Registry.
@@ -71,11 +71,7 @@ interface IIdentityRegistry {
      *  @param _country The country of the holder
      *  emits `IdentityRegistered` event
      */
-    function registerIdentity(
-        address _account,
-        IIdentity _identity,
-        uint16 _country
-    ) external;
+    function registerIdentity(address _account, IIdentity _identity, uint16 _country) external;
 
     /**
      *  @dev Removes an user from the identity registry.
@@ -97,18 +93,18 @@ interface IIdentityRegistry {
     /**
      *  @dev Replace the actual claimTopicsRegistry contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _claimTopicsRegistry The address of the new claim Topics Registry
-     *  emits `ClaimTopicsRegistrySet` event
+     *  @param _complianceClaimsRequired The address of the new claim Topics Registry
+     *  emits `ComplianceClaimsRequired` event
      */
-    function setClaimTopicsRegistry(address _claimTopicsRegistry) external;
+    function setComplianceClaimsRequired(address _complianceClaimsRequired) external;
 
     /**
-     *  @dev Replace the actual trustedIssuersRegistry contract with a new one.
+     *  @dev Replace the actual trustedVerifiersRegistry contract with a new one.
      *  This function can only be called by the wallet set as owner of the smart contract
-     *  @param _trustedIssuersRegistry The address of the new Trusted Issuers Registry
-     *  emits `TrustedIssuersRegistrySet` event
+     *  @param _trustedVerifiersRegistry The address of the new Trusted Verifiers Registry
+     *  emits `ClaimVerifiersRegistrySet` event
      */
-    function setTrustedIssuersRegistry(address _trustedIssuersRegistry) external;
+    function setClaimVerifiersRegistry(address _trustedVerifiersRegistry) external;
 
     /**
      *  @dev Updates the country corresponding to a user address.
@@ -180,17 +176,17 @@ interface IIdentityRegistry {
     /**
      *  @dev Returns the IdentityRegistryStorage linked to the current IdentityRegistry.
      */
-    function identityStorage() external view returns (IIdentityRegistryStorage);
+    function identityRegistryStorage() external view returns (IIdentityRegistryStorage);
 
     /**
-     *  @dev Returns the TrustedIssuersRegistry linked to the current IdentityRegistry.
+     *  @dev Returns the ClaimVerifiersRegistry linked to the current IdentityRegistry.
      */
-    function issuersRegistry() external view returns (IClaimVerifiersRegistry);
+    function claimVerifiersRegistry() external view returns (IClaimVerifiersRegistry);
 
     /**
      *  @dev Returns the ClaimTopicsRegistry linked to the current IdentityRegistry.
      */
-    function topicsRegistry() external view returns (IClaimTopicsRegistry);
+    function complianceClaimsRequired() external view returns (IComplianceClaimsRequired);
 
     /**
      *  @notice Transfers the Ownership of the Identity Registry to a new Owner.

@@ -79,36 +79,29 @@ interface ICompliance {
      *  default compliance always returns true
      *  READ ONLY FUNCTION, this function cannot be used to increment
      *  counters, emit events, ...
-     *  @param _from The address of the sender
-     *  @param _to The address of the receiver
-     *  @param _amount The amount of tokens involved in the transfer
+     *  @param to The address of the receiver
+     *  @param id The id of the token
+     *  @param amount The amount to transfer
+     *  @param data The data
      */
-    function canTransfer(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) external view returns (bool);
+    function canTransfer(address to, uint256 id, uint256 amount, bytes memory data) external view override returns (bool);
 
     /**
-     *  @dev function called whenever tokens are transferred
-     *  from one wallet to another
+     *  @dev function called whenever tokens are transferred from one wallet to another
      *  this function can update state variables in the compliance contract
      *  these state variables being used by `canTransfer` to decide if a transfer
      *  is compliant or not depending on the values stored in these state variables and on
      *  the parameters of the compliance smart contract
-     *  @param _from The address of the sender
-     *  @param _to The address of the receiver
-     *  @param _amount The amount of tokens involved in the transfer
+     *  @param from The address of the sender
+     *  @param to The address of the receiver
+     *  @param id The token id
+     *  @param amount The amount of tokens involved in the transfer
+     *  @param data The data field
      */
-    function transferred(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) external;
+    function transferred(address from, address to, uint256 id, uint256 amount, bytes memory data) external;
 
     /**
-     *  @dev function called whenever tokens are created
-     *  on a wallet
+     *  @dev function called whenever tokens are created on a wallet
      *  this function can update state variables in the compliance contract
      *  these state variables being used by `canTransfer` to decide if a transfer
      *  is compliant or not depending on the values stored in these state variables and on
@@ -116,7 +109,7 @@ interface ICompliance {
      *  @param _to The address of the receiver
      *  @param _amount The amount of tokens involved in the transfer
      */
-    function created(address _to, uint256 _amount) external;
+    function created(address to, uint256 id, uint256 amount, bytes memory data) external;
 
     /**
      *  @dev function called whenever tokens are destroyed

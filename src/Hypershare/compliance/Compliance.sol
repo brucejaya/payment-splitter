@@ -112,7 +112,7 @@ contract Compliance is ICompliance, Ownable  {
         onlyOwner
     {
         _holderLimit[id] = holderLimit;
-        emit HolderLimitSet(holderLimit);
+        emit HolderLimitSet(holderLimit, id);
     }
 
     /**
@@ -262,7 +262,7 @@ contract Compliance is ICompliance, Ownable  {
         external
         override
     {
-        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
+        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         updateShareholders(to, id);
         pruneShareholders(from, id);
     }
@@ -280,7 +280,7 @@ contract Compliance is ICompliance, Ownable  {
         external
         override
     {
-        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
+        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         require(amount > 0, 'No token created');
         updateShareholders(to, id);
     }
@@ -297,7 +297,7 @@ contract Compliance is ICompliance, Ownable  {
         external
         override
     {
-        require(msg.sender == _tokenRegistry, "Only token contract can call this function");
+        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         pruneShareholders(from, id);
     }
 

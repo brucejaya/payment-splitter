@@ -4,68 +4,85 @@ pragma solidity ^0.8.0;
 import './IIdentity.sol';
 
 interface IIdentityRegistryStorage {
-    /**
-     *  this event is emitted when an Identity is registered into the storage contract.
-     *  the event is emitted by the 'registerIdentity' function
-     *  `holderAddress` is the address of the holder's wallet
-     *  `identity` is the address of the Identity smart contract (onchainID)
-     */
-    event IdentityStored(address indexed holderAddress, IIdentity indexed identity);
+
+    // TODO code comments
+    event IdentityStored(address _account, IIdentity _identity);
+    event IdentityModified(IIdentity _oldIdentity, IIdentity _identity);
+    event CountryModified(address _account, uint16 _country);
+    event IdentityUnstored(address _account, IIdentity _identity);
+    event IdentityRegistryBound(address _identityRegistry);
+    event IdentityRegistryUnbound(address _identityRegistry);
+
 
     /**
-     *  this event is emitted when an Identity is removed from the storage contract.
-     *  the event is emitted by the 'deleteIdentity' function
-     *  `holderAddress` is the address of the holder's wallet
-     *  `identity` is the address of the Identity smart contract (onchainID)
+     *  this event is emitted when the HolderRegistry has been set for the token
+     *  the event is emitted by the token constructor and by the setHolderRegistry function
+     *  `_holderRegistry` is the address of the Identity Registry of the token
      */
-    event IdentityUnstored(address indexed holderAddress, IIdentity indexed identity);
+    event IdentityRegistryAdded(address indexed _holderRegistry);
 
     /**
-     *  this event is emitted when an Identity has been updated
-     *  the event is emitted by the 'updateIdentity' function
-     *  `oldIdentity` is the old Identity contract's address to update
-     *  `newIdentity` is the new Identity contract's
+     *  this event is emitted when the Compliance has been set for the token
+     *  the event is emitted by the token constructor and by the setCompliance function
+     *  `_compliance` is the address of the Compliance contract of the token
      */
-    event IdentityModified(IIdentity indexed oldIdentity, IIdentity indexed newIdentity);
+    event ComplianceAdded(address indexed _compliance);
 
     /**
-     *  this event is emitted when an Identity's country has been updated
-     *  the event is emitted by the 'updateCountry' function
-     *  `holderAddress` is the address on which the country has been updated
-     *  `country` is the numeric code (ISO 3166-1) of the new country
+     *  this event is emitted when an holder successfully recovers his tokens
+     *  the event is emitted by the recoveryAddress function
+     *  `_lostWallet` is the address of the wallet that the holder lost access to
+     *  `_newWallet` is the address of the wallet that the holder provided for the recovery
+     *  `_holderIdentity` is the address of the Identity of the holder who asked for a recovery
      */
-    event CountryModified(address indexed holderAddress, uint16 indexed country);
+    event RecoverySuccess(address _lostWallet, address _newWallet, address _holderIdentity);
 
     /**
-     *  this event is emitted when an Identity Registry is bound to the storage contract
-     *  the event is emitted by the 'addIdentityRegistry' function
-     *  `identityRegistry` is the address of the identity registry added
+     *  this event is emitted when the wallet of an holder is frozen or unfrozen
+     *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
+     *  `_isFrozen` is the freezing status of the wallet
+     *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
+     *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
+     *  `_owner` is the address of the agent who called the function to freeze the wallet
      */
-    event IdentityRegistryBound(address indexed identityRegistry);
+    event AddressFrozen(address indexed _account, bool indexed _isFrozen, address indexed _owner);
 
     /**
-     *  this event is emitted when an Identity Registry is unbound from the storage contract
-     *  the event is emitted by the 'removeIdentityRegistry' function
-     *  `identityRegistry` is the address of the identity registry removed
+     *  this event is emitted when a certain amount of tokens is frozen on a wallet
+     *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
+     *  `_amount` is the amount of tokens that are frozen
      */
-    event IdentityRegistryUnbound(address indexed identityRegistry);
+    event TokensFrozen(address indexed _account, uint256 _amount);
 
     /**
-     *  @dev Returns the identity registries linked to the storage contract
+     *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
+     *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
+     *  `_account` is the wallet of the holder that is concerned by the freezing status
+     *  `_amount` is the amount of tokens that are unfrozen
      */
-    function linkedIdentityRegistries() external view returns (address[] memory);
+    event TokensUnfrozen(address indexed _account, uint256 _amount);
 
     /**
-     *  @dev Returns the onchainID of an holder.
-     *  @param _account The wallet of the holder
+     *  this event is emitted when the token is paused
+     *  the event is emitted by the pause function
+     *  `_account` is the address of the wallet that called the pause function
      */
-    function storedIdentity(address _account) external view returns (IIdentity);
+    event Paused(address _account, uint256 _id);
 
     /**
-     *  @dev Returns the country code of an holder.
-     *  @param _account The wallet of the holder
+     *  this event is emitted when the token is unpaused
+     *  the event is emitted by the unpause function
+     *  `_account` is the address of the wallet that called the unpause function
      */
-    function storedHolderCountry(address _account) external view returns (uint16);
+    event Unpaused(address _account, uint256 _id);
+
+    // TODO comments
+    function storedIdentity(address _account) external view override returns (IIdentity);
+
+    // TODO comments 
+    function storedHolderCountry(address _account) external view override returns (uint16);
 
     /**
      *  @dev adds an identity contract corresponding to a user address in the storage.
@@ -76,11 +93,7 @@ interface IIdentityRegistryStorage {
      *  @param _country The country of the holder
      *  emits `IdentityStored` event
      */
-    function addIdentityToStorage(
-        address _account,
-        IIdentity _identity,
-        uint16 _country
-    ) external;
+    function addIdentityToStorage(address _account, IIdentity _identity, uint16 _country) external;
 
     /**
      *  @dev Removes an user from the storage.

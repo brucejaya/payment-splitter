@@ -73,65 +73,61 @@ interface ITokenRegistry is IERC1155 {
      *  this event is emitted when the token is paused
      *  the event is emitted by the pause function
      *  `_account` is the address of the wallet that called the pause function
+     *  `_id` The token id
      */
-    event Paused(address _account);
+    event Paused(address _account, uint256 _id);
 
     /**
      *  this event is emitted when the token is unpaused
      *  the event is emitted by the unpause function
      *  `_account` is the address of the wallet that called the unpause function
+     *  `_id` The token id
      */
-    event Unpaused(address _account);
+    event Unpaused(address _account, uint256 _id);
 
     /**
-     *  @dev TODO
+     * @dev Returns the total supply of the token.
      */
     function totalSupply(uint256 id) external view override returns (uint256);
     
     /**
-     *  @dev See {ITokenRegistry-Identity}.
+     * @dev Returns the address of the Hyperbase identity of the token.
+     * The Hyperbase of the token gives all the information available
+     * about the token and is managed by the token issuer or his agent.
      */
     function Identity() external view override returns (address);
+
     /**
-     *  @dev See {ITokenRegistry-version}.
-     */
-    function version() external view override returns (string memory);
-    
-    /**
-     *  @dev See {ITokenRegistry-identityRegistry}.
+     *  @dev Returns the Identity Registry linked to the token
      */
     function identityRegistry() external view override returns (IIdentityRegistry);
+
     /**
-     *  @dev See {ITokenRegistry-compliance}.
+     *  @dev Returns the Identity Registry linked to the token
      */
     function compliance() external view override returns (ICompliance);
+  
     /**
-     *  @dev See {ITokenRegistry-paused}.
+     * @dev Returns true if the contract is paused, and false otherwise.
      */
-    function paused() external view override returns (bool);
+    function paused(uint256 id) external view override returns (bool);
     
     /**
-     *  @dev See {ITokenRegistry-Wrapper}.
+     *  @dev Returns the freezing status of a wallet
+     *  if isFrozen returns `true` the wallet is frozen
+     *  if isFrozen returns `false` the wallet is not frozen
+     *  isFrozen returning `true` doesn't mean that the balance is free, tokens could be blocked by
+     *  a partial freeze or the whole token could be blocked by pause
+     *  @param _userAddress the address of the wallet on which isFrozen is called
      */
-    function Wrapper(
-        uint256 id
-    ) external view override returns (address);
+    function isFrozen(address account, uint256 id) external view override returns (bool);
 
     /**
-     *  @dev See {ITokenRegistry-isFrozen}.
+     *  @dev Returns the amount of tokens that are partially frozen on a wallet
+     *  the amount of frozen tokens is always <= to the total balance of the wallet
+     *  @param _userAddress the address of the wallet on which getFrozenTokens is called
      */
-    function isFrozen(
-        address account,
-        uint256 id
-    ) external view override returns (bool);
-
-    /**
-     *  @dev See {ITokenRegistry-getFrozenTokens}.
-     */
-    function getFrozenTokens(
-        address account,
-        uint256 id     
-    ) external view override returns (uint256);
+    function getFrozenTokens(address account, uint256 id) external view override returns (uint256);
     
     /**
      * @dev Sets a new URI for all token types, by relying on the token type ID
@@ -152,58 +148,86 @@ interface ITokenRegistry is IERC1155 {
      * Because these URIs cannot be meaningfully represented by the {URI} event,
      * this function emits no events.
      */
-    function setURI(
-        string memory uri
-    ) internal virtual;
+    function setURI(string memory uri) external;
+
     /**
+     *  TODO
      *  @dev See {ITokenRegistry-setIdentity}.
      */
     function setIdentity(address Identity) external override;
 
     /**
-     *  @dev See {ITokenRegistry-pause}.
+     *  @dev pauses the token contract, when contract is paused investors cannot transfer tokens anymore
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits a `Paused` event
      */
-    function pause() external override;
-    /**
-     *  @dev See {ITokenRegistry-unpause}.
-     */
-    function unpause() external override;
-    
-    /**
-     *  @dev See {ITokenRegistry-setIdentityRegistry}.
-     */
-    function setIdentityRegistry(address identityRegistryAddress) external override;
+    function pause(uint256 id) external;
 
     /**
-     *  @dev See {ITokenRegistry-setCompliance}.
+     *  @dev unpauses the token contract, when contract is unpaused investors can transfer tokens
+     *  if their wallet is not blocked & if the amount to transfer is <= to the amount of free tokens
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits an `Unpaused` event
+     */
+    function unpause(uint256 id) external;
+
+    /**
+     *  @dev sets the Identity Registry for the token
+     *  @param _identityRegistry the address of the Identity Registry to set
+     *  Only the owner of the token smart contract can call this function
+     *  emits an `IdentityRegistryAdded` event
+     */
+    function setIdentityRegistry(address identityRegistry) external override;
+
+    /**
+     *  @dev sets the compliance contract of the token
+     *  @param _compliance the address of the compliance contract to set
+     *  Only the owner of the token smart contract can call this function
+     *  emits a `ComplianceAdded` event
      */
     function setCompliance(address complianceAddress) external override;
     
     /**
-     *  @dev See {ITokenRegistry-transferOwnershipOnTokenContract}.
+     *  @dev transfers the ownership of the token smart contract
+     *  @param _newOwner the address of the new token smart contract owner
+     *  This function can only be called by the owner of the token
+     *  emits an `OwnershipTransferred` event
      */
-    function transferOwnershipOnTokenContract(address newOwner) external override;
+    function transferOwnershipOnTokenContract(address _newOwner) external;
+    
+    /**
+     *  @dev adds an agent to the token smart contract
+     *  @param _agent the address of the new agent of the token smart contract
+     *  This function can only be called by the owner of the token
+     *  emits an `AgentAdded` event
+     */
+    function addAgentOnTokenContract(address _agent) external;
 
     /**
-     *  @dev See {ITokenRegistry-addAgentOnTokenContract}.
+     *  @dev remove an agent from the token smart contract
+     *  @param _agent the address of the agent to remove
+     *  This function can only be called by the owner of the token
+     *  emits an `AgentRemoved` event
      */
-    function addAgentOnTokenContract(address agent) external override;
+    function removeAgentOnTokenContract(address _agent) external;
 
     /**
-     *  @dev See {ITokenRegistry-removeAgentOnTokenContract}.
+     *  @dev force a transfer of tokens between 2 whitelisted wallets
+     *  In case the `from` address has not enough free tokens (unfrozen tokens)
+     *  but has a total balance higher or equal to the `amount`
+     *  the amount of frozen tokens is reduced in order to have enough free tokens
+     *  to proceed the transfer, in such a case, the remaining balance on the `from`
+     *  account is 100% composed of frozen tokens post-transfer.
+     *  Require that the `to` address is a verified address,
+     *  @param _from The address of the sender
+     *  @param _to The address of the receiver
+     *  @param _amount The number of tokens to transfer
+     *  @return `true` if successful and revert if unsuccessful
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits a `TokensUnfrozen` event if `_amount` is higher than the free balance of `_from`
+     *  emits a `Transfer` event
      */
-    function removeAgentOnTokenContract(address agent) external override;
-
-    /**
-     *  @dev See {ITokenRegistry-forcedTransferFrom}.
-     */
-    function forcedTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public override returns (bool);
+    function forcedTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) external returns (bool);
 
     /**
      * @dev Transfers `amount` tokens of token type `id` from `from` to `to`.
@@ -217,108 +241,121 @@ interface ITokenRegistry is IERC1155 {
      * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
      * acceptance magic value.
      */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) internal virtual;
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data) external;
 
     /**
-     *  @dev See {ITokenRegistry-batchForcedTransfer}.
+     *  @dev function allowing to issue forced transfers in batch
+     *  Require that `amounts[i]` should not exceed available balance of `_fromList[i]`.
+     *  Require that the `_toList` addresses are all verified addresses
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_fromList.length` IS TOO HIGH,
+     *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
+     *  @param _fromList The addresses of the senders
+     *  @param _toList The addresses of the receivers
+     *  @param amounts The number of tokens to transfer to the corresponding receiver
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits `TokensUnfrozen` events if `amounts[i]` is higher than the free balance of `_fromList[i]`
+     *  emits _fromList.length `Transfer` events
      */
-    function batchForcedTransfer(
-        address[] memory fromList,
-        address[] memory toList,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes[] memory dataList
-    ) external override;
+    function batchForcedTransfer(address[] memory fromList, address[] memory toList, uint256[] memory ids, uint256[] memory amounts, bytes[] memory dataList) external override;
 
 
     /**
-     *  @dev See {ITokenRegistry-mint}.
+     *  @dev mint tokens on a wallet
+     *  Improved version of default mint method. Tokens can be minted
+     *  to an address if only it is a verified address as per the security token.
+     *  @param to Address to mint the tokens to.
+     *  @param id Token id.
+     *  @param amount Amount of tokens to mint.
+     *  @param data Data field
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits a `Transfer` event
      */
-    function mint(
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) public override;
+    function mint(address to, uint256 id, uint256 amount, bytes memory data) external;
+
+ 
+    /**
+     *  @dev function allowing to mint tokens in batch
+     *  Require that the `_toList` addresses are all verified addresses
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_toList.length` IS TOO HIGH,
+     *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
+     *  @param accounts The addresses of the receivers
+     *  @param ids The token ids
+     *  @param amounts The number of tokens to mint to the corresponding receiver
+     *  @param dataList of the corresponding data
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits _toList.length `Transfer` events
+     */
+    function mintBatch(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts, bytes[] memory dataList) external;
+
 
     /**
-     *  @dev See {ITokenRegistry-batchMint}.
+     *  this event is emitted when the wallet of an investor is frozen or unfrozen
+     *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
+     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_isFrozen` is the freezing status of the wallet
+     *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
+     *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
+     *  `_owner` is the address of the agent who called the function to freeze the wallet
      */
-    function batchMint(
-        address[] memory fromList,
-        address[] memory toList,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes[] memory dataList
-    ) public override;
+    function setAddressFrozen(address account, uint256 id, bool freeze) external;
 
 
     /**
-     *  @dev See {ITokenRegistry-setAddressFrozen}.
+     *  @dev function allowing to set frozen addresses in batch
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `accounts.length` IS TOO HIGH,
+     *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
+     *  @param accounts The addresses for which to update frozen status
+     *  @param ids The ids of the tokens to freeze
+     *  @param freeze Frozen status of the corresponding address
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits accounts.length `AddressFrozen` events
      */
-    function setAddressFrozen(
-        address account,
-        uint256 id,
-        bool freeze
-    ) public override;
+    function batchSetAddressFrozen(address[] memory accounts, uint256[] memory ids, bool[] memory freeze) external override;
 
+  
+    /**
+     *  this event is emitted when a certain amount of tokens is frozen on a wallet
+     *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
+     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_amount` is the amount of tokens that are frozen
+     */
+    function freezePartialTokens(address account, uint256 id, uint256 amount) external;
+
+
+    /**
+     *  @dev function allowing to freeze tokens partially in batch
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `accounts.length` IS TOO HIGH,
+     *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
+     *  @param accounts The addresses on which tokens need to be frozen
+     *  @param ids  of tokens to freeze on the corresponding address
+     *  @param amounts the amount of tokens to freeze on the corresponding address
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits accounts.length `TokensFrozen` events
+     */
+    function batchFreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external override;
+
+
+    /**
+     *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
+     *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
+     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `_amount` is the amount of tokens that are unfrozen
+     */
+    function unfreezePartialTokens(address account, uint256 id, uint256 amount) external;
+
+
+    /**
+     *  @dev function allowing to unfreeze tokens partially in batch
+     *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `accounts.length` IS TOO HIGH,
+     *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
+     *  @param accounts The addresses on which tokens need to be unfrozen
+     *  @param ids the amount of tokens to unfreeze on the corresponding address
+     *  @param amounts the amount of tokens to unfreeze on the corresponding address
+     *  This function can only be called by a wallet set as agent of the token
+     *  emits accounts.length `TokensUnfrozen` events
+     */
+    function batchUnfreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external override;
     
-    /**
-     *  @dev See {ITokenRegistry-batchSetAddressFrozen}.
-     */
-    function batchSetAddressFrozen(
-        address[] memory accounts,
-        uint256[] memory ids,
-        bool[] memory freeze
-    ) external override;
-
-    /**
-     *  @dev See {ITokenRegistry-freezePartialTokens}.
-     */
-    function freezePartialTokens(
-        address account,
-        uint256 id,
-        uint256 amount
-    ) public override;
-    /**
-     *  @dev See {ITokenRegistry-batchFreezePartialTokens}.
-     */
-    function batchFreezePartialTokens(
-        address[] memory accounts,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    ) external override;
-
-    /**
-     *  @dev See {ITokenRegistry-unfreezePartialTokens}.
-     */
-    function unfreezePartialTokens(
-        address account,
-        uint256 id,
-        uint256 amount
-    ) public override;
-
-    /**
-     *  @dev See {ITokenRegistry-batchUnfreezePartialTokens}.
-     */
-    function batchUnfreezePartialTokens(
-        address[] memory accounts,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    ) external override;
-    
-    // -------------------------------------------------------------------------------------------------------------done
-    // -------------------------------------------------------------------------------------------------------------done
-    // -------------------------------------------------------------------------------------------------------------done
-    // -------------------------------------------------------------------------------------------------------------done
-
-
 
     /**
      * @dev Destroys `amount` tokens of token type `id` from `from`
@@ -328,11 +365,9 @@ interface ITokenRegistry is IERC1155 {
      * - `from` cannot be the zero address.
      * - `from` must have at least `amount` tokens of token type `id`.
      */
-    function burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) internal virtual;
+    function burn(address from, uint256 id, uint256 amount) external;
+    
+    
     /**
      * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {burn}.
      *
@@ -340,111 +375,10 @@ interface ITokenRegistry is IERC1155 {
      *
      * - `ids` and `amounts` must have the same length.
      */
-    function burnBatch(
-        address from,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    ) internal virtual;
+    function burnBatch(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external;
 
 
-    /**
-     *  @dev See {ITokenRegistry-recoveryAddress}.
-     */
-    function recoveryAddress(
-        address lostWallet,
-        address newWallet,
-        uint256 id,
-        address holderIdentity,
-        bytes memory data
-    ) external override returns (bool);
+    // TODO
+    function recoveryAddress(address lostWallet, address newWallet, uint256 id, address holderIdentity, bytes memory data) external override returns (bool);
 
-
-    /**
-     * @dev Approve `operator` to operate on all of `owner` tokens
-     *
-     * Emits a {ApprovalForAll} event.
-     */
-    function setApprovalForAll(
-        address account,
-        address operator,
-        bool approved
-    ) internal virtual;
-
-    /**
-     * @dev Hook that is called before any token transfer. This includes minting
-     * and burning, as well as batched variants.
-     *
-     * The same hook is called on both single and batched variants. For single
-     * transfers, the length of the `id` and `amount` arrays will be 1.
-     *
-     * Calling conditions (for each `id` and `amount` pair):
-     *
-     * - When `from` and `to` are both non-zero, `amount` of ``from``'s tokens
-     * of token type `id` will be  transferred to `to`.
-     * - When `from` is zero, `amount` tokens of token type `id` will be minted
-     * for `to`.
-     * - when `to` is zero, `amount` of ``from``'s tokens of token type `id`
-     * will be burned.
-     * - `from` and `to` are never both zero.
-     * - `ids` and `amounts` have the same, non-zero length.
-     *
-     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
-     */
-    function beforeTokenTransfer(
-        address operator,
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual;
-
-    /**
-     * @dev Hook that is called after any token transfer. This includes minting
-     * and burning, as well as batched variants.
-     *
-     * The same hook is called on both single and batched variants. For single
-     * transfers, the length of the `id` and `amount` arrays will be 1.
-     *
-     * Calling conditions (for each `id` and `amount` pair):
-     *
-     * - When `from` and `to` are both non-zero, `amount` of ``from``'s tokens
-     * of token type `id` will be  transferred to `to`.
-     * - When `from` is zero, `amount` tokens of token type `id` will be minted
-     * for `to`.
-     * - when `to` is zero, `amount` of ``from``'s tokens of token type `id`
-     * will be burned.
-     * - `from` and `to` are never both zero.
-     * - `ids` and `amounts` have the same, non-zero length.
-     *
-     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
-     */
-    function afterTokenTransfer(
-        address operator,
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) internal virtual;
-
-    function doSafeTransferAcceptanceCheck(
-        address operator,
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) private;
-
-    function doSafeBatchTransferAcceptanceCheck(
-        address operator,
-        address from,
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) private;
-
-    function asSingletonArray(uint256 element) private pure returns (uint256[] memory);
 }

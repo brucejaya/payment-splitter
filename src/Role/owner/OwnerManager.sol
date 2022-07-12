@@ -133,7 +133,7 @@ contract OwnerManager is OwnerRoles {
     )
         internal
         pure
-        returns (bytes4 result)
+        returns (bytes4 result) 
     {
         if (callData.length >= 4) {
         // NOTE: Read the first word of the interaction's calldata. The
@@ -143,58 +143,17 @@ contract OwnerManager is OwnerRoles {
         // <https://docs.soliditylang.org/en/v0.7.6/abi-spec.html#encoding-of-indexed-event-parameters>
         // <https://docs.soliditylang.org/en/v0.7.6/assembly.html#access-to-external-variables-functions-and-libraries>
         // solhint-disable-next-line no-inline-assembly
-            assembly {
-                result := calldataload(callData.offset)
-                }
+        assembly {
+            result := calldataload(callData.offset)
             }
         }
-
-    /**
-     *  @dev calls the `setName` function on the tokenRegistry contract
-     *  OwnerManager has to be set as owner on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-setName}.
-     *  Requires that `_identity` is set as TokenInfoManager on the OwnerManager contract
-     *  Requires that msg.sender is an ACTION KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
-    function callSetTokenName(
-        string calldata _name, 
-        IIdentity _identity
-    ) 
-        external 
-    {
-        require(
-            isTokenInfoManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
-            'Role: Sender is NOT Token Information Manager'
-        );
-        tokenRegistry.setName(_name);
     }
 
-    /**
-     *  @dev calls the `setSymbol` function on the tokenRegistry contract
-     *  OwnerManager has to be set as owner on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-setSymbol}.
-     *  Requires that `_identity` is set as TokenInfoManager on the OwnerManager contract
-     *  Requires that msg.sender is an ACTION KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
-    function callSetTokenSymbol(
-        string calldata _symbol, 
-        IIdentity _identity
-    )
-        external
-    {
-        require(
-            isTokenInfoManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
-            'Role: Sender is NOT Token Information Manager'
-        );
-        tokenRegistry.setSymbol(_symbol);
-    }
 
     /**
-     *  @dev calls the `setOnchainID` function on the tokenRegistry contract
+     *  @dev calls the `setIdentity` function on the tokenRegistry contract
      *  OwnerManager has to be set as owner on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-setOnchainID}.
+     *  See {ITokenRegistry-setIdentity}.
      *  Requires that `_tokenRegistryOnchainID` is set as TokenInfoManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_identity`
      *  @param _identity the onchainID contract of the caller, e.g. "i call this function and i am Bob"
@@ -209,7 +168,7 @@ contract OwnerManager is OwnerRoles {
             isTokenInfoManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Token Information Manager'
         );
-        tokenRegistry.setOnchainID(_tokenRegistryOnchainID);
+        tokenRegistry.setIdentity(_tokenRegistryOnchainID);
     }
 
     /**
@@ -234,15 +193,15 @@ contract OwnerManager is OwnerRoles {
     }
 
     /**
-     *  @dev calls the `setTrustedIssuersRegistry` function on the Identity Registry contract
+     *  @dev calls the `setClaimVerifiersRegistry` function on the Identity Registry contract
      *  OwnerManager has to be set as owner on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-setTrustedIssuersRegistry}.
+     *  See {IIdentityRegistry-setClaimVerifiersRegistry}.
      *  Requires that `_identity` is set as RegistryAddressSetter on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callSetTrustedIssuersRegistry(
-        address _trustedIssuersRegistry,
+    function callSetTrustedVerifierssRegistry(
+        address _trustedVerifiersRegistry,
         IIdentity _identity
     )
         external
@@ -251,72 +210,72 @@ contract OwnerManager is OwnerRoles {
             isRegistryAddressSetter(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Registry Address Setter'
         );
-        tokenRegistry.identityRegistry().setTrustedIssuersRegistry(_trustedIssuersRegistry);
+        tokenRegistry.identityRegistry().setClaimVerifiersRegistry(_trustedVerifiersRegistry);
     }
 
     /**
-     *  @dev calls the `addTrustedIssuer` function on the Trusted Issuers Registry contract
-     *  OwnerManager has to be set as owner on the Trusted Issuers Registry smart contract to process this function
-     *  See {IClaimVerifiersRegistry-addTrustedIssuer}.
-     *  Requires that `_identity` is set as IssuersRegistryManager on the OwnerManager contract
+     *  @dev calls the `addTrustedVerifier` function on the Trusted Verifiers Registry contract
+     *  OwnerManager has to be set as owner on the Trusted Verifiers Registry smart contract to process this function
+     *  See {IClaimVerifiersRegistry-addTrustedVerifier}.
+     *  Requires that `_identity` is set as VerifiersRegistryManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callAddTrustedIssuer(
-        IClaimVerifier _trustedIssuer,
+    function callAddTrustedVerifiers(
+        IClaimVerifier _trustedVerifier,
         uint256[] calldata _claimTopics,
         IIdentity _identity
     )
         external
     {
         require(
-            isIssuersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
-            'Role: Sender is NOT IssuersRegistryManager'
+            isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
+            'Role: Sender is NOT VerifiersRegistryManager'
         );
-        tokenRegistry.identityRegistry().issuersRegistry().addTrustedIssuer(_trustedIssuer, _claimTopics);
+        tokenRegistry.identityRegistry().claimVerifiersRegistry().addTrustedVerifier(_trustedVerifier, _claimTopics);
     }
 
     /**
-     *  @dev calls the `removeTrustedIssuer` function on the Trusted Issuers Registry contract
-     *  OwnerManager has to be set as owner on the Trusted Issuers Registry smart contract to process this function
-     *  See {IClaimVerifiersRegistry-removeTrustedIssuer}.
-     *  Requires that `_identity` is set as IssuersRegistryManager on the OwnerManager contract
+     *  @dev calls the `removeTrustedVerifier` function on the Trusted Verifiers Registry contract
+     *  OwnerManager has to be set as owner on the Trusted Verifiers Registry smart contract to process this function
+     *  See {IClaimVerifiersRegistry-removeTrustedVerifier}.
+     *  Requires that `_identity` is set as VerifiersRegistryManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callRemoveTrustedIssuer(
-        IClaimVerifier _trustedIssuer, 
+    function callRemoveTrustedVerifiers(
+        IClaimVerifier _trustedVerifier, 
         IIdentity _identity
     )
         external
     {
         require(
-            isIssuersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
-            'Role: Sender is NOT IssuersRegistryManager'
+            isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
+            'Role: Sender is NOT VerifiersRegistryManager'
         );
-        tokenRegistry.identityRegistry().issuersRegistry().removeTrustedIssuer(_trustedIssuer);
+        tokenRegistry.identityRegistry().claimVerifiersRegistry().removeTrustedVerifier(_trustedVerifier);
     }
 
     /**
-     *  @dev calls the `updateIssuerClaimTopics` function on the Trusted Issuers Registry contract
-     *  OwnerManager has to be set as owner on the Trusted Issuers Registry smart contract to process this function
-     *  See {IClaimVerifiersRegistry-updateIssuerClaimTopics}.
-     *  Requires that `_identity` is set as IssuersRegistryManager on the OwnerManager contract
+     *  @dev calls the `updateVerifierClaimTopics` function on the Trusted Verifiers Registry contract
+     *  OwnerManager has to be set as owner on the Trusted Verifiers Registry smart contract to process this function
+     *  See {IClaimVerifiersRegistry-updateVerifierClaimTopics}.
+     *  Requires that `_identity` is set as VerifiersRegistryManager on the OwnerManager contract
      *  Requires that msg.sender is an ACTION KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callUpdateIssuerClaimTopics(
-        IClaimVerifier _trustedIssuer,
+    function callUpdateVerifierClaimTopics(
+        IClaimVerifier _trustedVerifier,
         uint256[] calldata _claimTopics,
         IIdentity _identity
     )
         external
     {
         require(
-            isIssuersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
-            'Role: Sender is NOT IssuersRegistryManager'
+            isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
+            'Role: Sender is NOT VerifiersRegistryManager'
         );
-        tokenRegistry.identityRegistry().issuersRegistry().updateIssuerClaimTopics(_trustedIssuer, _claimTopics);
+        tokenRegistry.identityRegistry().claimVerifiersRegistry().updateVerifierClaimTopics(_trustedVerifier, _claimTopics);
     }
 
     /**
@@ -337,7 +296,7 @@ contract OwnerManager is OwnerRoles {
             isClaimRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT ClaimRegistryManager'
         );
-        tokenRegistry.identityRegistry().topicsRegistry().addClaimTopic(_claimTopic);
+        tokenRegistry.identityRegistry().complianceClaimsRequired().addClaimTopic(_claimTopic);
     }
 
     /**
@@ -358,7 +317,7 @@ contract OwnerManager is OwnerRoles {
             isClaimRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT ClaimRegistryManager'
         );
-        tokenRegistry.identityRegistry().topicsRegistry().removeClaimTopic(_claimTopic);
+        tokenRegistry.identityRegistry().complianceClaimsRequired().removeClaimTopic(_claimTopic);
     }
 
     /**
@@ -418,22 +377,22 @@ contract OwnerManager is OwnerRoles {
         external
         onlyAdmin
     {
-        tokenRegistry.identityRegistry().topicsRegistry().transferOwnershipOnComplianceClaimsRequiredContract(_newOwner);
+        tokenRegistry.identityRegistry().complianceClaimsRequired().transferOwnershipOnComplianceClaimsRequiredContract(_newOwner);
     }
 
     /**
-     *  @dev calls the `transferOwnershipOnIssuersRegistryContract` function on the Trusted Issuers Registry contract
-     *  OwnerManager has to be set as owner on the Trusted Issuers registry smart contract to process this function
-     *  See {IClaimVerifiersRegistry-transferOwnershipOnIssuersRegistryContract}.
+     *  @dev calls the `transferOwnershipOnVerifiersRegistryContract` function on the Trusted Verifiers Registry contract
+     *  OwnerManager has to be set as owner on the Trusted Verifiers registry smart contract to process this function
+     *  See {IClaimVerifiersRegistry-transferOwnershipOnVerifiersRegistryContract}.
      *  Requires that msg.sender is an Admin of the OwnerManager contract
      */
-    function callTransferOwnershipOnIssuersRegistryContract(
+    function callTransferOwnershipOnVerifiersRegistryContract(
         address _newOwner
     )
         external
         onlyAdmin
     {
-        tokenRegistry.identityRegistry().issuersRegistry().transferOwnershipOnIssuersRegistryContract(_newOwner);
+        tokenRegistry.identityRegistry().claimVerifiersRegistry().transferOwnershipOnVerifiersRegistryContract(_newOwner);
     }
 
     /**

@@ -115,21 +115,21 @@ contract OwnerRoles is Ownable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev IssuersRegistryManager Role _issuersRegistryManager
+    /// @dev VerifiersRegistryManager Role _issuersRegistryManager
 
-    function isIssuersRegistryManager(address _owner) public view returns (bool) {
+    function isVerifiersRegistryManager(address _owner) public view returns (bool) {
         return _issuersRegistryManager.has(_owner);
     }
 
-    function addIssuersRegistryManager(address _owner) external onlyAdmin {
+    function addVerifiersRegistryManager(address _owner) external onlyAdmin {
         _issuersRegistryManager.add(_owner);
-        string memory _role = 'IssuersRegistryManager';
+        string memory _role = 'VerifiersRegistryManager';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeIssuersRegistryManager(address _owner) external onlyAdmin {
+    function removeVerifiersRegistryManager(address _owner) external onlyAdmin {
         _issuersRegistryManager.remove(_owner);
-        string memory _role = 'IssuersRegistryManager';
+        string memory _role = 'VerifiersRegistryManager';
         emit RoleRemoved(_owner, _role);
     }
 

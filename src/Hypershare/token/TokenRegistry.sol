@@ -28,30 +28,34 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      *  @dev the constructor initiates the token contract
      *  _msgSender() is set automatically as the owner of the smart contract
      *  @param uri_ @dev See {setURI}.
-     *  @param identityRegistry the address of the Identity registry linked to the token
-     *  @param compliance the address of the compliance contract linked to the token
-     *  @param agentIdentity the address of the Identity of the token
+     *  @param identityRegistry_ the address of the Identity registry linked to the token
+     *  @param compliance_ the address of the compliance contract linked to the token
+     *  @param agentIdentity_ the address of the Identity of the token
      *  emits an `UpdatedTokenInformation` event
      *  emits an `_identityRegistryAdded` event
      *  emits a `ComplianceAdded` event
      */
     function init(
         string memory uri_,
-        address identityRegistry,
-        address compliance,
-        address agentIdentity
+        address identityRegistry_,
+        address compliance_,
+        address agentIdentity_
     ) public initializer {
         _uri = uri_;
-        _tokenIdentity = agentIdentity;
-        _identityRegistry = IIdentityRegistry(identityRegistry);
-        emit IdentityRegistryAdded(identityRegistry);
-        _compliance = ICompliance(compliance);
-        emit ComplianceAdded(compliance);
+        _tokenIdentity = agentIdentity_;
+        _identityRegistry = IIdentityRegistry(identityRegistry_);
+        emit IdentityRegistryAdded(identityRegistry_);
+        _compliance = ICompliance(compliance_);
+        emit ComplianceAdded(compliance_);
+
         // emit UpdatedTokenInformation(uri, _tokenIdentity); TODO: update event
         __Ownable_init();
     }
 
-    // @dev Modifier to make a function callable only when the contract is not paused.
+
+    /**
+     * @dev Modifier to make a function callable only when the contract is not paused.
+     */
     modifier whenNotPaused(
         uint256 id
     ) {
@@ -59,7 +63,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _;
     }
 
-    // @dev Modifier to make a function callable only when the contract is paused.
+    /**
+     * @dev Modifier to make a function callable only when the contract is paused.
+     */
     modifier whenPaused(
         uint256 id
     ) {
@@ -67,9 +73,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _;
     }
 
-
     /**
-     *  @dev 
+     * @dev See {ITokenRegistry-totalSupply}.
      */
     function totalSupply(uint256 id) external view override returns (uint256) {
         return _totalSupply[id];
@@ -86,7 +91,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev See {IERC1155MetadataURI-uri}.
+     * @dev See {ITokenRegistryMetadataURI-uri}.
      *
      * This implementation returns the same URI for *all* token types. It relies
      * on the token type ID substitution mechanism
@@ -95,11 +100,11 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      * Clients calling this function must replace the `\{id\}` substring with the
      * actual token type ID.
      */
-    function uri() 
-        public 
+    function uri(
+        uint256 id
+    ) 
+        external 
         view 
-        virtual 
-        override 
         returns (string memory)
     {
         return _uri;
@@ -145,27 +150,15 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     /**
      *  @dev See {ITokenRegistry-paused}.
      */
-    function paused()
-        external
-        view
-        override
-        returns (bool)
-    {
-        return _tokenPaused;
-    }
-    
-    /**
-     *  @dev See {ITokenRegistry-Wrapper}.
-     */
-    function Wrapper(
+    function paused(
         uint256 id
     )
         external
         view
         override
-        returns (address)
+        returns (bool)
     {
-        return _tokenWrapper[id];
+        return _tokenPaused[id];
     }
 
     /**
@@ -199,29 +192,13 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
     
     /**
-     * @dev Sets a new URI for all token types, by relying on the token type ID
-     * substitution mechanism
-     * https://eips.ethereum.org/EIPS/eip-1155#metadata[defined in the EIP].
-     *
-     * By this mechanism, any occurrence of the `\{id\}` substring in either the
-     * URI or any of the amounts in the JSON file at said URI will be replaced by
-     * clients with the token type ID.
-     *
-     * For example, the `https://token-cdn-domain/\{id\}.json` URI would be
-     * interpreted by clients as
-     * `https://token-cdn-domain/000000000000000000000000000000000000000000000000000000000004cce0.json`
-     * for token type ID 0x4cce0.
-     *
-     * See {uri}.
-     *
-     * Because these URIs cannot be meaningfully represented by the {URI} event,
-     * this function emits no events.
+     * @dev See {ITokenRegistry-setURI}.
      */
     function setURI(
         string memory uri_
     )
-        internal
-        virtual
+        public
+        onlyOwner
     {
         _uri = uri_;
     }
@@ -249,30 +226,32 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         external
         override
         onlyAgent
-        whenNotPaused
+        whenNotPaused(id)
     {
         _tokenPaused[id] = true;
-        emit Paused(_msgSender());
+        emit Paused(_msgSender(), id);
     }
 
     /**
      *  @dev See {ITokenRegistry-unpause}.
      */
-    function unpause()
+    function unpause(
+        uint256 id
+    )
         external
         override
         onlyAgent
-        whenPaused
+        whenPaused(id)
     {
-        _tokenPaused = false;
-        emit Unpaused(_msgSender());
+        _tokenPaused[id] = false;
+        emit Unpaused(_msgSender(), id);
     }
 
     
     /**
-     *  @dev See {ITokenRegistry-setidentityRegistry}.
+     *  @dev See {ITokenRegistry-setIdentityRegistry}.
      */
-    function setidentityRegistry(
+    function setIdentityRegistry(
         address identityRegistry
     )
         external
@@ -336,11 +315,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev See {IERC1155-balanceOf}.
-     *
-     * Requirements:
-     *
-     * - `account` cannot be the zero address.
+     * @dev See {ITokenRegistry-balanceOf}.
      */
     function balanceOf(
         address account,
@@ -356,13 +331,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _balances[id][account];
     }
     
-
     /**
-     * @dev See {IERC1155-balanceOfBatch}.
-     *
-     * Requirements:
-     *
-     * - `accounts` and `ids` must have the same length.
+     * @dev See {ITokenRegistry-balanceOfBatch}.
      */
     function balanceOfBatch(
         address[] memory accounts,
@@ -386,7 +356,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev See {IERC1155-setApprovalForAll}.
+     * @dev See {ITokenRegistry-setApprovalForAll}.
      */
     function setApprovalForAll(
         address operator,
@@ -400,7 +370,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev See {IERC1155-isApprovedForAll}.
+     * @dev See {ITokenRegistry-isApprovedForAll}.
      */
     function isApprovedForAll(
         address account,
@@ -416,7 +386,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev See {IERC1155-safeTransferFrom}.
+     * @dev See {ITokenRegistry-safeTransferFrom}.
      */
     function safeTransferFrom(
         address from,
@@ -435,8 +405,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         );
         require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
         require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-        if (_identityRegistry.isVerified(to) && _compliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
-            _compliance.transferred(from, to, id, amount);
+        if (_identityRegistry.isVerified(to) && _compliance.canTransfer(to, id, amount, data)) {
+            _compliance.transferred(from, to, id, amount, data);
             safeTransferFrom(from, to, id, amount, data);
             // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
         }
@@ -473,9 +443,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Transfer not possible');
     }
 
-
     /**
-     * @dev See {IERC1155-safeBatchTransferFrom}.
+     * @dev See {ITokenRegistry-safeBatchTransferFrom}.
      */
     function safeBatchTransferFrom(
         address from,
@@ -503,8 +472,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             
             require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
             require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-            if (_identityRegistry.isVerified(to) && _compliance.canTransfer(from, to, id, amount)) { // TODO, add id to the token compliance contracts
-                _compliance.transferred(from, to, id, amount);
+            if (_identityRegistry.isVerified(to) && _compliance.canTransfer(to, id, amount, data)) { // TODO, add id to the token compliance contracts
+                _compliance.transferred(from, to, id, amount, data);
                 safeTransferFrom(from, to, id, amount, data);
                 // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
             }
@@ -518,16 +487,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     * @dev Transfers `amount` tokens of token type `id` from `from` to `to`.
-     *
-     * Emits a {TransferSingle} event.
-     *
-     * Requirements:
-     *
-     * - `to` cannot be the zero address.
-     * - `from` must have a balance of tokens of type `id` of at least `amount`.
-     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
-     * acceptance magic value.
+     *  @dev See {ITokenRegistry-safeTransferFrom}.
      */
     function safeTransferFrom(
         address from,
@@ -536,8 +496,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         uint256 amount,
         bytes memory data
     )
-        internal
-        virtual
+        external
     {
         require(to != address(0), "ERC1155: transfer to the zero address");
 
@@ -586,64 +545,80 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
+
     /**
-     *  @dev See {ITokenRegistry-mint}.
+     *  @dev See {ITokenRegistry-mintBatch}.
+     *  Not to be confused with mintMisc
+     *  mintBatch distributes a single token to multiple accounts
+     */
+    function mintBatch(
+        address[] memory accounts,
+        uint256 memory id,
+        uint256[] memory amounts,
+        bytes memory data
+    )
+  		external
+  		override
+    {
+        for (uint256 i = 0; i < ids.accounts; ++i) {
+            mint(accounts[i], id, amounts[i], data);
+        }
+    }
+
+    /**
+     *  @dev See {ITokenRegistry-mintMisc}.
+     *  Not to be confused with mintBatch
+     *  mintBatch distributes multiple tokens to a single account accounts
+    */
+    function mintMisc(
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    )
+  		external
+  		override
+    {
+        for (uint256 i = 0; i < ids.accounts; ++i) {
+            burn(from, ids[i], amounts[i], data);
+        }
+    }
+
+
+
+    /**
+     *  @dev See {IToken-mint}.
      */
     function mint(
         address to,
         uint256 id,
         uint256 amount,
         bytes memory data
-    )
-        public
-        override
-        onlyAgent
-    {
+	)
+		public
+		override
+		onlyAgent
+	{
         require(_identityRegistry.isVerified(to), 'Identity is not verified.');
         require(_compliance.canTransfer(to, id, amount, data), 'Compliance not followed');
-        mint(to, id, amount, data);
+        
+        _mint(to, id, amount, data);
         _compliance.created(to, id, amount, data);
     }
-
-
-    /**
-     *  @dev See {ITokenRegistry-batchMint}.
-     */
-    function batchMint(
-        address[] memory fromList,
-        address[] memory toList,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes[] memory dataList
-    )
-        public
-        override
-        onlyAgent
-    {
-        for (uint256 i = 0; i < ids.length; ++i) {
-            address from = fromList[i];
-            address to = toList[i];
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-            bytes memory data = dataList[i];
-            
-            require(_identityRegistry.isVerified(to), 'Identity is not verified.');
-            require(_compliance.canTransfer(to, id, amount, data), 'Compliance not followed');
-            mint(to, id, amount, data);
-            _compliance.created(to, id, amount, data);
-        }
-    }
-
+	
 
     /**
      * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
+     *
      * Emits a {TransferSingle} event.
+     *
      * Requirements:
+     *
      * - `to` cannot be the zero address.
      * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
      * acceptance magic value.
      */
-    function mint(
+    function _mint(
         address to,
         uint256 id,
         uint256 amount,
@@ -655,55 +630,137 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         require(to != address(0), "ERC1155: mint to the zero address");
 
         address operator = _msgSender();
-        uint256[] memory ids = asSingletonArray(id);
-        uint256[] memory amounts = asSingletonArray(amount);
+        uint256[] memory ids = _asSingletonArray(id);
+        uint256[] memory amounts = _asSingletonArray(amount);
 
-        beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
+        _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
 
         _balances[id][to] += amount;
         emit TransferSingle(operator, address(0), to, id, amount);
 
-        afterTokenTransfer(operator, address(0), to, ids, amounts, data);
+        _afterTokenTransfer(operator, address(0), to, ids, amounts, data);
 
-        doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
+        _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
     }
 
+
     /**
-     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {mint}.
-     *
-     * Requirements:
-     *
-     * - `ids` and `amounts` must have the same length.
-     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
-     * acceptance magic value.
+     *  @dev See {ITokenRegistry-burnBatch}.
+     *  Not to be confused with burnMisc
+     *  burnBatch distributes a single token to multiple accounts
      */
-    function mintBatch(
-        address to,
+    function burnBatch(
+        address[] memory accounts,
+        uint256 memory id,
+        uint256[] memory amounts,
+        bytes memory data
+    )
+		external
+		override 
+    {
+        for (uint256 i = 0; i < ids.accounts; ++i) {
+            burn(accounts[i], id, amounts[i], data);
+        }
+    }
+
+
+    /**
+     *  @dev See {ITokenRegistry-burnMisc}.
+     *  Not to be confused with burnBatch
+     *  burnBatch distributes multiple tokens to a single account accounts
+    */
+    function burnMisc(
+        address from,
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
     )
-        internal
-        virtual
+		external
+		override 
     {
-        require(to != address(0), "ERC1155: mint to the zero address");
-        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
-
-        address operator = _msgSender();
-
-        beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
-
-        for (uint256 i = 0; i < ids.length; i++) {
-            _balances[ids[i]][to] += amounts[i];
+        for (uint256 i = 0; i < ids.accounts; ++i) {
+            burn(from, ids[i], amounts[i], data);
         }
-
-        emit TransferBatch(operator, address(0), to, ids, amounts);
-
-        afterTokenTransfer(operator, address(0), to, ids, amounts, data);
-
-        doSafeBatchTransferAcceptanceCheck(operator, address(0), to, ids, amounts, data);
     }
 
+
+    /**
+     *  @dev See {ITokenRegistry-burn}.
+     */
+    function burn(
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    )
+        public
+        override
+        onlyAgent
+    {
+        uint256 freeBalance = balanceOf(_userAddress) - frozenTokens[_userAddress];
+        if (_amount > freeBalance) {
+            uint256 tokensToUnfreeze = _amount - (freeBalance);
+            frozenTokens[_userAddress] = frozenTokens[_userAddress] - (tokensToUnfreeze);
+            emit TokensUnfrozen(_userAddress, tokensToUnfreeze);
+        }
+        _burn(_userAddress, _amount);
+        tokenCompliance.destroyed(_userAddress, _amount);		
+    }
+
+
+    /**
+     * @dev Destroys `amount` tokens of token type `id` from `from`
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `from` cannot be the zero address.
+     * - `from` must have at least `amount` tokens of token type `id`.
+     */
+    function _burn(
+        address from,
+        uint256 id,
+        uint256 amount
+    )
+		internal
+		virtual
+	{
+        require(from != address(0), "ERC1155: burn from the zero address");
+
+        address operator = _msgSender();
+        uint256[] memory ids = _asSingletonArray(id);
+        uint256[] memory amounts = _asSingletonArray(amount);
+
+        _beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
+
+        uint256 fromBalance = _balances[id][from];
+        require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
+        unchecked {
+            _balances[id][from] = fromBalance - amount;
+        }
+
+        emit TransferSingle(operator, from, address(0), id, amount);
+
+        _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
+    }
+
+
+    /**
+     *  @dev See {ITokenRegistry-batchSetAddressFrozen}.
+     */
+    function batchSetAddressFrozen(
+        address[] memory accounts,
+        uint256[] memory ids,
+        bool[] memory freeze
+    )
+        external
+        override
+    {
+        for (uint256 i = 0; i < accounts.length; i++) {
+            setAddressFrozen(accounts[i], ids[i], freeze[i]);
+        }
+    }
 
     /**
      *  @dev See {ITokenRegistry-setAddressFrozen}.
@@ -720,21 +777,23 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _frozen[id][account] = freeze;
         emit AddressFrozen(account, freeze, _msgSender());
     }
-
     
     /**
-     *  @dev See {ITokenRegistry-batchSetAddressFrozen}.
+     *  @dev See {ITokenRegistry-batchFreezePartialTokens}.
      */
-    function batchSetAddressFrozen(
+    function batchFreezePartialTokens(
         address[] memory accounts,
         uint256[] memory ids,
-        bool[] memory freeze
+        uint256[] memory amounts
     )
         external
         override
     {
+
+        require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");
+        
         for (uint256 i = 0; i < accounts.length; i++) {
-            setAddressFrozen(accounts[i], ids[i], freeze[i]);
+            freezePartialTokens(accounts[i], ids[i], amounts[i]);
         }
     }
 
@@ -757,9 +816,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     /**
-     *  @dev See {ITokenRegistry-batchFreezePartialTokens}.
+     *  @dev See {ITokenRegistry-batchUnfreezePartialTokens}.
      */
-    function batchFreezePartialTokens(
+    function batchUnfreezePartialTokens(
         address[] memory accounts,
         uint256[] memory ids,
         uint256[] memory amounts
@@ -769,9 +828,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     {
 
         require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");
-        
+
         for (uint256 i = 0; i < accounts.length; i++) {
-            freezePartialTokens(accounts[i], ids[i], amounts[i]);
+            unfreezePartialTokens(accounts[i], ids[i], amounts[i]);
         }
     }
 
@@ -794,100 +853,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         // emit TokensUnfrozen(account, id, amount); TODO update event
     }
 
-    /**
-     *  @dev See {ITokenRegistry-batchUnfreezePartialTokens}.
-     */
-    function batchUnfreezePartialTokens(
-        address[] memory accounts,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    )
-        external
-        override
-    {
-
-        require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");
-
-        for (uint256 i = 0; i < accounts.length; i++) {
-            unfreezePartialTokens(accounts[i], ids[i], amounts[i]);
-        }
-    }
-    
-    /**
-     * @dev Destroys `amount` tokens of token type `id` from `from`
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `from` must have at least `amount` tokens of token type `id`.
-     */
-    function burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    )
-        internal
-        virtual
-    {
-        require(from != address(0), "ERC1155: burn from the zero address");
-
-        address operator = _msgSender();
-        uint256[] memory ids = asSingletonArray(id);
-        uint256[] memory amounts = asSingletonArray(amount);
-
-        beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
-
-        uint256 fromBalance = _balances[id][from];
-        require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
-        unchecked {
-            _balances[id][from] = fromBalance - amount;
-        }
-
-        emit TransferSingle(operator, from, address(0), id, amount);
-
-        afterTokenTransfer(operator, from, address(0), ids, amounts, "");
-    }
-
-    /**
-     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {burn}.
-     *
-     * Requirements:
-     *
-     * - `ids` and `amounts` must have the same length.
-     */
-    function burnBatch(
-        address from,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    )
-        internal
-        virtual
-    {
-        require(from != address(0), "ERC1155: burn from the zero address");
-        require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
-
-        address operator = _msgSender();
-
-        beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
-
-        for (uint256 i = 0; i < ids.length; i++) {
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-
-            uint256 fromBalance = _balances[id][from];
-            require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
-            unchecked {
-                _balances[id][from] = fromBalance - amount;
-            }
-        }
-
-        emit TransferBatch(operator, from, address(0), ids, amounts);
-
-        afterTokenTransfer(operator, from, address(0), ids, amounts, "");
-    }
-
-
-    /**
+    /**     
      *  @dev See {ITokenRegistry-recoveryAddress}.
      */
     function recoveryAddress(
@@ -923,11 +889,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Recovery not possible');
     }
 
-
     /**
-     * @dev Approve `operator` to operate on all of `owner` tokens
-     *
-     * Emits a {ApprovalForAll} event.
+     *  @dev See {ITokenRegistry-setApprovalForAll}.
      */
     function setApprovalForAll(
         address account,
@@ -942,26 +905,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         emit ApprovalForAll(account, operator, approved);
     }
 
-    /**
-     * @dev Hook that is called before any token transfer. This includes minting
-     * and burning, as well as batched variants.
-     *
-     * The same hook is called on both single and batched variants. For single
-     * transfers, the length of the `id` and `amount` arrays will be 1.
-     *
-     * Calling conditions (for each `id` and `amount` pair):
-     *
-     * - When `from` and `to` are both non-zero, `amount` of ``from``'s tokens
-     * of token type `id` will be  transferred to `to`.
-     * - When `from` is zero, `amount` tokens of token type `id` will be minted
-     * for `to`.
-     * - when `to` is zero, `amount` of ``from``'s tokens of token type `id`
-     * will be burned.
-     * - `from` and `to` are never both zero.
-     * - `ids` and `amounts` have the same, non-zero length.
-     *
-     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
-     */
+
     function beforeTokenTransfer(
         address operator,
         address from,
@@ -971,26 +915,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         bytes memory data
     ) internal virtual {}
 
-    /**
-     * @dev Hook that is called after any token transfer. This includes minting
-     * and burning, as well as batched variants.
-     *
-     * The same hook is called on both single and batched variants. For single
-     * transfers, the length of the `id` and `amount` arrays will be 1.
-     *
-     * Calling conditions (for each `id` and `amount` pair):
-     *
-     * - When `from` and `to` are both non-zero, `amount` of ``from``'s tokens
-     * of token type `id` will be  transferred to `to`.
-     * - When `from` is zero, `amount` tokens of token type `id` will be minted
-     * for `to`.
-     * - when `to` is zero, `amount` of ``from``'s tokens of token type `id`
-     * will be burned.
-     * - `from` and `to` are never both zero.
-     * - `ids` and `amounts` have the same, non-zero length.
-     *
-     * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
-     */
+
     function afterTokenTransfer(
         address operator,
         address from,
@@ -999,6 +924,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         uint256[] memory amounts,
         bytes memory data
     ) internal virtual {}
+
 
     function doSafeTransferAcceptanceCheck(
         address operator,

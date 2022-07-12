@@ -157,8 +157,8 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev IssuersRegistryManager Role _issuersRegistryManager
-    function isIssuersRegistryManager(
+    /// @dev VerifiersRegistryManager Role _issuersRegistryManager
+    function isVerifiersRegistryManager(
         address _owner
     )
         public
@@ -168,25 +168,25 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         return _issuersRegistryManager.has(_owner);
     }
 
-    function addIssuersRegistryManager(
+    function addVerifiersRegistryManager(
         address _owner
     )
         external
         onlyAdmin
     {
         _issuersRegistryManager.add(_owner);
-        string memory _role = 'IssuersRegistryManager';
+        string memory _role = 'VerifiersRegistryManager';
         emit RoleAdded(_owner, _role);
     }
 
-    function removeIssuersRegistryManager(
+    function removeVerifiersRegistryManager(
         address _owner
     )
         external
         onlyAdmin
     {
         _issuersRegistryManager.remove(_owner);
-        string memory _role = 'IssuersRegistryManager';
+        string memory _role = 'VerifiersRegistryManager';
         emit RoleRemoved(_owner, _role);
     }
 

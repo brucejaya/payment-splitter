@@ -7,7 +7,7 @@ import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol';
 
 import '../../Interface/ITokenRegistry.sol';
 
-contract Wrapper is ERC20, IERC1155Receiver {
+abstract contract Wrapper is ERC20, IERC1155Receiver {
     
     ITokenRegistry public _tokenRegistry;
     uint256 public _id;
@@ -24,11 +24,9 @@ contract Wrapper is ERC20, IERC1155Receiver {
         ITokenRegistry tokenRegistry,
         uint256 id,
         string memory name,
-        string memory symbol,
-        uint8 decimals
+        string memory symbol
     )
-        public
-        ERC20(name, symbol, decimals)
+        ERC20(name, symbol)
     {
         _tokenRegistry = tokenRegistry;
         _id = id;
@@ -69,7 +67,7 @@ contract Wrapper is ERC20, IERC1155Receiver {
 
         _burn(account, amount);
 
-        tokenRegistry.safeTransferFrom(address(this), account, id, amount, "" );
+        _tokenRegistry.safeTransferFrom(address(this), account, _id, amount, "" );
     }
 
     /**

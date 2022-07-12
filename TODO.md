@@ -1,1 +1,0 @@
-Move claims verifiers reg to claims

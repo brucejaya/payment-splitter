@@ -41,7 +41,7 @@ contract AgentManager is AgentRoles {
             isTransferManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Transfer Manager'
         );
-        tokenRegistry.forcedTransfer(_from, _to, _amount);
+        tokenRegistry.forcedTransfer(_from, _to, _id, _amount, _data);
     }
 
     /**
@@ -53,11 +53,11 @@ contract AgentManager is AgentRoles {
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
     function callBatchForcedTransfer(
-        address[] memory fromList,
-        address[] memory toList,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes[] memory dataList
+        address[] memory _fromList,
+        address[] memory _toList,
+        uint256[] memory _ids,
+        uint256[] memory _amounts,
+        bytes[] memory _dataList,
         IIdentity _identity
     )
         external
@@ -66,7 +66,7 @@ contract AgentManager is AgentRoles {
             isTransferManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Transfer Manager'
         );
-        tokenRegistry.batchForcedTransfer(_fromList, _toList, _amounts);
+        tokenRegistry.batchForcedTransfer(_fromList, _toList, _ids, _amounts, _dataList);
     }
 
     /**
@@ -117,7 +117,7 @@ contract AgentManager is AgentRoles {
         address _to,
         uint256 _id,
         uint256 _amount,
-        bytes memory _data
+        bytes memory _data,
         IIdentity _identity
     )
         external
@@ -130,16 +130,15 @@ contract AgentManager is AgentRoles {
     }
 
     /**
-     *  @dev calls the `batchMint` function on the Token contract
+     *  @dev calls the `mintBatch` function on the Token contract
      *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchMint}.
+     *  See {ITokenRegistry-mintBatch}.
      *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
      *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callBatchMint(
-        address[] memory _fromList,
-        address[] memory _toList,
+    function callMintBatch(
+        address[] memory _accounts,
         uint256[] memory _ids,
         uint256[] memory _amounts,
         bytes[] memory _dataList,
@@ -151,7 +150,7 @@ contract AgentManager is AgentRoles {
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
-        tokenRegistry.batchMint(_fromList, _toList, _ids, _amounts, _dataList);
+        tokenRegistry.mintBatch(_accounts, _ids, _amounts, _dataList);
     }
 
     /**
@@ -175,17 +174,18 @@ contract AgentManager is AgentRoles {
             'Role: Sender is NOT Supply Modifier'
         );
         tokenRegistry.burn(_account, _id, _amount);
+        
     }
 
     /**
-     *  @dev calls the `batchBurn` function on the Token contract
+     *  @dev calls the `burnBatch` function on the Token contract
      *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchBurn}.
+     *  See {ITokenRegistry-burnBatch}.
      *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
      *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
-    function callBatchBurn(
+    function callBurnBatch(
         address[] calldata _accounts,
         uint256[] calldata _ids,
         uint256[] calldata _amounts,
@@ -197,7 +197,7 @@ contract AgentManager is AgentRoles {
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
-        tokenRegistry.batchBurn(_accounts, _ids, _amounts);
+        tokenRegistry.burnBatch(_accounts, _ids, _amounts);
     }
 
     /**
@@ -211,7 +211,7 @@ contract AgentManager is AgentRoles {
     function callSetAddressFrozen(
         address _account,
         uint256 _id,
-        bool _freeze
+        bool _freeze,
         IIdentity _identity
     )
         external
@@ -333,7 +333,7 @@ contract AgentManager is AgentRoles {
         address _newWallet,
         uint256 _id,
         address _account,
-        bytes memory _data
+        bytes memory _data,
         IIdentity _managerIdentity
     )
         external
@@ -342,7 +342,7 @@ contract AgentManager is AgentRoles {
             isRecoveryAgent(address(_managerIdentity)) && _managerIdentity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Recovery Agent'
         );
-        tokenRegistry.recoveryAddress(_lostWallet, _newWallet, _identity);
+        tokenRegistry.recoveryAddress(_lostWallet, _newWallet, _id, _account, _data);
     }
 
     /**
@@ -378,7 +378,6 @@ contract AgentManager is AgentRoles {
      */
     function callUpdateIdentity(
         address _account,
-        IIdentity _identity,
         IIdentity _identity
     ) external {
         require(

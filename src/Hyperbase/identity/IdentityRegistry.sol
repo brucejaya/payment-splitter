@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import '../../Interface/IClaimVerifier.sol';
 import '../../Interface/IIdentity.sol';
 
-import '../../Interface/IClaimTopicsRegistry.sol';
+import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IIdentityRegistryStorage.sol';
@@ -17,31 +17,31 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     /// @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private identityRegistryStorage;
 
-    /// @dev Address of the ClaimTopicsRegistry Contract
-    IClaimTopicsRegistry private claimTopicsRegistry;
+    /// @dev Address of the ComplianceClaimsRequired Contract
+    IComplianceClaimsRequired private complianceClaimsRequired;
 
-    /// @dev Address of the TrustedIssuersRegistry Contract
+    /// @dev Address of the TrustedVerifierssRegistry Contract
     IClaimVerifiersRegistry private claimVerifiersRegistry;
 
     /**
      *  @dev the constructor initiates the Identity Registry smart contract
-     *  @param _claimVerifiersRegistry the trusted issuers registry linked to the Identity Registry
-     *  @param _claimTopicsRegistry the claim topics registry linked to the Identity Registry
+     *  @param _claimVerifiersRegistry the trusted verifiers registry linked to the Identity Registry
+     *  @param _complianceClaimsRequired the claim topics registry linked to the Identity Registry
      *  @param _identityRegistryStorage the identity registry storage linked to the Identity Registry
-     *  emits a `ClaimTopicsRegistrySet` event
-     *  emits a `TrustedIssuersRegistrySet` event
+     *  emits a `ComplianceClaimsRequiredSet` event
+     *  emits a `ClaimVerifiersRegistrySet` event
      *  emits an `IdentityStorageSet` event
      */
     constructor(
         address _claimVerifiersRegistry,
-        address _claimTopicsRegistry,
+        address _complianceClaimsRequired,
         address _identityRegistryStorage
     ) {
-        claimTopicsRegistry = IClaimTopicsRegistry(_claimTopicsRegistry);
+        complianceClaimsRequired = IComplianceClaimsRequired(_complianceClaimsRequired);
         claimVerifiersRegistry = IClaimVerifiersRegistry(_claimVerifiersRegistry);
         identityRegistryStorage = IIdentityRegistryStorage(_identityRegistryStorage);
-        emit ClaimTopicsRegistrySet(_claimTopicsRegistry);
-        emit TrustedIssuersRegistrySet(_claimVerifiersRegistry);
+        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
+        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
@@ -74,9 +74,9 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistry-issuersRegistry}.
+     *  @dev See {IIdentityRegistry-claimVerifiersRegistry}.
      */
-    function issuersRegistry()
+    function claimVerifiersRegistry()
         external
         view
         override
@@ -86,21 +86,21 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistry-topicsRegistry}.
+     *  @dev See {IIdentityRegistry-complianceClaimsRequired}.
      */
-    function topicsRegistry()
+    function complianceClaimsRequired()
         external
         view
         override
-        returns (IClaimTopicsRegistry)
+        returns (IComplianceClaimsRequired)
     {
-        return claimTopicsRegistry;
+        return complianceClaimsRequired;
     }
 
     /**
-     *  @dev See {IIdentityRegistry-identityStorage}.
+     *  @dev See {IIdentityRegistry-identityRegistryStorage}.
      */
-    function identityStorage()
+    function identityRegistryStorage()
         external
         view
         override
@@ -193,7 +193,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         if (address(identity(_account)) == address(0)) {
             return false;
         }
-        uint256[] memory requiredClaimTopics = claimTopicsRegistry.getClaimTopics();
+        uint256[] memory requiredClaimTopics = complianceClaimsRequired.getClaimTopics();
         if (requiredClaimTopics.length == 0) {
             return true;
         }
@@ -249,19 +249,19 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     }
 
     /**
-     *  @dev See {IIdentityRegistry-setClaimTopicsRegistry}.
+     *  @dev See {IIdentityRegistry-setComplianceClaimsRequired}.
      */
-    function setClaimTopicsRegistry(address _claimTopicsRegistry) external override onlyOwner {
-        claimTopicsRegistry = IClaimTopicsRegistry(_claimTopicsRegistry);
-        emit ClaimTopicsRegistrySet(_claimTopicsRegistry);
+    function setComplianceClaimsRequired(address _complianceClaimsRequired) external override onlyOwner {
+        complianceClaimsRequired = IComplianceClaimsRequired(_complianceClaimsRequired);
+        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
     }
 
     /**
-     *  @dev See {IIdentityRegistry-setTrustedIssuersRegistry}.
+     *  @dev See {IIdentityRegistry-setClaimVerifiersRegistry}.
      */
-    function setTrustedIssuersRegistry(address _claimVerifiersRegistry) external override onlyOwner {
+    function setClaimVerifiersRegistry(address _claimVerifiersRegistry) external override onlyOwner {
         claimVerifiersRegistry = IClaimVerifiersRegistry(_claimVerifiersRegistry);
-        emit TrustedIssuersRegistrySet(_claimVerifiersRegistry);
+        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
     }
 
     /**

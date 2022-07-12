@@ -33,5 +33,3 @@ contract ImplementationAuthority is IImplementationAuthority, Ownable {
         emit UpdatedImplementation(_newImplementation);
     }
 }
-
-

@@ -6,17 +6,14 @@ interface IImplementationAuthority {
     function getImplementation() external view returns (address);
 }
 
-contract TokenProxy {
+contract TokenRegistryProxy {
     address public implementationAuthority;
 
     constructor(
-        address _implementationAuthority,
-        address _identityRegistry,
-        address _compliance,
-        string memory _name,
-        string memory _symbol,
-        uint8 _decimals,
-        address _identity
+        string memory uri_,
+        address identityRegistry_,
+        address compliance_,
+        address agentIdentity_
     ) {
         implementationAuthority = _implementationAuthority;
 
@@ -26,13 +23,11 @@ contract TokenProxy {
         (bool success, ) =
             logic.delegatecall(
                 abi.encodeWithSignature(
-                    'init(address,address,string,string,uint8,address)',
-                    _identityRegistry,
-                    _compliance,
-                    _name,
-                    _symbol,
-                    _decimals,
-                    _identity
+                    'init(string,address,address,address)',
+                    uri_,
+                    identityRegistry_,
+                    compliance_,
+                    agentIdentity_
                 )
             );
         require(success, 'Initialization failed.');
