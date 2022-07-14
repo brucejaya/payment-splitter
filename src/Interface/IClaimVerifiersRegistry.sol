@@ -11,14 +11,14 @@ interface IClaimVerifiersRegistry {
      *  `trustedVerifier` is the address of the trusted issuer's ClaimVerifier contract
      *  `claimTopics` is the set of claims that the trusted issuer is allowed to emit
      */
-    event TrustedVerifierAdded(IClaimVerifier indexed trustedVerifier, uint256[] claimTopics);
+    event TrustedVerifierAdded(IClaimValidator indexed trustedVerifier, uint256[] claimTopics);
 
     /**
      *  this event is emitted when a trusted issuer is removed from the registry.
      *  the event is emitted by the removeTrustedVerifier function
      *  `trustedVerifier` is the address of the trusted issuer's ClaimVerifier contract
      */
-    event TrustedVerifierRemoved(IClaimVerifier indexed trustedVerifier);
+    event TrustedVerifierRemoved(IClaimValidator indexed trustedVerifier);
 
     /**
      *  this event is emitted when the set of claim topics is changed for a given trusted issuer.
@@ -26,7 +26,7 @@ interface IClaimVerifiersRegistry {
      *  `trustedVerifier` is the address of the trusted issuer's ClaimVerifier contract
      *  `claimTopics` is the set of claims that the trusted issuer is allowed to emit
      */
-    event ClaimTopicsUpdated(IClaimVerifier indexed trustedVerifier, uint256[] claimTopics);
+    event ClaimTopicsUpdated(IClaimValidator indexed trustedVerifier, uint256[] claimTopics);
 
     /**
      *  @dev registers a ClaimVerifier contract as trusted claim issuer.
@@ -37,7 +37,7 @@ interface IClaimVerifiersRegistry {
      *  This function can only be called by the owner of the Trusted Verifiers Registry contract
      *  emits a `TrustedVerifierAdded` event
      */
-    function addTrustedVerifier(IClaimVerifier _trustedVerifier, uint256[] calldata _claimTopics) external;
+    function addTrustedVerifier(IClaimValidator _trustedVerifier, uint256[] calldata _claimTopics) external;
 
     /**
      *  @dev Removes the ClaimVerifier contract of a trusted claim issuer.
@@ -46,7 +46,7 @@ interface IClaimVerifiersRegistry {
      *  This function can only be called by the owner of the Trusted Verifiers Registry contract
      *  emits a `TrustedVerifierRemoved` event
      */
-    function removeTrustedVerifier(IClaimVerifier _trustedVerifier) external;
+    function removeTrustedVerifier(IClaimValidator _trustedVerifier) external;
 
     /**
      *  @dev Updates the set of claim topics that a trusted issuer is allowed to emit.
@@ -57,13 +57,13 @@ interface IClaimVerifiersRegistry {
      *  This function can only be called by the owner of the Trusted Verifiers Registry contract
      *  emits a `ClaimTopicsUpdated` event
      */
-    function updateVerifierClaimTopics(IClaimVerifier _trustedVerifier, uint256[] calldata _claimTopics) external;
+    function updateVerifierClaimTopics(IClaimValidator _trustedVerifier, uint256[] calldata _claimTopics) external;
 
     /**
      *  @dev Function for getting all the trusted claim issuers stored.
      *  @return array of all claim issuers registered.
      */
-    function getTrustedVerifiers() external view returns (IClaimVerifier[] memory);
+    function getTrustedVerifiers() external view returns (IClaimValidator[] memory);
 
     /**
      *  @dev Checks if the ClaimVerifier contract is trusted
@@ -78,7 +78,7 @@ interface IClaimVerifiersRegistry {
      *  @param _trustedVerifier the trusted issuer concerned.
      *  @return The set of claim topics that the trusted issuer is allowed to emit
      */
-    function getTrustedVerifierClaimTopics(IClaimVerifier _trustedVerifier) external view returns (uint256[] memory);
+    function getTrustedVerifierClaimTopics(IClaimValidator _trustedVerifier) external view returns (uint256[] memory);
 
     /**
      *  @dev Function for checking if the trusted claim issuer is allowed

@@ -10,7 +10,7 @@ import '../../Interface/IClaimVerifiersRegistry.sol';
 contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     
     /// @dev Array containing all verifiers identity contract address.
-    IClaimVerifier[] private verifiers;
+    IClaimValidator[] private verifiers;
 
     /// @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) private claimVerifierTopics;
@@ -19,7 +19,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
      *  @dev See {IClaimVerifiersRegistry-addTrustedVerifier}.
      */
     function addTrustedVerifier(
-        IClaimVerifier _verifier,
+        IClaimValidator _verifier,
         uint256[] calldata _claimsRequired
     )
         external
@@ -37,7 +37,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
      *  @dev See {IClaimVerifiersRegistry-removeTrustedVerifier}.
      */
     function removeTrustedVerifier(
-        IClaimVerifier _verifier
+        IClaimValidator _verifier
     )
         external
         override
@@ -60,7 +60,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
      *  @dev See {IClaimVerifiersRegistry-updateVerifierClaimTopics}.
      */
     function updateVerifierClaimTopics(
-        IClaimVerifier _verifier,
+        IClaimValidator _verifier,
         uint256[] calldata _claimsRequired
     )
         external
@@ -80,7 +80,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         external
         view
         override
-        returns (IClaimVerifier[] memory)
+        returns (IClaimValidator[] memory)
     {
         return verifiers;
     }
@@ -109,7 +109,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
      *  @dev See {IClaimVerifiersRegistry-getclaimVerifierTopics}.
      */
     function getclaimVerifierTopics(
-        IClaimVerifier _verifier
+        IClaimValidator _verifier
     )
         external
         view

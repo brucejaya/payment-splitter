@@ -2,8 +2,9 @@
 pragma solidity ^0.8.0;
 
 import "openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
 
-import './IdentityExecuter.sol';
+import './IdentityStorage.sol';
 
 import '../../Interface/IIdentity.sol';
 
@@ -26,7 +27,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
             initialized = true;
         }
     }
-
 
     /**
      * @notice Prevent any direct calls to the implementation contract (marked by canInteract = false).
@@ -91,9 +91,9 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
      *
      * @param key The public key.  for non-hex and long keys, its the Keccak256 hash of the key
      *
-     * @return purposes Returns the full key data, if present in the identity.
-     * @return keyType Returns the full key data, if present in the identity.
-     * @return key Returns the full key data, if present in the identity.
+     * @return purposes_ Returns the full key data, if present in the identity.
+     * @return keyType_ Returns the full key data, if present in the identity.
+     * @return key_ Returns the full key data, if present in the identity.
      */
     function getKey(
         bytes32 key
@@ -101,7 +101,7 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         public
         override
         view
-        returns(uint256[] memory purposes, uint256 keyType, bytes32 key)
+        returns(uint256[] memory purpose_, uint256 keyType_, bytes32 key_)
     {
         return (keys[key].purposes, keys[key].keyType, keys[key].key);
     }
@@ -463,7 +463,7 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
 
     /*//////////////////////////////////////////////////////////////
-                                EXECUTIONS
+                                MULTI-SIGNATURE
     //////////////////////////////////////////////////////////////*/
 
 
@@ -471,13 +471,13 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 	function getMessageHash(
         address to,
         uint256 value,
-        bytes data,
+        bytes memory data,
         uint nonce,
         uint gasPrice,
         uint gasLimit,
         address gasToken,
         uint8 operationType,
-        bytes extraHash
+        bytes memory extraHash
     )
         public
         view
@@ -507,6 +507,55 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
             )
         );
     }
+
+    
+    function haveEnoughValidSignatures(
+        uint256 operationType,
+        bytes32 messageHash,
+        bytes memory messageSignatures
+    )
+        internal
+        view
+        returns (bool hasEnough)
+    {
+
+        uint256 numSignatures = messageSignatures.length / 65;
+        uint256 validSignatureCount = 0;
+
+        // TODO check gnosis
+        for (uint pos = 0; pos < numSignatures; pos++) {
+            uint8 v;
+            bytes32 r;
+            bytes32 s;
+
+            assembly{
+                r := mload(add(messageSignatures, add(32, mul(65,pos))))
+                s := mload(add(messageSignatures, add(64, mul(65,pos))))
+                // Here we are loading the last 32 bytes, including 31 bytes
+                // of 's'. There is no 'mload8' to do this.
+                //
+                // 'byte' is not working due to the Solidity parser, so lets
+                // use the second best option, 'and'
+                v := mload(add(messageSignatures, add(65, mul(65,pos))))
+            }
+
+            if (keyHasPurpose(keys[bytes32(ecrecover(messageHash, v, r, s))], operationType)) {
+                validSignatureCount++;
+            }
+        }
+
+        if (validSignatureCount >= sigRequirementByKeyType[operationType]) {
+            return true;
+        }
+
+        return false;
+    }
+    
+
+
+    /*//////////////////////////////////////////////////////////////
+                                EXECUTIONS
+    //////////////////////////////////////////////////////////////*/
 
     
     
@@ -587,28 +636,27 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         address to,
         address from,
         uint256 value,
-        bytes data,
+        bytes memory data,
         uint nonce,
         uint gasPrice,
         uint gasLimit,
         address gasToken,
         uint8 operationType,
-        bytes extraHash,
-        bytes messageSignatures
+        bytes memory extraHash,
+        bytes memory messageSignatures
     )
         public
     {
 
         uint256 startGas = gasleft();
-
         require(supportedOpType[operationType]);
+        
         require(startGas >= gasLimit);
 
         bytes32 msgHash = getMessageHash(to, value, data, nonce, gasPrice, gasLimit, gasToken, operationType, extraHash);
         
         uint256 requiredKeyType = ACTION_KEY;
         if (to == address(this)) {
-            // calling Self should be only be with MANAGEMENT_KEY
             requiredKeyType = MANAGEMENT_KEY;
         }
         require(haveEnoughValidSignatures(requiredKeyType, msgHash, messageSignatures));
@@ -617,12 +665,12 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
         uint256 refundAmount = (startGas - gasleft()) * gasPrice;
 
-        if (gasToken == address(0)) { // gas refund is in ETH
+        if (gasToken == address(0)) {
             require(address(this).balance > refundAmount);
-            msg.sender.transfer(refundAmount);
-        } else { // gas refund is in ERC20
-            require(ERC20Interface(gasToken).balanceOf(address(this)) > refundAmount);
-            require(ERC20Interface(gasToken).transfer(msg.sender, refundAmount));
+            msg.snedr.transfer(refundAmount);
+        } else {
+            require(IERC20(gasToken).balanceOf(address(this)) > refundAmount);
+            require(IERC20(gasToken).transfer(recepient, refundAmount));
         }
     }
 

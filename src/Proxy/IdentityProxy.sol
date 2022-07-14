@@ -5,12 +5,15 @@ pragma solidity ^0.8.0;
 import '../Interface/IImplementationAuthority.sol';
 
 contract IdentityProxy {
-    address public implementationAuthority;
+    address public _implementationAuthority;
 
-    constructor(address _implementationAuthority, address initialManagementKey) {
-        implementationAuthority = _implementationAuthority;
+    constructor(
+        address implementationAuthority,
+        address initialManagementKey
+    ) {
+        _implementationAuthority = implementationAuthority;
 
-        address logic = IImplementationAuthority(implementationAuthority).getImplementation();
+        address logic = IImplementationAuthority(_implementationAuthority).getImplementation();
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success,) = logic.delegatecall(abi.encodeWithSignature("initialize(address)", initialManagementKey));
@@ -18,7 +21,7 @@ contract IdentityProxy {
     }
 
     fallback() external payable {
-        address logic = IImplementationAuthority(implementationAuthority).getImplementation();
+        address logic = IImplementationAuthority(_implementationAuthority).getImplementation();
 
         assembly { // solium-disable-line
         calldatacopy(0x0, 0x0, calldatasize())

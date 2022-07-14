@@ -112,9 +112,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
 
     /**
-     *  @dev See {ITokenRegistry-Identity}.
+     *  @dev See {ITokenRegistry-identity}.
      */
-    function Identity()
+    function identity()
         external
         view
         override
@@ -553,14 +553,14 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      */
     function mintBatch(
         address[] memory accounts,
-        uint256 memory id,
+        uint256 id,
         uint256[] memory amounts,
         bytes memory data
     )
   		external
   		override
     {
-        for (uint256 i = 0; i < ids.accounts; ++i) {
+        for (uint256 i = 0; i < accounts.length; ++i) {
             mint(accounts[i], id, amounts[i], data);
         }
     }
@@ -579,8 +579,8 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
   		external
   		override
     {
-        for (uint256 i = 0; i < ids.accounts; ++i) {
-            burn(from, ids[i], amounts[i], data);
+        for (uint256 i = 0; i < amounts.length; ++i) {
+            burn(to, ids[i], amounts[i]);
         }
     }
 
@@ -630,17 +630,17 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         require(to != address(0), "ERC1155: mint to the zero address");
 
         address operator = _msgSender();
-        uint256[] memory ids = _asSingletonArray(id);
-        uint256[] memory amounts = _asSingletonArray(amount);
+        uint256[] memory ids = asSingletonArray(id);
+        uint256[] memory amounts = asSingletonArray(amount);
 
-        _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
+        beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
 
         _balances[id][to] += amount;
         emit TransferSingle(operator, address(0), to, id, amount);
 
-        _afterTokenTransfer(operator, address(0), to, ids, amounts, data);
+        afterTokenTransfer(operator, address(0), to, ids, amounts, data);
 
-        _doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
+        doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
     }
 
 
@@ -651,15 +651,14 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      */
     function burnBatch(
         address[] memory accounts,
-        uint256 memory id,
-        uint256[] memory amounts,
-        bytes memory data
+        uint256 id,
+        uint256[] memory amounts
     )
 		external
 		override 
     {
-        for (uint256 i = 0; i < ids.accounts; ++i) {
-            burn(accounts[i], id, amounts[i], data);
+        for (uint256 i = 0; i < accounts.length; ++i) {
+            burn(accounts[i], id, amounts[i]);
         }
     }
 
@@ -668,18 +667,17 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      *  @dev See {ITokenRegistry-burnMisc}.
      *  Not to be confused with burnBatch
      *  burnBatch distributes multiple tokens to a single account accounts
-    */
+     */
     function burnMisc(
         address from,
         uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
+        uint256[] memory amounts
     )
 		external
 		override 
     {
-        for (uint256 i = 0; i < ids.accounts; ++i) {
-            burn(from, ids[i], amounts[i], data);
+        for (uint256 i = 0; i < amounts.length; ++i) {
+            burn(from, ids[i], amounts[i]);
         }
     }
 
@@ -688,23 +686,22 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
      *  @dev See {ITokenRegistry-burn}.
      */
     function burn(
-        address to,
+        address from,
         uint256 id,
-        uint256 amount,
-        bytes memory data
+        uint256 amount
     )
         public
         override
         onlyAgent
     {
-        uint256 freeBalance = balanceOf(_userAddress) - frozenTokens[_userAddress];
-        if (_amount > freeBalance) {
-            uint256 tokensToUnfreeze = _amount - (freeBalance);
-            frozenTokens[_userAddress] = frozenTokens[_userAddress] - (tokensToUnfreeze);
-            emit TokensUnfrozen(_userAddress, tokensToUnfreeze);
+        uint256 freeBalance = balanceOf(from, id) - _frozenTokens[id][from];
+        if (amount > freeBalance) {
+            uint256 tokensToUnfreeze = amount - (freeBalance);
+            _frozenTokens[id][from] = _frozenTokens[id][from] - (tokensToUnfreeze);
+            emit TokensUnfrozen(from, tokensToUnfreeze);
         }
-        _burn(_userAddress, _amount);
-        tokenCompliance.destroyed(_userAddress, _amount);		
+        _burn(from, id, amount);
+        _compliance.destroyed(from, id, amount);		
     }
 
 
@@ -729,10 +726,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         require(from != address(0), "ERC1155: burn from the zero address");
 
         address operator = _msgSender();
-        uint256[] memory ids = _asSingletonArray(id);
-        uint256[] memory amounts = _asSingletonArray(amount);
+        uint256[] memory ids = asSingletonArray(id);
+        uint256[] memory amounts = asSingletonArray(amount);
 
-        _beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
+        beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
 
         uint256 fromBalance = _balances[id][from];
         require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
@@ -742,7 +739,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
         emit TransferSingle(operator, from, address(0), id, amount);
 
-        _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
+        afterTokenTransfer(operator, from, address(0), ids, amounts, "");
     }
 
 

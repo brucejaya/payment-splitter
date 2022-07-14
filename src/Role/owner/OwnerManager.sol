@@ -222,7 +222,7 @@ contract OwnerManager is OwnerRoles {
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
     function callAddTrustedVerifiers(
-        IClaimVerifier _trustedVerifier,
+        IClaimValidator _trustedVerifier,
         uint256[] calldata _claimTopics,
         IIdentity _identity
     )
@@ -244,7 +244,7 @@ contract OwnerManager is OwnerRoles {
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
     function callRemoveTrustedVerifiers(
-        IClaimVerifier _trustedVerifier, 
+        IClaimValidator _trustedVerifier, 
         IIdentity _identity
     )
         external
@@ -265,7 +265,7 @@ contract OwnerManager is OwnerRoles {
      *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
      */
     function callUpdateVerifierClaimTopics(
-        IClaimVerifier _trustedVerifier,
+        IClaimValidator _trustedVerifier,
         uint256[] calldata _claimTopics,
         IIdentity _identity
     )

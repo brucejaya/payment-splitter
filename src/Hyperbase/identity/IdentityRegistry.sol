@@ -15,13 +15,13 @@ import '../../Role/agent/AgentRole.sol';
 contract IdentityRegistry is IIdentityRegistry, AgentRole {
 
     /// @dev Address of the IdentityRegistryStorage Contract
-    IIdentityRegistryStorage private identityRegistryStorage;
+    IIdentityRegistryStorage private identityRegistryStorage_;
 
     /// @dev Address of the ComplianceClaimsRequired Contract
-    IComplianceClaimsRequired private complianceClaimsRequired;
+    IComplianceClaimsRequired private complianceClaimsRequired_;
 
     /// @dev Address of the TrustedVerifierssRegistry Contract
-    IClaimVerifiersRegistry private claimVerifiersRegistry;
+    IClaimVerifiersRegistry private claimVerifiersRegistry_;
 
     /**
      *  @dev the constructor initiates the Identity Registry smart contract
@@ -37,9 +37,9 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         address _complianceClaimsRequired,
         address _identityRegistryStorage
     ) {
-        complianceClaimsRequired = IComplianceClaimsRequired(_complianceClaimsRequired);
-        claimVerifiersRegistry = IClaimVerifiersRegistry(_claimVerifiersRegistry);
-        identityRegistryStorage = IIdentityRegistryStorage(_identityRegistryStorage);
+        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
+        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
+        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
         emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
         emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
         emit IdentityStorageSet(_identityRegistryStorage);
@@ -56,7 +56,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         returns (IIdentity)
     {
-        return identityRegistryStorage.storedIdentity(_account);
+        return identityRegistryStorage_.storedIdentity(_account);
     }
 
     /**
@@ -70,7 +70,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         returns (uint16)
     {
-        return identityRegistryStorage.storedHolderCountry(_account);
+        return identityRegistryStorage_.storedHolderCountry(_account);
     }
 
     /**
@@ -82,7 +82,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         returns (IClaimVerifiersRegistry)
     {
-        return claimVerifiersRegistry;
+        return claimVerifiersRegistry_;
     }
 
     /**
@@ -94,7 +94,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         returns (IComplianceClaimsRequired)
     {
-        return complianceClaimsRequired;
+        return complianceClaimsRequired_;
     }
 
     /**
@@ -106,7 +106,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         returns (IIdentityRegistryStorage)
     {
-        return identityRegistryStorage;
+        return identityRegistryStorage_;
     }
 
     /**
@@ -121,7 +121,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         onlyAgent
     {
-        identityRegistryStorage.addIdentityToStorage(_account, _identity, _country);
+        identityRegistryStorage_.addIdentityToStorage(_account, _identity, _country);
         emit IdentityRegistered(_account, _identity);
     }
 
@@ -153,7 +153,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         onlyAgent
     {
         IIdentity oldIdentity = identity(_account);
-        identityRegistryStorage.modifyStoredIdentity(_account, _identity);
+        identityRegistryStorage_.modifyStoredIdentity(_account, _identity);
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
@@ -168,7 +168,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         onlyAgent
     {
-        identityRegistryStorage.modifyStoredHolderCountry(_account, _country);
+        identityRegistryStorage_.modifyStoredHolderCountry(_account, _country);
         emit CountryUpdated(_account, _country);
     }
 
@@ -182,7 +182,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         override
         onlyAgent
     {
-        identityRegistryStorage.removeIdentityFromStorage(_account);
+        identityRegistryStorage_.removeIdentityFromStorage(_account);
         emit IdentityRemoved(_account, identity(_account));
     }
 
@@ -193,7 +193,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         if (address(identity(_account)) == address(0)) {
             return false;
         }
-        uint256[] memory requiredClaimTopics = complianceClaimsRequired.getClaimTopics();
+        uint256[] memory requiredClaimTopics = complianceClaimsRequired_.getClaimTopics();
         if (requiredClaimTopics.length == 0) {
             return true;
         }
@@ -211,19 +211,19 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
             for (uint256 j = 0; j < claimIds.length; j++) {
                 (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_account).getClaim(claimIds[j]);
 
-                try IClaimVerifier(issuer).isClaimValid(identity(_account), requiredClaimTopics[claimTopic], sig,
+                try IClaimValidator(issuer).isClaimValid(identity(_account), requiredClaimTopics[claimTopic], sig,
                 data) returns(bool _validity){
                     if (
                         _validity
-                        && claimVerifiersRegistry.hasClaimTopic(issuer, requiredClaimTopics[claimTopic])
-                        && claimVerifiersRegistry.isVerifier(issuer)
+                        && claimVerifiersRegistry_.hasClaimTopic(issuer, requiredClaimTopics[claimTopic])
+                        && claimVerifiersRegistry_.isVerifier(issuer)
                     ) {
                         j = claimIds.length;
                     }
-                    if (!claimVerifiersRegistry.isVerifier(issuer) && j == (claimIds.length - 1)) {
+                    if (!claimVerifiersRegistry_.isVerifier(issuer) && j == (claimIds.length - 1)) {
                         return false;
                     }
-                    if (!claimVerifiersRegistry.hasClaimTopic(issuer, requiredClaimTopics[claimTopic]) && j == (claimIds.length - 1)) {
+                    if (!claimVerifiersRegistry_.hasClaimTopic(issuer, requiredClaimTopics[claimTopic]) && j == (claimIds.length - 1)) {
                         return false;
                     }
                     if (!_validity && j == (claimIds.length - 1)) {
@@ -244,7 +244,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
      *  @dev See {IIdentityRegistry-setIdentityRegistryStorage}.
      */
     function setIdentityRegistryStorage(address _identityRegistryStorage) external override onlyOwner {
-        identityRegistryStorage = IIdentityRegistryStorage(_identityRegistryStorage);
+        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
@@ -252,7 +252,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
      *  @dev See {IIdentityRegistry-setComplianceClaimsRequired}.
      */
     function setComplianceClaimsRequired(address _complianceClaimsRequired) external override onlyOwner {
-        complianceClaimsRequired = IComplianceClaimsRequired(_complianceClaimsRequired);
+        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
         emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
     }
 
@@ -260,7 +260,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
      *  @dev See {IIdentityRegistry-setClaimVerifiersRegistry}.
      */
     function setClaimVerifiersRegistry(address _claimVerifiersRegistry) external override onlyOwner {
-        claimVerifiersRegistry = IClaimVerifiersRegistry(_claimVerifiersRegistry);
+        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
         emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
     }
 

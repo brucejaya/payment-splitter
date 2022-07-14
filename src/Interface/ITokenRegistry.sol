@@ -118,7 +118,7 @@ interface ITokenRegistry is IERC1155 {
      *  if isFrozen returns `false` the wallet is not frozen
      *  isFrozen returning `true` doesn't mean that the balance is free, tokens could be blocked by
      *  a partial freeze or the whole token could be blocked by pause
-     *  @param userAddress the address of the wallet on which isFrozen is called
+     *  @param account the address of the wallet on which isFrozen is called
      *  @param id the id of the token
      */
     function isFrozen(address account, uint256 id) external view override returns (bool);

@@ -7,17 +7,18 @@ interface IImplementationAuthority {
 }
 
 contract TokenRegistryProxy {
-    address public implementationAuthority;
+    address public _implementationAuthority;
 
     constructor(
         string memory uri_,
         address identityRegistry_,
         address compliance_,
-        address agentIdentity_
+        address agentIdentity_,
+        address implementationAuthority
     ) {
-        implementationAuthority = _implementationAuthority;
+        _implementationAuthority = implementationAuthority;
 
-        address logic = IImplementationAuthority(implementationAuthority).getImplementation();
+        address logic = IImplementationAuthority(_implementationAuthority).getImplementation();
 
         // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) =
@@ -34,7 +35,7 @@ contract TokenRegistryProxy {
     }
 
     fallback() external payable {
-        address logic = IImplementationAuthority(implementationAuthority).getImplementation();
+        address logic = IImplementationAuthority(_implementationAuthority).getImplementation();
 
         assembly {
             // solium-disable-line
