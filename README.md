@@ -10,7 +10,7 @@ Full folder structure is as follows:
 	Hypersurface (src)
 	├── Hyperbase
 	│   ├── claims
-	│   │   ├── ClaimVerifier.sol
+	│   │   ├── ClaimValidator.sol
 	│   │   └── ClaimVerifiersRegistry.sol
 	│   └── identity
 	│       ├── IdentityRegistry.sol
@@ -65,7 +65,7 @@ Hypershare is the home of all things **equity** related.
 
 ### 2. Hyperbase is the home of all things **identity** related.
 
-2.1 [identity](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/identity) is both (1) an identity registry, (2) a multi-level [access-control](https://docs.openzeppelin.com/contracts/2.x/access-control "OpenZeppelin Access Control") contract. This means that numerous disparate EVM accounts may perform actions under the umbrella of the same identity. 
+2.1 [identity](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/identity) is both 
 
 2.2. [claims](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/claims) records verifiable digital claims from a Hyperbase and also records a registry of trusted claim issuers (e.g. KPMG, etc) and claim topics (e.g. accredited: y/n, nationality, etc.)
 

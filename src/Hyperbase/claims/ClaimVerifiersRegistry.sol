@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IClaimVerifier.sol';
+import '../../Interface/IClaimValidator.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 
 contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {

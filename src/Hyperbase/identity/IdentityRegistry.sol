@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Interface/IClaimVerifier.sol';
+import '../../Interface/IClaimValidator.sol';
 import '../../Interface/IIdentity.sol';
 
 import '../../Interface/IComplianceClaimsRequired.sol';

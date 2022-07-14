@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import './IClaimVerifiersRegistry.sol';
 import './IComplianceClaimsRequired.sol';
 import './IIdentityRegistryStorage.sol';
-import './IClaimVerifier.sol';
+import './IClaimValidator.sol';
 import './IIdentity.sol';
 
 interface IIdentityRegistry {

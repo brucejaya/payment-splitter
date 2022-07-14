@@ -8,7 +8,7 @@ import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/ICompliance.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IClaimVerifier.sol';
+import '../../Interface/IClaimValidator.sol';
 import './OwnerRoles.sol';
 
 contract OwnerManager is OwnerRoles {

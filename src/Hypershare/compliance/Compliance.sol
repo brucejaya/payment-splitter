@@ -45,7 +45,6 @@ contract Compliance is ICompliance, Ownable  {
         _identityRegistry = _tokenRegistry.identityRegistry();
     }
 
-
     /**
      *  this event is emitted when the holder limit is set.
      *  the event is emitted by the setHolderLimit function and by the constructor
@@ -53,7 +52,6 @@ contract Compliance is ICompliance, Ownable  {
      *  `_id` is the id of the token
      */
     event HolderLimitSet(uint256 _holderLimit, uint256 _id);
-
 
     /**
      *  @dev See {ICompliance-isTokenAgent}.
@@ -96,7 +94,6 @@ contract Compliance is ICompliance, Ownable  {
         _tokenAgentsList[id][agentAddress] = false;
         emit TokenAgentRemoved(agentAddress);
     }
-
 
     /**
      *  @dev sets the holder limit as required for compliance purpose

@@ -11,79 +11,79 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when the token information is updated.
      *  the event is emitted by the token constructor and by the setTokenInformation function
-     *  `_newName` is the name of the token
-     *  `_newSymbol` is the symbol of the token
-     *  `_newDecimals` is the decimals of the token
-     *  `_newVersion` is the version of the token, current version is 3.0
-     *  `_newIdentity` is the address of the Identity of the token
+     *  `newName` is the name of the token
+     *  `newSymbol` is the symbol of the token
+     *  `newDecimals` is the decimals of the token
+     *  `newVersion` is the version of the token, current version is 3.0
+     *  `newIdentity` is the address of the Identity of the token
      */
-    event UpdatedTokenInformation(string _newName, string _newSymbol, uint8 _newDecimals, string _newVersion, address _newIdentity);
+    event UpdatedTokenInformation(string newName, string newSymbol, uint8 newDecimals, string newVersion, address newIdentity);
 
     /**
      *  this event is emitted when the IdentityRegistry has been set for the token
      *  the event is emitted by the token constructor and by the setIdentityRegistry function
-     *  `_identityRegistry` is the address of the Identity Registry of the token
+     *  `identityRegistry` is the address of the Identity Registry of the token
      */
-    event IdentityRegistryAdded(address indexed _identityRegistry);
+    event IdentityRegistryAdded(address indexed identityRegistry);
 
     /**
      *  this event is emitted when the Compliance has been set for the token
      *  the event is emitted by the token constructor and by the setCompliance function
-     *  `_compliance` is the address of the Compliance contract of the token
+     *  `compliance` is the address of the Compliance contract of the token
      */
-    event ComplianceAdded(address indexed _compliance);
+    event ComplianceAdded(address indexed compliance);
 
     /**
      *  this event is emitted when an holder successfully recovers his tokens
      *  the event is emitted by the recoveryAddress function
-     *  `_lostWallet` is the address of the wallet that the holder lost access to
-     *  `_newWallet` is the address of the wallet that the holder provided for the recovery
-     *  `_holderIdentity` is the address of the Identity of the holder who asked for a recovery
+     *  `lostWallet` is the address of the wallet that the holder lost access to
+     *  `newWallet` is the address of the wallet that the holder provided for the recovery
+     *  `holderIdentity` is the address of the Identity of the holder who asked for a recovery
      */
-    event RecoverySuccess(address _lostWallet, address _newWallet, address _holderIdentity);
+    event RecoverySuccess(address lostWallet, address newWallet, address holderIdentity);
 
     /**
      *  this event is emitted when the wallet of an holder is frozen or unfrozen
      *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
-     *  `_account` is the wallet of the holder that is concerned by the freezing status
-     *  `_isFrozen` is the freezing status of the wallet
-     *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
-     *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
-     *  `_owner` is the address of the agent who called the function to freeze the wallet
+     *  `account` is the wallet of the holder that is concerned by the freezing status
+     *  `isFrozen` is the freezing status of the wallet
+     *  if `isFrozen` equals `true` the wallet is frozen after emission of the event
+     *  if `isFrozen` equals `false` the wallet is unfrozen after emission of the event
+     *  `owner` is the address of the agent who called the function to freeze the wallet
      */
-    event AddressFrozen(address indexed _account, bool indexed _isFrozen, address indexed _owner);
+    event AddressFrozen(address indexed account, bool indexed isFrozen, address indexed owner);
 
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
      *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `_account` is the wallet of the holder that is concerned by the freezing status
-     *  `_amount` is the amount of tokens that are frozen
+     *  `account` is the wallet of the holder that is concerned by the freezing status
+     *  `amount` is the amount of tokens that are frozen
      */
-    event TokensFrozen(address indexed _account, uint256 _amount);
+    event TokensFrozen(address indexed account, uint256 amount);
 
     /**
      *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
      *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `_account` is the wallet of the holder that is concerned by the freezing status
-     *  `_amount` is the amount of tokens that are unfrozen
+     *  `account` is the wallet of the holder that is concerned by the freezing status
+     *  `amount` is the amount of tokens that are unfrozen
      */
-    event TokensUnfrozen(address indexed _account, uint256 _amount);
+    event TokensUnfrozen(address indexed account, uint256 amount);
 
     /**
      *  this event is emitted when the token is paused
      *  the event is emitted by the pause function
-     *  `_account` is the address of the wallet that called the pause function
-     *  `_id` The token id
+     *  `account` is the address of the wallet that called the pause function
+     *  `id` The token id
      */
-    event Paused(address _account, uint256 _id);
+    event Paused(address account, uint256 id);
 
     /**
      *  this event is emitted when the token is unpaused
      *  the event is emitted by the unpause function
-     *  `_account` is the address of the wallet that called the unpause function
-     *  `_id` The token id
+     *  `account` is the address of the wallet that called the unpause function
+     *  `id` The token id
      */
-    event Unpaused(address _account, uint256 _id);
+    event Unpaused(address account, uint256 id);
 
     /**
      * @dev Returns the total supply of the token.
@@ -118,14 +118,16 @@ interface ITokenRegistry is IERC1155 {
      *  if isFrozen returns `false` the wallet is not frozen
      *  isFrozen returning `true` doesn't mean that the balance is free, tokens could be blocked by
      *  a partial freeze or the whole token could be blocked by pause
-     *  @param _userAddress the address of the wallet on which isFrozen is called
+     *  @param userAddress the address of the wallet on which isFrozen is called
+     *  @param id the id of the token
      */
     function isFrozen(address account, uint256 id) external view override returns (bool);
 
     /**
      *  @dev Returns the amount of tokens that are partially frozen on a wallet
      *  the amount of frozen tokens is always <= to the total balance of the wallet
-     *  @param _userAddress the address of the wallet on which getFrozenTokens is called
+     *  @param account the address of the wallet on which getFrozenTokens is called
+     *  @param id the id of the token
      */
     function getFrozenTokens(address account, uint256 id) external view override returns (uint256);
     
@@ -173,7 +175,7 @@ interface ITokenRegistry is IERC1155 {
 
     /**
      *  @dev sets the Identity Registry for the token
-     *  @param _identityRegistry the address of the Identity Registry to set
+     *  @param identityRegistry the address of the Identity Registry to set
      *  Only the owner of the token smart contract can call this function
      *  emits an `IdentityRegistryAdded` event
      */
@@ -181,7 +183,7 @@ interface ITokenRegistry is IERC1155 {
 
     /**
      *  @dev sets the compliance contract of the token
-     *  @param _compliance the address of the compliance contract to set
+     *  @param complianceAddress the address of the compliance contract to set
      *  Only the owner of the token smart contract can call this function
      *  emits a `ComplianceAdded` event
      */
@@ -189,27 +191,27 @@ interface ITokenRegistry is IERC1155 {
     
     /**
      *  @dev transfers the ownership of the token smart contract
-     *  @param _newOwner the address of the new token smart contract owner
+     *  @param newOwner the address of the new token smart contract owner
      *  This function can only be called by the owner of the token
      *  emits an `OwnershipTransferred` event
      */
-    function transferOwnershipOnTokenContract(address _newOwner) external;
+    function transferOwnershipOnTokenContract(address newOwner) external;
     
     /**
      *  @dev adds an agent to the token smart contract
-     *  @param _agent the address of the new agent of the token smart contract
+     *  @param agent the address of the new agent of the token smart contract
      *  This function can only be called by the owner of the token
      *  emits an `AgentAdded` event
      */
-    function addAgentOnTokenContract(address _agent) external;
+    function addAgentOnTokenContract(address agent) external;
 
     /**
      *  @dev remove an agent from the token smart contract
-     *  @param _agent the address of the agent to remove
+     *  @param agent the address of the agent to remove
      *  This function can only be called by the owner of the token
      *  emits an `AgentRemoved` event
      */
-    function removeAgentOnTokenContract(address _agent) external;
+    function removeAgentOnTokenContract(address agent) external;
 
     /**
      *  @dev force a transfer of tokens between 2 whitelisted wallets
@@ -219,12 +221,12 @@ interface ITokenRegistry is IERC1155 {
      *  to proceed the transfer, in such a case, the remaining balance on the `from`
      *  account is 100% composed of frozen tokens post-transfer.
      *  Require that the `to` address is a verified address,
-     *  @param _from The address of the sender
-     *  @param _to The address of the receiver
-     *  @param _amount The number of tokens to transfer
+     *  @param from The address of the sender
+     *  @param to The address of the receiver
+     *  @param amount The number of tokens to transfer
      *  @return `true` if successful and revert if unsuccessful
      *  This function can only be called by a wallet set as agent of the token
-     *  emits a `TokensUnfrozen` event if `_amount` is higher than the free balance of `_from`
+     *  emits a `TokensUnfrozen` event if `amount` is higher than the free balance of `_from`
      *  emits a `Transfer` event
      */
     function forcedTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) external returns (bool);
@@ -249,8 +251,9 @@ interface ITokenRegistry is IERC1155 {
      *  Require that the `_toList` addresses are all verified addresses
      *  IMPORTANT : THIS TRANSACTION COULD EXCEED GAS LIMIT IF `_fromList.length` IS TOO HIGH,
      *  USE WITH CARE OR YOU COULD LOSE TX FEES WITH AN "OUT OF GAS" TRANSACTION
-     *  @param _fromList The addresses of the senders
-     *  @param _toList The addresses of the receivers
+     *  @param fromList The addresses of the senders
+     *  @param toList The addresses of the receivers
+     *  @param ids The token ids
      *  @param amounts The number of tokens to transfer to the corresponding receiver
      *  This function can only be called by a wallet set as agent of the token
      *  emits `TokensUnfrozen` events if `amounts[i]` is higher than the free balance of `_fromList[i]`
@@ -291,11 +294,11 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when the wallet of an investor is frozen or unfrozen
      *  the event is emitted by setAddressFrozen and batchSetAddressFrozen functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
-     *  `_isFrozen` is the freezing status of the wallet
-     *  if `_isFrozen` equals `true` the wallet is frozen after emission of the event
-     *  if `_isFrozen` equals `false` the wallet is unfrozen after emission of the event
-     *  `_owner` is the address of the agent who called the function to freeze the wallet
+     *  `userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `isFrozen` is the freezing status of the wallet
+     *  if `isFrozen` equals `true` the wallet is frozen after emission of the event
+     *  if `isFrozen` equals `false` the wallet is unfrozen after emission of the event
+     *  `owner` is the address of the agent who called the function to freeze the wallet
      */
     function setAddressFrozen(address account, uint256 id, bool freeze) external;
 
@@ -316,8 +319,8 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when a certain amount of tokens is frozen on a wallet
      *  the event is emitted by freezePartialTokens and batchFreezePartialTokens functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
-     *  `_amount` is the amount of tokens that are frozen
+     *  `userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `amount` is the amount of tokens that are frozen
      */
     function freezePartialTokens(address account, uint256 id, uint256 amount) external;
 
@@ -338,8 +341,8 @@ interface ITokenRegistry is IERC1155 {
     /**
      *  this event is emitted when a certain amount of tokens is unfrozen on a wallet
      *  the event is emitted by unfreezePartialTokens and batchUnfreezePartialTokens functions
-     *  `_userAddress` is the wallet of the investor that is concerned by the freezing status
-     *  `_amount` is the amount of tokens that are unfrozen
+     *  `userAddress` is the wallet of the investor that is concerned by the freezing status
+     *  `amount` is the amount of tokens that are unfrozen
      */
     function unfreezePartialTokens(address account, uint256 id, uint256 amount) external;
 

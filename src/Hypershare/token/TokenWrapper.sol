@@ -7,7 +7,7 @@ import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol';
 
 import '../../Interface/ITokenRegistry.sol';
 
-abstract contract Wrapper is ERC20, IERC1155Receiver {
+abstract contract TokenWrapper is ERC20, IERC1155Receiver {
     
     ITokenRegistry public _tokenRegistry;
     uint256 public _id;
@@ -18,7 +18,6 @@ abstract contract Wrapper is ERC20, IERC1155Receiver {
      * @param id of the asset the contract is for
      * @param name a descriptive name mentioning market and outcome
      * @param symbol symbol
-     * @param decimals decimals
      */
     constructor(
         ITokenRegistry tokenRegistry,
@@ -41,6 +40,7 @@ abstract contract Wrapper is ERC20, IERC1155Receiver {
         address account,
         uint256 amount
     ) public {
+        // TODO require that token not paused...
         _mint(account, amount);
     }
 
