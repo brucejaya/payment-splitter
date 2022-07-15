@@ -57,7 +57,7 @@ contract AgentManager is AgentRoles {
         address[] memory _toList,
         uint256[] memory _ids,
         uint256[] memory _amounts,
-        bytes[] memory _dataList,
+        bytes[] memory _data,
         IIdentity _identity
     )
         external
@@ -66,7 +66,7 @@ contract AgentManager is AgentRoles {
             isTransferManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Transfer Manager'
         );
-        tokenRegistry.batchForcedTransfer(_fromList, _toList, _ids, _amounts, _dataList);
+        tokenRegistry.batchForcedTransfer(_fromList, _toList, _ids, _amounts, _data);
     }
 
     /**
@@ -139,9 +139,9 @@ contract AgentManager is AgentRoles {
      */
     function callMintBatch(
         address[] memory _accounts,
-        uint256[] memory _ids,
+        uint256 _id,
         uint256[] memory _amounts,
-        bytes[] memory _dataList,
+        bytes memory _data,
         IIdentity _identity
     )
         external
@@ -150,7 +150,7 @@ contract AgentManager is AgentRoles {
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
-        tokenRegistry.mintBatch(_accounts, _ids, _amounts, _dataList);
+        tokenRegistry.mintBatch(_accounts, _id, _amounts, _data);
     }
 
     /**

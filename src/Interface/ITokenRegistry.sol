@@ -284,11 +284,11 @@ interface ITokenRegistry is IERC1155 {
      *  @param accounts The addresses of the receivers
      *  @param ids The token ids
      *  @param amounts The number of tokens to mint to the corresponding receiver
-     *  @param dataList of the corresponding data
+     *  @param data of the corresponding data
      *  This function can only be called by a wallet set as agent of the token
      *  emits _toList.length `Transfer` events
      */
-    function mintBatch(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts, bytes[] memory dataList) external;
+    function mintBatch(address[] memory accounts, uint256 id, uint256[] memory amounts, bytes memory data) external;
 
 
     /**
@@ -359,27 +359,11 @@ interface ITokenRegistry is IERC1155 {
      */
     function batchUnfreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external override;
     
-
-    /**
-     * @dev Destroys `amount` tokens of token type `id` from `from`
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `from` must have at least `amount` tokens of token type `id`.
-     */
+    // TODO
     function burn(address from, uint256 id, uint256 amount) external;
     
-    
-    /**
-     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {burn}.
-     *
-     * Requirements:
-     *
-     * - `ids` and `amounts` must have the same length.
-     */
-    function burnBatch(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external;
-
+    // TODO
+    function burnBatch(address[] memory accounts, uint256 id, uint256[] memory amounts) external;
 
     // TODO
     function recoveryAddress(address lostWallet, address newWallet, uint256 id, address holderIdentity, bytes memory data) external override returns (bool);

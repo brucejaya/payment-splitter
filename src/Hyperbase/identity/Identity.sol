@@ -667,10 +667,10 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
         if (gasToken == address(0)) {
             require(address(this).balance > refundAmount);
-            msg.snedr.transfer(refundAmount);
+            payable(msg.sender).transfer(refundAmount);
         } else {
             require(IERC20(gasToken).balanceOf(address(this)) > refundAmount);
-            require(IERC20(gasToken).transfer(recepient, refundAmount));
+            require(IERC20(gasToken).transfer(msg.sender, refundAmount));
         }
     }
 
