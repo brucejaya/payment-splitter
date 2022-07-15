@@ -25,7 +25,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         _;
     }
 
-    /// @dev OwnerAdmin Role _ownerAdmin
     function isOwnerAdmin(
         address _owner
     )
@@ -58,7 +57,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev RegistryAddressSetter Role _registryAddressSetter
     function isRegistryAddressSetter(
         address _owner
     )
@@ -91,7 +89,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ComplianceSetter Role _complianceSetter
     function isComplianceSetter(
         address _owner
     )
@@ -124,7 +121,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ClaimRegistryManager Role _claimRegistryManager
     function isClaimRegistryManager(
         address _owner
     )
@@ -157,7 +153,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev VerifiersRegistryManager Role _issuersRegistryManager
     function isVerifiersRegistryManager(
         address _owner
     )
@@ -190,7 +185,6 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev TokenInfoManager Role _tokenInfoManager
     function isTokenInfoManager(
         address _owner
     )

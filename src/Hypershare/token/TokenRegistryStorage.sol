@@ -6,16 +6,16 @@ import '../../Interface/IIdentityRegistry.sol';
 
 contract TokenRegistryStorage {
 
-    // Mapping from token ID to account balances
+    // @Dev Mapping from token ID to account balances
     mapping(uint256 => mapping(address => uint256)) internal _balances;
 
-    // Mapping from account to operator approvals
+    // @Dev Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) internal _operatorApprovals;
 
-    // Mapping from token ID to Wrapper contract address
+    // @Dev Mapping from token ID to Wrapper contract address
     mapping(uint256 => address) internal _tokenWrapper;
 
-    // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
+    // @Dev Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
     string internal _uri;
 
     // @dev Mapping from token ID to account balances

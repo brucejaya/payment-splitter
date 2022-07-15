@@ -3,132 +3,35 @@
 pragma solidity ^0.8.0;
 
 // TODO UPDATE
-
 interface ICompliance {
     
-    /**
-     *  this event is emitted when the Agent has been added on the allowedList of this Compliance.
-     *  the event is emitted by the Compliance constructor and by the addTokenAgent function
-     *  `agentAddress` is the address of the Agent to add
-     */
     event TokenAgentAdded(address agentAddress);
 
-    /**
-     *  this event is emitted when the Agent has been removed from the agent list of this Compliance.
-     *  the event is emitted by the Compliance constructor and by the removeTokenAgent function
-     *  `agentAddress` is the address of the Agent to remove
-     */
     event TokenAgentRemoved(address agentAddress);
 
-    /**
-     *  this event is emitted when a token has been bound to the compliance contract
-     *  the event is emitted by the bindToken function
-     *  `token` is the address of the token to bind
-     */
     event TokenBound(address token);
 
-    /**
-     *  this event is emitted when a token has been unbound from the compliance contract
-     *  the event is emitted by the unbindToken function
-     *  `token` is the address of the token to unbind
-     */
     event TokenUnbound(address token);
 
-    /**
-     *  @dev Returns true if the Address is in the list of token agents
-     *  @param agentAddress address of this agent
-     */
     function isTokenAgent(address agentAddress) external view returns (bool);
 
-    /**
-     *  @dev Returns true if the address given corresponds to a token that is bound with the Compliance contract
-     *  @param token address of the token
-     */
     function isTokenBound(address token) external view returns (bool);
 
-    /**
-     *  @dev adds an agent to the list of token agents
-     *  @param agentAddress address of the agent to be added
-     *  Emits a TokenAgentAdded event
-     */
     function addTokenAgent(address agentAddress) external;
 
-    /**
-     *  @dev remove Agent from the list of token agents
-     *  @param agentAddress address of the agent to be removed (must be added first)
-     *  Emits a TokenAgentRemoved event
-     */
     function removeTokenAgent(address agentAddress) external;
 
-    /**
-     *  @dev binds a token to the compliance contract
-     *  @param token address of the token to bind
-     *  Emits a TokenBound event
-     */
     function bindToken(address token) external;
 
-    /**
-     *  @dev unbinds a token from the compliance contract
-     *  @param token address of the token to unbind
-     *  Emits a TokenUnbound event
-     */
     function unbindToken(address token) external;
 
-    /**
-     *  @dev checks that the transfer is compliant.
-     *  default compliance always returns true
-     *  READ ONLY FUNCTION, this function cannot be used to increment
-     *  counters, emit events, ...
-     *  @param to The address of the receiver
-     *  @param id The id of the token
-     *  @param amount The amount to transfer
-     *  @param data The data
-     */
     function canTransfer(address to, uint256 id, uint256 amount, bytes memory data) external view override returns (bool);
 
-    /**
-     *  @dev function called whenever tokens are transferred from one wallet to another
-     *  this function can update state variables in the compliance contract
-     *  these state variables being used by `canTransfer` to decide if a transfer
-     *  is compliant or not depending on the values stored in these state variables and on
-     *  the parameters of the compliance smart contract
-     *  @param from The address of the sender
-     *  @param to The address of the receiver
-     *  @param id The token id
-     *  @param amount The amount of tokens involved in the transfer
-     *  @param data The data field
-     */
     function transferred(address from, address to, uint256 id, uint256 amount, bytes memory data) external;
 
-    /**
-     *  @dev function called whenever tokens are created on a wallet
-     *  this function can update state variables in the compliance contract
-     *  these state variables being used by `canTransfer` to decide if a transfer
-     *  is compliant or not depending on the values stored in these state variables and on
-     *  the parameters of the compliance smart contract
-     *  @param to The address of the receiver
-     *  @param amount The amount of tokens involved in the transfer
-     */
     function created(address to, uint256 id, uint256 amount, bytes memory data) external;
 
-    /**
-     *  @dev function called whenever tokens are destroyed
-     *  this function can update state variables in the compliance contract
-     *  these state variables being used by `canTransfer` to decide if a transfer
-     *  is compliant or not depending on the values stored in these state variables and on
-     *  the parameters of the compliance smart contract
-     *  @param from The address of the receiver
-     *  @param id The token id
-     *  @param amount The amount of tokens involved in the transfer
-     */
     function destroyed(address from, uint256 id, uint256 amount) external;
 
-    /**
-     *  @dev function used to transfer the ownership of the compliance contract
-     *  to a new owner, giving him access to the `OnlyOwner` functions implemented on the contract
-     *  @param newOwner The address of the new owner of the compliance contract
-     *  This function can only be called by the owner of the compliance contract
-     *  emits an `OwnershipTransferred` event
-     */
     function transferOwnershipOnComplianceContract(address newOwner) external;
 }

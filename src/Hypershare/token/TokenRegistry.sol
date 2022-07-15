@@ -24,17 +24,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
     using Address for address;
 
-    /**
-     *  @dev the constructor initiates the token contract
-     *  _msgSender() is set automatically as the owner of the smart contract
-     *  @param uri_ @dev See {setURI}.
-     *  @param identityRegistry_ the address of the Identity registry linked to the token
-     *  @param compliance_ the address of the compliance contract linked to the token
-     *  @param agentIdentity_ the address of the Identity of the token
-     *  emits an `UpdatedTokenInformation` event
-     *  emits an `_identityRegistryAdded` event
-     *  emits a `ComplianceAdded` event
-     */
     function init(
         string memory uri_,
         address identityRegistry_,
@@ -53,9 +42,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     * @dev Modifier to make a function callable only when the contract is not paused.
-     */
     modifier whenNotPaused(
         uint256 id
     ) {
@@ -63,9 +49,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _;
     }
 
-    /**
-     * @dev Modifier to make a function callable only when the contract is paused.
-     */
     modifier whenPaused(
         uint256 id
     ) {
@@ -73,16 +56,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _;
     }
 
-    /**
-     * @dev See {ITokenRegistry-totalSupply}.
-     */
     function totalSupply(uint256 id) external view override returns (uint256) {
         return _totalSupply[id];
     }
 
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
         return
             interfaceId == type(IERC1155).interfaceId ||
@@ -90,16 +67,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             super.supportsInterface(interfaceId);
     }
 
-    /**
-     * @dev See {ITokenRegistryMetadataURI-uri}.
-     *
-     * This implementation returns the same URI for *all* token types. It relies
-     * on the token type ID substitution mechanism
-     * https://eips.ethereum.org/EIPS/eip-1155#metadata[defined in the EIP].
-     *
-     * Clients calling this function must replace the `\{id\}` substring with the
-     * actual token type ID.
-     */
     function uri(
         uint256 id
     ) 
@@ -111,9 +78,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     *  @dev See {ITokenRegistry-identity}.
-     */
     function identity()
         external
         view
@@ -123,9 +87,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _tokenIdentity;
     }
     
-    /**
-     *  @dev See {ITokenRegistry-identityRegistry}.
-     */
     function identityRegistry()
         external
         view
@@ -135,9 +96,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _identityRegistry;
     }
 
-    /**
-     *  @dev See {ITokenRegistry-compliance}.
-     */
     function compliance()
         external
         view
@@ -147,9 +105,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _compliance;
     }
 
-    /**
-     *  @dev See {ITokenRegistry-paused}.
-     */
     function paused(
         uint256 id
     )
@@ -161,9 +116,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _tokenPaused[id];
     }
 
-    /**
-     *  @dev See {ITokenRegistry-isFrozen}.
-     */
     function isFrozen(
         address account,
         uint256 id
@@ -176,9 +128,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _frozen[id][account];
     }
 
-    /**
-     *  @dev See {ITokenRegistry-getFrozenTokens}.
-     */
     function getFrozenTokens(
         address account,
         uint256 id     
@@ -191,9 +140,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _frozenTokens[id][account];
     }
     
-    /**
-     * @dev See {ITokenRegistry-setURI}.
-     */
     function setURI(
         string memory uri_
     )
@@ -203,9 +149,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _uri = uri_;
     }
 
-    /**
-     *  @dev See {ITokenRegistry-setIdentity}.
-     */
     function setIdentity(
         address Identity
     )
@@ -217,9 +160,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         // emit UpdatedTokenInformation(_tokenIdentity);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-pause}.
-     */
     function pause(
         uint256 id
     )
@@ -232,9 +172,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         emit Paused(_msgSender(), id);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-unpause}.
-     */
     function unpause(
         uint256 id
     )
@@ -248,9 +185,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     
-    /**
-     *  @dev See {ITokenRegistry-setIdentityRegistry}.
-     */
     function setIdentityRegistry(
         address identityRegistry
     )
@@ -262,9 +196,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         emit IdentityRegistryAdded(identityRegistry);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-setCompliance}.
-     */
     function setCompliance(
         address compliance
     )
@@ -277,9 +208,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
     
-    /**
-     *  @dev See {ITokenRegistry-transferOwnershipOnTokenContract}.
-     */
     function transferOwnershipOnTokenContract(
         address newOwner
     )
@@ -290,9 +218,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         transferOwnership(newOwner);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-addAgentOnTokenContract}.
-     */
     function addAgentOnTokenContract(
         address agent
     )
@@ -302,9 +227,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         addAgent(agent);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-removeAgentOnTokenContract}.
-     */
     function removeAgentOnTokenContract(
         address agent
     )
@@ -314,9 +236,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         removeAgent(agent);
     }
 
-    /**
-     * @dev See {ITokenRegistry-balanceOf}.
-     */
     function balanceOf(
         address account,
         uint256 id
@@ -331,9 +250,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _balances[id][account];
     }
     
-    /**
-     * @dev See {ITokenRegistry-balanceOfBatch}.
-     */
     function balanceOfBatch(
         address[] memory accounts,
         uint256[] memory ids
@@ -355,9 +271,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return batchBalances;
     }
 
-    /**
-     * @dev See {ITokenRegistry-setApprovalForAll}.
-     */
     function setApprovalForAll(
         address operator,
         bool approved
@@ -369,9 +282,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         setApprovalForAll(_msgSender(), operator, approved);
     }
 
-    /**
-     * @dev See {ITokenRegistry-isApprovedForAll}.
-     */
     function isApprovedForAll(
         address account,
         address operator
@@ -385,9 +295,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return _operatorApprovals[account][operator];
     }
 
-    /**
-     * @dev See {ITokenRegistry-safeTransferFrom}.
-     */
     function safeTransferFrom(
         address from,
         address to,
@@ -414,9 +321,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Transfer not possible');
     }
     
-    /**
-     *  @dev See {ITokenRegistry-forcedTransfer}.
-     */
     function forcedTransfer(
         address from,
         address to,
@@ -443,9 +347,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Transfer not possible');
     }
 
-    /**
-     * @dev See {ITokenRegistry-safeBatchTransferFrom}.
-     */
     function safeBatchTransferFrom(
         address from,
         address to,
@@ -486,9 +387,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         doSafeBatchTransferAcceptanceCheck(operator, from, to, ids, amounts, data);    
     }
 
-    /**
-     *  @dev See {ITokenRegistry-safeTransferFrom}.
-     */
     function safeTransferFrom(
         address from,
         address to,
@@ -520,9 +418,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         doSafeTransferAcceptanceCheck(operator, from, to, id, amount, data);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-batchForcedTransfer}.
-     */
     function batchForcedTransfer(
         address[] memory fromList,
         address[] memory toList,
@@ -546,11 +441,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
 
 
-    /**
-     *  @dev See {ITokenRegistry-mintBatch}.
-     *  Not to be confused with mintMisc
-     *  mintBatch distributes a single token to multiple accounts
-     */
     function mintBatch(
         address[] memory accounts,
         uint256 id,
@@ -565,11 +455,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-    /**
-     *  @dev See {ITokenRegistry-mintMisc}.
-     *  Not to be confused with mintBatch
-     *  mintBatch distributes multiple tokens to a single account accounts
-    */
     function mintMisc(
         address to,
         uint256[] memory ids,
@@ -586,9 +471,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
 
 
 
-    /**
-     *  @dev See {IToken-mint}.
-     */
     function mint(
         address to,
         uint256 id,
@@ -607,17 +489,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 	
 
-    /**
-     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
-     *
-     * Emits a {TransferSingle} event.
-     *
-     * Requirements:
-     *
-     * - `to` cannot be the zero address.
-     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
-     * acceptance magic value.
-     */
     function _mint(
         address to,
         uint256 id,
@@ -644,11 +515,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     *  @dev See {ITokenRegistry-burnBatch}.
-     *  Not to be confused with burnMisc
-     *  burnBatch distributes a single token to multiple accounts
-     */
     function burnBatch(
         address[] memory accounts,
         uint256 id,
@@ -663,11 +529,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     *  @dev See {ITokenRegistry-burnMisc}.
-     *  Not to be confused with burnBatch
-     *  burnBatch distributes multiple tokens to a single account accounts
-     */
     function burnMisc(
         address from,
         uint256[] memory ids,
@@ -682,9 +543,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     *  @dev See {ITokenRegistry-burn}.
-     */
     function burn(
         address from,
         uint256 id,
@@ -705,16 +563,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     * @dev Destroys `amount` tokens of token type `id` from `from`
-     *
-     * Emits a {TransferSingle} event.
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `from` must have at least `amount` tokens of token type `id`.
-     */
     function _burn(
         address from,
         uint256 id,
@@ -743,9 +591,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     }
 
 
-    /**
-     *  @dev See {ITokenRegistry-batchSetAddressFrozen}.
-     */
     function batchSetAddressFrozen(
         address[] memory accounts,
         uint256[] memory ids,
@@ -759,9 +604,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-    /**
-     *  @dev See {ITokenRegistry-setAddressFrozen}.
-     */
     function setAddressFrozen(
         address account,
         uint256 id,
@@ -775,9 +617,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         emit AddressFrozen(account, freeze, _msgSender());
     }
     
-    /**
-     *  @dev See {ITokenRegistry-batchFreezePartialTokens}.
-     */
     function batchFreezePartialTokens(
         address[] memory accounts,
         uint256[] memory ids,
@@ -794,9 +633,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-    /**
-     *  @dev See {ITokenRegistry-freezePartialTokens}.
-     */
     function freezePartialTokens(
         address account,
         uint256 id,
@@ -812,9 +648,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         emit TokensFrozen(account, amount);
     }
 
-    /**
-     *  @dev See {ITokenRegistry-batchUnfreezePartialTokens}.
-     */
     function batchUnfreezePartialTokens(
         address[] memory accounts,
         uint256[] memory ids,
@@ -831,9 +664,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-    /**
-     *  @dev See {ITokenRegistry-unfreezePartialTokens}.
-     */
     function unfreezePartialTokens(
         address account,
         uint256 id,
@@ -850,9 +680,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         // emit TokensUnfrozen(account, id, amount); TODO update event
     }
 
-    /**     
-     *  @dev See {ITokenRegistry-recoveryAddress}.
-     */
     function recoveryAddress(
         address lostWallet,
         address newWallet,
@@ -886,9 +713,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Recovery not possible');
     }
 
-    /**
-     *  @dev See {ITokenRegistry-setApprovalForAll}.
-     */
     function setApprovalForAll(
         address account,
         address operator,

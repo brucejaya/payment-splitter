@@ -14,24 +14,16 @@ import '../../Role/agent/AgentRole.sol';
 
 contract IdentityRegistry is IIdentityRegistry, AgentRole {
 
-    /// @dev Address of the IdentityRegistryStorage Contract
+    //  @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private identityRegistryStorage_;
 
-    /// @dev Address of the ComplianceClaimsRequired Contract
+    //  @dev Address of the ComplianceClaimsRequired Contract
     IComplianceClaimsRequired private complianceClaimsRequired_;
 
-    /// @dev Address of the TrustedVerifierssRegistry Contract
+    //  @dev Address of the TrustedVerifierssRegistry Contract
     IClaimVerifiersRegistry private claimVerifiersRegistry_;
 
-    /**
-     *  @dev the constructor initiates the Identity Registry smart contract
-     *  @param _claimVerifiersRegistry the trusted verifiers registry linked to the Identity Registry
-     *  @param _complianceClaimsRequired the claim topics registry linked to the Identity Registry
-     *  @param _identityRegistryStorage the identity registry storage linked to the Identity Registry
-     *  emits a `ComplianceClaimsRequiredSet` event
-     *  emits a `ClaimVerifiersRegistrySet` event
-     *  emits an `IdentityStorageSet` event
-     */
+    //  @dev the constructor initiates the Identity Registry smart contract
     constructor(
         address _claimVerifiersRegistry,
         address _complianceClaimsRequired,
@@ -45,9 +37,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-identity}.
-     */
     function identity(
         address _account
     )
@@ -59,9 +48,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return identityRegistryStorage_.storedIdentity(_account);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-holderCountry}.
-     */
     function holderCountry(
         address _account
     )
@@ -73,9 +59,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return identityRegistryStorage_.storedHolderCountry(_account);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-claimVerifiersRegistry}.
-     */
     function claimVerifiersRegistry()
         external
         view
@@ -85,9 +68,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return claimVerifiersRegistry_;
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-complianceClaimsRequired}.
-     */
     function complianceClaimsRequired()
         external
         view
@@ -97,9 +77,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return complianceClaimsRequired_;
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-identityRegistryStorage}.
-     */
     function identityRegistryStorage()
         external
         view
@@ -109,9 +86,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return identityRegistryStorage_;
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-registerIdentity}.
-     */
     function registerIdentity(
         address _account,
         IIdentity _identity,
@@ -125,9 +99,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityRegistered(_account, _identity);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-batchRegisterIdentity}.
-     */
     function batchRegisterIdentity(
         address[] calldata _accounts,
         IIdentity[] calldata _identities,
@@ -141,9 +112,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         }
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-updateIdentity}.
-     */
     function updateIdentity(
         address _account,
         IIdentity _identity
@@ -157,9 +125,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-updateCountry}.
-     */
     function updateCountry(
         address _account, 
         uint16 _country
@@ -172,9 +137,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit CountryUpdated(_account, _country);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-deleteIdentity}.
-     */
     function deleteIdentity(
         address _account
     )
@@ -186,9 +148,6 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityRemoved(_account, identity(_account));
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-isVerified}.
-     */
     function isVerified(address _account) external view override returns (bool) {
         if (address(identity(_account)) == address(0)) {
             return false;
@@ -240,33 +199,21 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return true;
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-setIdentityRegistryStorage}.
-     */
     function setIdentityRegistryStorage(address _identityRegistryStorage) external override onlyOwner {
         identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-setComplianceClaimsRequired}.
-     */
     function setComplianceClaimsRequired(address _complianceClaimsRequired) external override onlyOwner {
         complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
         emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-setClaimVerifiersRegistry}.
-     */
     function setClaimVerifiersRegistry(address _claimVerifiersRegistry) external override onlyOwner {
         claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
         emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-contains}.
-     */
     function contains(address _account) external view override returns (bool) {
         if (address(identity(_account)) == address(0)) {
             return false;
@@ -274,23 +221,14 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         return true;
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-transferOwnershipOnIdentityRegistryContract}.
-     */
     function transferOwnershipOnIdentityRegistryContract(address _newOwner) external override onlyOwner {
         transferOwnership(_newOwner);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-addAgentOnIdentityRegistryContract}.
-     */
     function addAgentOnIdentityRegistryContract(address _agent) external override {
         addAgent(_agent);
     }
 
-    /**
-     *  @dev See {IIdentityRegistry-removeAgentOnIdentityRegistryContract}.
-     */
     function removeAgentOnIdentityRegistryContract(address _agent) external override {
         removeAgent(_agent);
     }

@@ -9,15 +9,12 @@ import '../../Interface/IClaimVerifiersRegistry.sol';
 
 contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     
-    /// @dev Array containing all verifiers identity contract address.
+    // @dev Array containing all verifiers identity contract address.
     IClaimValidator[] private verifiers;
 
-    /// @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
+    // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) private claimVerifierTopics;
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-addTrustedVerifier}.
-     */
     function addTrustedVerifier(
         IClaimValidator _verifier,
         uint256[] calldata _claimsRequired
@@ -33,9 +30,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         emit TrustedVerifierAdded(_verifier, _claimsRequired);
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-removeTrustedVerifier}.
-     */
     function removeTrustedVerifier(
         IClaimValidator _verifier
     )
@@ -56,9 +50,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         emit TrustedVerifierRemoved(_verifier);
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-updateVerifierClaimTopics}.
-     */
     function updateVerifierClaimTopics(
         IClaimValidator _verifier,
         uint256[] calldata _claimsRequired
@@ -73,9 +64,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         emit ClaimTopicsUpdated(_verifier, _claimsRequired);
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-getverifiers}.
-     */
     function getverifiers()
         external
         view
@@ -85,9 +73,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         return verifiers;
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-isVerifier}.
-     */
     function isVerifier(
         address _Verifier
     )
@@ -105,9 +90,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         return false;
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-getclaimVerifierTopics}.
-     */
     function getclaimVerifierTopics(
         IClaimValidator _verifier
     )
@@ -120,9 +102,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         return claimVerifierTopics[address(_verifier)];
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-hasClaimTopic}.
-     */
     function hasClaimTopic(
         address _Verifier,
         uint256 _claimTopic
@@ -142,9 +121,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         return false;
     }
 
-    /**
-     *  @dev See {IClaimVerifiersRegistry-transferOwnershipOnVerifiersRegistryContract}.
-     */
     function transferOwnershipOnVerifiersRegistryContract(
         address _newOwner
     )

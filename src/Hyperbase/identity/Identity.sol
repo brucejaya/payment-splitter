@@ -8,10 +8,6 @@ import './IdentityStorage.sol';
 
 import '../../Interface/IIdentity.sol';
 
-/**
- * @dev Implementation of the `IERC734` "KeyHolder" as `IdentityKeys` and the `IERC735` "ClaimHolder" as `IdentityClaims` interfaces into a common Identity Contract.
- */
-
 contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
 
@@ -28,28 +24,15 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         }
     }
 
-    /**
-     * @notice Prevent any direct calls to the implementation contract (marked by canInteract = false).
-     */
     modifier delegatedOnly() {
         require(canInteract == true, "Interacting with the library contract is forbidden.");
         _;
     }
 
-    /**
-     * @notice When using this contract as an implementation for a proxy, call this initializer with a delegatecall.
-     *
-     * @param initialManagementKey The ethereum address to be set as the management key of the ONCHAINID.
-     */
     function initialize(address initialManagementKey) public {
         _Identity_init(initialManagementKey);
     }
 
-    /**
-     * @notice Computes if the context in which the function is called is a constructor or not.
-     *
-     * @return true if the context is a constructor.
-     */
     function _isConstructor() private view returns (bool) {
         address self = address(this);
         uint256 cs;
@@ -58,11 +41,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return cs == 0;
     }
 
-    /**
-     * @notice Initializer internal function for the Identity contract.
-     *
-     * @param initialManagementKey The ethereum address to be set as the management key of the ONCHAINID.
-     */
     // solhint-disable-next-line func-name-mixedcase
     function _Identity_init(address initialManagementKey) internal {
         require(!initialized || _isConstructor(), "Initial key was already setup.");
@@ -77,24 +55,10 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         emit KeyAdded(key, 1, 1);
     }
 
-
-
-
     /*//////////////////////////////////////////////////////////////
                                  KEYS
     //////////////////////////////////////////////////////////////*/
 
-    
-	
-    /**
-     * @notice Implementation of the getKey function from the ERC-734 standard
-     *
-     * @param key The public key.  for non-hex and long keys, its the Keccak256 hash of the key
-     *
-     * @return purposes_ Returns the full key data, if present in the identity.
-     * @return keyType_ Returns the full key data, if present in the identity.
-     * @return key_ Returns the full key data, if present in the identity.
-     */
     function getKey(
         bytes32 key
     )
@@ -106,13 +70,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return (keys[key].purposes, keys[key].keyType, keys[key].key);
     }
 
-    /**
-    * @notice gets the purposes of a key
-    *
-    * @param key The public key.  for non-hex and long keys, its the Keccak256 hash of the key
-    *
-    * @return purposes Returns the purposes of the specified key
-    */
     function getKeyPurposes(
         bytes32 key
     )
@@ -124,13 +81,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return (keys[key].purposes);
     }
 
-    /**
-    * @notice gets all the keys with a specific purpose from an identity
-    *
-    * @param purpose a uint256[] Array of the key types, like 1 = MANAGEMENT, 2 = ACTION, 3 = CLAIM, 4 = ENCRYPTION
-    *
-    * @return keys Returns an array of public key bytes32 hold by this identity and having the specified purpose
-    */
     function getKeysByPurpose(
         uint256 purpose
     )
@@ -142,22 +92,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return keysByPurpose[purpose];
     }
 
-    /**
-    * @notice implementation of the addKey function of the ERC-734 standard
-    * Adds a key to the identity. The purpose specifies the purpose of key. Initially we propose four purposes:
-    * 1: MANAGEMENT keys, which can manage the identity
-    * 2: ACTION keys, which perform actions in this identities name (signing, logins, transactions, etc.)
-    * 3: CLAIM signer keys, used to sign claims on other identities which need to be revokable.
-    * 4: ENCRYPTION keys, used to encrypt data e.g. hold in claims.
-    * MUST only be done by keys of purpose 1, or the identity itself.
-    * If its the identity itself, the approval process will determine its approval.
-    *
-    * @param key keccak256 representation of an ethereum address
-    * @param keyType type of key used, which would be a uint256 for different key types. e.g. 1 = ECDSA, 2 = RSA, etc.
-    * @param purpose a uint256[] Array of the key types, like 1 = MANAGEMENT, 2 = ACTION, 3 = CLAIM, 4 = ENCRYPTION
-    *
-    * @return success Returns TRUE if the addition was successful and FALSE if not
-    */
     function addKey(
         bytes32 key,
         uint256 purpose,
@@ -195,9 +129,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return true;
     }
 
-    /**
-    * @notice Remove the purpose from a key.
-    */
     function removeKey(
         bytes32 key,
         uint256 purpose
@@ -249,10 +180,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return true;
     }
 
-
-    /**
-    * @notice Returns true if the key has MANAGEMENT purpose or the specified purpose.
-    */
     function keyHasPurpose(
         bytes32 key, 
         uint256 purpose
@@ -274,28 +201,10 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return false;
     }
 
-
-
     /*//////////////////////////////////////////////////////////////
                                  CLAIMS
     //////////////////////////////////////////////////////////////*/
 
-
-    /**
-    * @notice Implementation of the addClaim function from the ERC-735 standard
-    *  Require that the msg.sender has claim signer key.
-    *
-    * @param topic The type of claim
-    * @param scheme The scheme with which this claim SHOULD be verified or how it should be processed.
-    * @param issuer The issuers identity contract address, or the address used to sign the above signature.
-    * @param signature Signature which is the proof that the claim issuer issued a claim of topic for this identity.
-    * it MUST be a signed message of the following structure: keccak256(abi.encode(address identityHolder_address, uint256 _ topic, bytes data))
-    * @param data The hash of the claim data, sitting in another location, a bit-mask, call data, or actual data based on the claim scheme.
-    * @param uri The location of the claim, this can be HTTP links, swarm hashes, IPFS hashes, and such.
-    *
-    * @return claimRequestId Returns claimRequestId: COULD be send to the approve function, to approve or reject this claim.
-    * triggers ClaimAdded event.
-    */
     function addClaim(
         uint256 topic,
         uint256 scheme,
@@ -355,16 +264,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return claimId;
     }
 
-    /**
-    * @notice Implementation of the removeClaim function from the ERC-735 standard
-    * Require that the msg.sender has management key.
-    * Can only be removed by the claim issuer, or the claim holder itself.
-    *
-    * @param claimId The identity of the claim i.e. keccak256(abi.encode(issuer, topic))
-    *
-    * @return success Returns TRUE when the claim was removed.
-    * triggers ClaimRemoved event
-    */
     function removeClaim(
         bytes32 claimId
     )
@@ -404,18 +303,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return true;
     }
 
-    /**
-    * @notice Implementation of the getClaim function from the ERC-735 standard.
-    *
-    * @param claimId The identity of the claim i.e. keccak256(abi.encode(issuer, topic))
-    *
-    * @return topic Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    * @return scheme Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    * @return issuer Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    * @return signature Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    * @return data Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    * @return uri Returns all the parameters of the claim for the specified claimId (topic, scheme, signature, issuer, data, uri) .
-    */
     function getClaim(
         bytes32 claimId
     )
@@ -441,14 +328,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         );
     }
 
-    /**
-    * @notice Implementation of the getClaimIdsByTopic function from the ERC-735 standard.
-    * used to get all the claims from the specified topic
-    *
-    * @param topic The identity of the claim i.e. keccak256(abi.encode(issuer, topic))
-    *
-    * @return claimIds Returns an array of claim IDs by topic.
-    */
     function getClaimIdsByTopic(
         uint256 topic
     )
@@ -460,12 +339,9 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return claimsByTopic[topic];
     }
 
-
-
     /*//////////////////////////////////////////////////////////////
                                 MULTI-SIGNATURE
     //////////////////////////////////////////////////////////////*/
-
 
 	// TODO see ERC-191 for more details on this
 	function getMessageHash(
@@ -508,7 +384,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         );
     }
 
-    
     function haveEnoughValidSignatures(
         uint256 operationType,
         bytes32 messageHash,
@@ -551,19 +426,10 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return false;
     }
     
-
-
     /*//////////////////////////////////////////////////////////////
                                 EXECUTIONS
     //////////////////////////////////////////////////////////////*/
 
-    
-    
-    /**
-     * @notice Approves an execution or claim addition.
-     * This SHOULD require n of m approvals of keys purpose 1, if the to of the execution is the identity contract itself, to successfully approve an execution.
-     * And COULD require n of m approvals of keys purpose 2, if the to of the execution is another contract, to successfully approve an execution.
-     */
     function approve(
         uint256 id,
         bool approve
@@ -609,13 +475,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         return true;
     }
 
-    /**
-     * @notice Passes an execution instruction to the keymanager.
-     * SHOULD require approve to be called with one or more keys of purpose 1 or 2 to approve this execution.
-     * Execute COULD be used as the only accessor for addKey, removeKey and replaceKey and removeClaim.
-     *
-     * @return executionId SHOULD be sent to the approve function, to approve or reject this execution.
-     */
     function execute(
         address to, 
         uint256 value, 
@@ -630,7 +489,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         uint256 executionId = _execute(to, value, data);
         return executionId;
     }
-
 
     function executeSigned(
         address to,
@@ -673,7 +531,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
             require(IERC20(gasToken).transfer(msg.sender, refundAmount));
         }
     }
-
 
     function _execute(
         address _to, 

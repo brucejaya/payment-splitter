@@ -19,14 +19,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry = ITokenRegistry(_tokenRegistry);
     }
 
-    /**
-     *  @dev calls the `forcedTransfer` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-forcedTransfer}.
-     *  Requires that `_identity` is set as TransferManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callForcedTransfer(
         address _from,
         address _to,
@@ -44,14 +36,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.forcedTransfer(_from, _to, _id, _amount, _data);
     }
 
-    /**
-     *  @dev calls the `batchForcedTransfer` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchForcedTransfer}.
-     *  Requires that `_identity` is set as TransferManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBatchForcedTransfer(
         address[] memory _fromList,
         address[] memory _toList,
@@ -69,14 +53,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.batchForcedTransfer(_fromList, _toList, _ids, _amounts, _data);
     }
 
-    /**
-     *  @dev calls the `pause` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-pause}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callPause(
         IIdentity _identity,
         uint256 _id
@@ -87,14 +63,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.pause(_id);
     }
 
-    /**
-     *  @dev calls the `unpause` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-unpause}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callUnpause(
         IIdentity _identity,
         uint256 _id
@@ -105,14 +73,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.unpause(_id);
     }
 
-    /**
-     *  @dev calls the `mint` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-mint}.
-     *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callMint(
         address _to,
         uint256 _id,
@@ -129,14 +89,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.mint(_to, _id, _amount, _data);
     }
 
-    /**
-     *  @dev calls the `mintBatch` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-mintBatch}.
-     *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callMintBatch(
         address[] memory _accounts,
         uint256 _id,
@@ -153,14 +105,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.mintBatch(_accounts, _id, _amounts, _data);
     }
 
-    /**
-     *  @dev calls the `burn` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-burn}.
-     *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBurn(
         address _account,
         uint256 _id,
@@ -177,14 +121,6 @@ contract AgentManager is AgentRoles {
         
     }
 
-    /**
-     *  @dev calls the `burnBatch` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-burnBatch}.
-     *  Requires that `_identity` is set as SupplyModifier on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBurnBatch(
         address[] calldata _accounts,
         uint256[] calldata _ids,
@@ -200,14 +136,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.burnBatch(_accounts, _ids, _amounts);
     }
 
-    /**
-     *  @dev calls the `setAddressFrozen` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-setAddressFrozen}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callSetAddressFrozen(
         address _account,
         uint256 _id,
@@ -220,14 +148,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.setAddressFrozen(_account, _id, _freeze);
     }
 
-    /**
-     *  @dev calls the `batchSetAddressFrozen` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchSetAddressFrozen}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBatchSetAddressFrozen(
         address[] calldata _accounts,
         uint256[] calldata _ids,
@@ -240,14 +160,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.batchSetAddressFrozen(_accounts, _ids, _freeze);
     }
 
-    /**
-     *  @dev calls the `freezePartialTokens` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-freezePartialTokens}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callFreezePartialTokens(
         address _account,
         uint256 _id,
@@ -260,14 +172,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.freezePartialTokens(_account, _id, _amount);
     }
 
-    /**
-     *  @dev calls the `batchFreezePartialTokens` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchFreezePartialTokens}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBatchFreezePartialTokens(
         address[] calldata _accounts,
         uint256[] calldata _ids,
@@ -280,14 +184,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.batchFreezePartialTokens(_accounts, _ids, _amounts);
     }
 
-    /**
-     *  @dev calls the `unfreezePartialTokens` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-unfreezePartialTokens}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callUnfreezePartialTokens(
         address _account,
         uint256 _ids,
@@ -300,14 +196,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.unfreezePartialTokens(_account, _ids, _amount);
     }
 
-    /**
-     *  @dev calls the `batchUnfreezePartialTokens` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-batchUnfreezePartialTokens}.
-     *  Requires that `_identity` is set as Freezer on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callBatchUnfreezePartialTokens(
         address[] calldata _accounts,
         uint256[] calldata _ids,
@@ -320,14 +208,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.batchUnfreezePartialTokens(_accounts, _ids, _amounts);
     }
 
-    /**
-     *  @dev calls the `recoveryAddress` function on the Token contract
-     *  AgentManager has to be set as agent on the tokenRegistry smart contract to process this function
-     *  See {ITokenRegistry-recoveryAddress}.
-     *  Requires that `_managerIdentity` is set as RecoveryAgent on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_managerIdentity`
-     *  @param _managerIdentity the onchainID contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callRecoveryAddress(
         address _lostWallet,
         address _newWallet,
@@ -345,14 +225,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.recoveryAddress(_lostWallet, _newWallet, _id, _account, _data);
     }
 
-    /**
-     *  @dev calls the `registerIdentity` function on the Identity Registry contract
-     *  AgentManager has to be set as agent on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-registerIdentity}.
-     *  Requires that `ManagerOnchainID` is set as WhiteListManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_managerIdentity`
-     *  @param _managerIdentity the onchainID contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callRegisterIdentity(
         address _account,
         IIdentity _identity,
@@ -368,14 +240,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.identityRegistry().registerIdentity(_account, _identity, _country);
     }
 
-    /**
-     *  @dev calls the `updateIdentity` function on the Identity Registry contract
-     *  AgentManager has to be set as agent on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-updateIdentity}.
-     *  Requires that `_identity` is set as WhiteListManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callUpdateIdentity(
         address _account,
         IIdentity _identity
@@ -387,14 +251,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.identityRegistry().updateIdentity(_account, _identity);
     }
 
-    /**
-     *  @dev calls the `updateCountry` function on the Identity Registry contract
-     *  AgentManager has to be set as agent on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-updateCountry}.
-     *  Requires that `_identity` is set as WhiteListManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callUpdateCountry(
         address _account,
         uint16 _country,
@@ -407,14 +263,6 @@ contract AgentManager is AgentRoles {
         tokenRegistry.identityRegistry().updateCountry(_account, _country);
     }
 
-    /**
-     *  @dev calls the `deleteIdentity` function on the Identity Registry contract
-     *  AgentManager has to be set as agent on the Identity Registry smart contract to process this function
-     *  See {IIdentityRegistry-deleteIdentity}.
-     *  Requires that `_identity` is set as WhiteListManager on the AgentManager contract
-     *  Requires that msg.sender is a MANAGEMENT KEY on `_identity`
-     *  @param _identity the _identity contract of the caller, e.g. "i call this function and i am Bob"
-     */
     function callDeleteIdentity(
         address _account,
         IIdentity _identity

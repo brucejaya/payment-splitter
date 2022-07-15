@@ -7,6 +7,7 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 import '../Roles.sol';
 
 contract OwnerRoles is Ownable {
+
     using Roles for Roles.Role;
 
     event RoleAdded(address indexed _owner, string _role);
@@ -25,8 +26,6 @@ contract OwnerRoles is Ownable {
         _;
     }
 
-    /// @dev OwnerAdmin Role _ownerAdmin
-
     function isOwnerAdmin(address _owner) public view returns (bool) {
         return _ownerAdmin.has(_owner);
     }
@@ -42,8 +41,6 @@ contract OwnerRoles is Ownable {
         string memory _role = 'OwnerAdmin';
         emit RoleRemoved(_owner, _role);
     }
-
-    /// @dev RegistryAddressSetter Role _registryAddressSetter
 
     function isRegistryAddressSetter(address _owner) public view returns (bool) {
         return _registryAddressSetter.has(_owner);
@@ -61,8 +58,6 @@ contract OwnerRoles is Ownable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ComplianceSetter Role _complianceSetter
-
     function isComplianceSetter(address _owner) public view returns (bool) {
         return _complianceSetter.has(_owner);
     }
@@ -78,8 +73,6 @@ contract OwnerRoles is Ownable {
         string memory _role = 'ComplianceSetter';
         emit RoleRemoved(_owner, _role);
     }
-
-    /// @dev ComplianceManager Role _complianceManager
 
     function isComplianceManager(address _owner) public view returns (bool) {
         return _complianceManager.has(_owner);
@@ -97,8 +90,6 @@ contract OwnerRoles is Ownable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ClaimRegistryManager Role _claimRegistryManager
-
     function isClaimRegistryManager(address _owner) public view returns (bool) {
         return _claimRegistryManager.has(_owner);
     }
@@ -114,8 +105,6 @@ contract OwnerRoles is Ownable {
         string memory _role = 'ClaimRegistryManager';
         emit RoleRemoved(_owner, _role);
     }
-
-    /// @dev VerifiersRegistryManager Role _issuersRegistryManager
 
     function isVerifiersRegistryManager(address _owner) public view returns (bool) {
         return _issuersRegistryManager.has(_owner);
@@ -133,8 +122,6 @@ contract OwnerRoles is Ownable {
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev TokenInfoManager Role _tokenInfoManager
-
     function isTokenInfoManager(address _owner) public view returns (bool) {
         return _tokenInfoManager.has(_owner);
     }
@@ -150,4 +137,5 @@ contract OwnerRoles is Ownable {
         string memory _role = 'TokenInfoManager';
         emit RoleRemoved(_owner, _role);
     }
+
 }

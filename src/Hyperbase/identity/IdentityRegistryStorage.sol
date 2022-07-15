@@ -9,21 +9,18 @@ import '../../Interface/IIdentity.sol';
 
 contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
     
-    /// @dev struct containing the identity contract and the country of the user
+    //  @dev struct containing the identity contract and the country of the user
     struct Identity {
         IIdentity identityContract;
         uint16 holderCountry;
     }
 
-    /// @dev mapping between a user address and the corresponding identity
+    //  @dev mapping between a user address and the corresponding identity
     mapping(address => Identity) private identities;
 
-    /// @dev array of Identity Registries linked to this storage
+    //  @dev array of Identity Registries linked to this storage
     address[] private identityRegistries;
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-linkedIdentityRegistries}.
-     */
     function linkedIdentityRegistries()
         external
         view
@@ -33,9 +30,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         return identityRegistries;
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-storedIdentity}.
-     */
     function storedIdentity(
         address _account
     )
@@ -47,9 +41,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         return identities[_account].identityContract;
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-storedHolderCountry}.
-     */
     function storedHolderCountry(
         address _account
     ) 
@@ -61,9 +52,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         return identities[_account].holderCountry;
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-addIdentityToStorage}.
-     */
     function addIdentityToStorage(
         address _account,
         IIdentity _identity,
@@ -80,9 +68,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         emit IdentityStored(_account, _identity);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-modifyStoredIdentity}.
-     */
     function modifyStoredIdentity(
         address _account, 
         IIdentity _identity
@@ -98,9 +83,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         emit IdentityModified(oldIdentity, _identity);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-modifyStoredHolderCountry}.
-     */
     function modifyStoredHolderCountry(
         address _account,
         uint16 _country
@@ -114,9 +96,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         emit CountryModified(_account, _country);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-removeIdentityFromStorage}.
-     */
     function removeIdentityFromStorage(
         address _account
     )
@@ -129,9 +108,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         emit IdentityUnstored(_account, identities[_account].identityContract);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-transferOwnershipOnIdentityRegistryStorage}.
-     */
     function transferOwnershipOnIdentityRegistryStorage(
         address _newOwner
     )
@@ -142,9 +118,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         transferOwnership(_newOwner);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-bindIdentityRegistry}.
-     */
     function bindIdentityRegistry(
         address _identityRegistry
     )
@@ -156,9 +129,6 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         emit IdentityRegistryBound(_identityRegistry);
     }
 
-    /**
-     *  @dev See {IIdentityRegistryStorage-unbindIdentityRegistry}.
-     */
     function unbindIdentityRegistry(
         address _identityRegistry
     )

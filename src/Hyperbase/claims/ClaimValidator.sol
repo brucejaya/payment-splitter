@@ -11,12 +11,7 @@ contract ClaimValidator is IClaimValidator, Identity {
 
     constructor(address initialManagementKey) Identity(initialManagementKey, false) {}
 
-    /**
-     * @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
-     * @param claimId the id of the claim
-     * @param identity the address of the identity contract
-     * @return isRevoked true when the claim is revoked
-     */
+    //  @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
     function revokeClaim(
         bytes32 claimId,
         address identity
@@ -42,11 +37,7 @@ contract ClaimValidator is IClaimValidator, Identity {
         return true;
     }
 
-    /**
-     * @dev Returns revocation status of a claim.
-     * @param _sig the signature of the claim
-     * @return isRevoked true if the claim is revoked and false otherwise
-     */
+    //  @dev Returns revocation status of a claim.
     function isClaimRevoked(
         bytes memory _sig
     )
@@ -62,14 +53,7 @@ contract ClaimValidator is IClaimValidator, Identity {
         return false;
     }
 
-    /**
-     * @dev Checks if a claim is valid.
-     * @param identity the identity contract related to the claim
-     * @param claimTopic the claim topic of the claim
-     * @param sig the signature of the claim
-     * @param data the data field of the claim
-     * @return claimValid true if the claim is valid, false otherwise
-     */
+    //   @dev Checks if a claim is valid.
     function isClaimValid(
         IIdentity identity,
         uint256 claimTopic,
@@ -82,6 +66,7 @@ contract ClaimValidator is IClaimValidator, Identity {
         returns (bool claimValid)
     {
         bytes32 dataHash = keccak256(abi.encode(identity, claimTopic, data));
+        
         // Use abi.encodePacked to concatenate the message prefix and the message to sign.
         bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));
 
@@ -92,7 +77,6 @@ contract ClaimValidator is IClaimValidator, Identity {
         bytes32 hashedAddr = keccak256(abi.encode(recovered));
 
         // Does the trusted identifier have they key which signed the user's claim?
-        //  && (isClaimRevoked(claimId) == false)
         if (keyHasPurpose(hashedAddr, 3) && (isClaimRevoked(sig) == false)) {
             return true;
         }

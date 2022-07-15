@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract Migrations {
+    
     address public owner;
     uint256 public lastCompletedMigration;
 
@@ -21,4 +22,5 @@ contract Migrations {
         Migrations upgraded = Migrations(new_address);
         upgraded.setCompleted(lastCompletedMigration);
     }
+
 }

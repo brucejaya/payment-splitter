@@ -14,9 +14,6 @@ contract ComplianceDefault is ICompliance, Ownable {
     /// @dev Mapping from id to tokens linked to the compliance contract
     mapping(uint256 => bool) private _tokensBound;
 
-    /**
-     *  @dev See {ICompliance-isTokenAgent}.
-     */
     function isTokenAgent(
 		address agentAddress,
 		uint256 id
@@ -29,9 +26,6 @@ contract ComplianceDefault is ICompliance, Ownable {
         return (_tokenAgentsList[id][agentAddress]);
     }
 
-    /**
-     *  @dev See {ICompliance-addTokenAgent}.
-     */
     function addTokenAgent(
 		address agentAddress,
 		uint256 id
@@ -45,9 +39,6 @@ contract ComplianceDefault is ICompliance, Ownable {
         emit TokenAgentAdded(agentAddress);
     }
 
-    /**
-     *  @dev See {ICompliance-isTokenAgent}.
-     */
     function removeTokenAgent(
 		address agentAddress,
         uint256 id
@@ -61,9 +52,6 @@ contract ComplianceDefault is ICompliance, Ownable {
         emit TokenAgentRemoved(agentAddress);
     }
 
-    /**
-     *  @dev See {ICompliance-canTransfer}.
-     */
     function canTransfer(
         address /* _from */,
         address /* _to */,
@@ -72,28 +60,16 @@ contract ComplianceDefault is ICompliance, Ownable {
         return true;
     }
 
-    /**
-     *  @dev See {ICompliance-transferred}.
-     */
     function transferred(
         address /* _from */,
         address /* _to */,
         uint256 /* _value */
     ) external override {}
 
-    /**
-     *  @dev See {ICompliance-created}.
-     */
     function created(address /* _to */, uint256 /* _value */) external override {}
 
-    /**
-     *  @dev See {ICompliance-destroyed}.
-     */
     function destroyed(address /* _from */, uint256 /* _value */) external override {}
 
-    /**
-     *  @dev See {ICompliance-transferOwnershipOnComplianceContract}.
-     */
     function transferOwnershipOnComplianceContract(
 		address newOwner
 	)
