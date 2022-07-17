@@ -37,14 +37,14 @@ contract CompatibilityFallbackHandler is DefaultCallbackHandler, ISignatureValid
         return EIP1271_MAGIC_VALUE;
     }
 
-    /// @dev Returns hash of a message that can be signed by owners.
+    // @dev Returns hash of a message that can be signed by owners.
     /// @param message Message that should be hashed
     /// @return Message hash.
     function getMessageHash(bytes memory message) public view returns (bytes32) {
         return getMessageHashForSafe(GnosisSafe(payable(msg.sender)), message);
     }
 
-    /// @dev Returns hash of a message that can be signed by owners.
+    // @dev Returns hash of a message that can be signed by owners.
     /// @param safe Safe to which the message is targeted
     /// @param message Message that should be hashed
     /// @return Message hash.
@@ -69,7 +69,7 @@ contract CompatibilityFallbackHandler is DefaultCallbackHandler, ISignatureValid
         return (value == EIP1271_MAGIC_VALUE) ? UPDATED_MAGIC_VALUE : bytes4(0);
     }
 
-    /// @dev Returns array of first 10 modules.
+    // @dev Returns array of first 10 modules.
     /// @return Array of modules.
     function getModules() external view returns (address[] memory) {
         // Caller should be a Safe

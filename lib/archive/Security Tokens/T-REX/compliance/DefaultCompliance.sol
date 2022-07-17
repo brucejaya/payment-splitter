@@ -30,10 +30,10 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import './IComplianceLimitHolder.sol';
 
 contract DefaultCompliance is ICompliance, Ownable {
-    /// @dev Mapping between agents and their statuses
+    // @dev Mapping between agents and their statuses
     mapping(address => bool) private _tokenAgentsList;
 
-    /// @dev Mapping of tokens linked to the compliance contract
+    // @dev Mapping of tokens linked to the compliance contract
     mapping(address => bool) private _tokensBound;
 
     /**

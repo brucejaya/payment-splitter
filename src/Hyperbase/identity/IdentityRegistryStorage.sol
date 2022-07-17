@@ -2,23 +2,23 @@
 
 pragma solidity ^0.8.0;
 
-import '../../Role/agent/AgentRole.sol';
+import '../../HyperDAC/owner/OwnerRoles.sol';
 
 import '../../Interface/IIdentityRegistryStorage.sol';
 import '../../Interface/IIdentity.sol';
 
 contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
     
-    //  @dev struct containing the identity contract and the country of the user
+    // @dev struct containing the identity contract and the country of the user
     struct Identity {
         IIdentity identityContract;
-        uint16 holderCountry;
+        uint16 identityCountry;
     }
 
-    //  @dev mapping between a user address and the corresponding identity
+    // @dev mapping between a user address and the corresponding identity
     mapping(address => Identity) private identities;
 
-    //  @dev array of Identity Registries linked to this storage
+    // @dev array of Identity Registries linked to this storage
     address[] private identityRegistries;
 
     function linkedIdentityRegistries()
@@ -49,7 +49,7 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         override 
         returns (uint16) 
     {
-        return identities[_account].holderCountry;
+        return identities[_account].identityCountry;
     }
 
     function addIdentityToStorage(
@@ -64,7 +64,7 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         require(address(_identity) != address(0), 'contract address can\'t be a zero address');
         require(address(identities[_account].identityContract) == address(0), 'identity contract already exists, please use update');
         identities[_account].identityContract = _identity;
-        identities[_account].holderCountry = _country;
+        identities[_account].identityCountry = _country;
         emit IdentityStored(_account, _identity);
     }
 
@@ -92,7 +92,7 @@ contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
         onlyAgent
     {
         require(address(identities[_account].identityContract) != address(0), 'this user has no identity registered');
-        identities[_account].holderCountry = _country;
+        identities[_account].identityCountry = _country;
         emit CountryModified(_account, _country);
     }
 

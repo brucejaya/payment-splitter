@@ -10,43 +10,9 @@ import '../../Interface/IIdentity.sol';
 
 contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
-
-    bool private initialized = false;
-    bool private canInteract = true;
-
-    constructor(address initialManagementKey, bool _isLibrary) {
-        canInteract = !_isLibrary;
-
-        if (canInteract) {
-            _Identity_init(initialManagementKey);
-        } else {
-            initialized = true;
-        }
-    }
-
-    modifier delegatedOnly() {
-        require(canInteract == true, "Interacting with the library contract is forbidden.");
-        _;
-    }
-
-    function initialize(address initialManagementKey) public {
-        _Identity_init(initialManagementKey);
-    }
-
-    function _isConstructor() private view returns (bool) {
-        address self = address(this);
-        uint256 cs;
-        // solhint-disable-next-line no-inline-assembly
-        assembly { cs := extcodesize(self) }
-        return cs == 0;
-    }
-
-    // solhint-disable-next-line func-name-mixedcase
-    function _Identity_init(address initialManagementKey) internal {
-        require(!initialized || _isConstructor(), "Initial key was already setup.");
-        initialized = true;
-        canInteract = true;
-
+    function init(
+        address initialManagementKey
+    ) internal {
         bytes32 key = keccak256(abi.encode(initialManagementKey));
         keys[key].key = key;
         keys[key].purposes = [1];
@@ -98,7 +64,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         uint256 keyType
     )
         public
-        delegatedOnly
         override
         returns (bool success)
     {
@@ -134,14 +99,13 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         uint256 purpose
     )
         public
-        delegatedOnly
         override
         returns (bool success)
     {
         require(keys[key].key == key, "NonExisting: Key isn't registered");
 
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
+            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), MANAGEMENT_KEY), "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
         }
 
         require(keys[key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
@@ -214,14 +178,13 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         string memory uri
     )
         public
-        delegatedOnly
         override
         returns (bytes32 claimRequestId)
     {
         bytes32 claimId = keccak256(abi.encode(issuer, topic));
 
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 3), "Permissions: Sender does not have claim signer key");
+            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), CLAIM_SIGNER_KEY), "Permissions: Sender does not have claim signer key");
         }
 
         if (claims[claimId].issuer != issuer) {
@@ -268,12 +231,11 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         bytes32 claimId
     )
         public
-        delegatedOnly
         override
         returns (bool success)
     {
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 3), "Permissions: Sender does not have CLAIM key");
+            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), CLAIM_SIGNER_KEY), "Permissions: Sender does not have CLAIM key");
         }
 
         if (claims[claimId].topic == 0) {
@@ -469,7 +431,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
     }
     */
 
-    
     /*//////////////////////////////////////////////////////////////
                                 EXECUTIONS
     //////////////////////////////////////////////////////////////*/
@@ -479,11 +440,10 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         bool approve
     )
         public
-        delegatedOnly
         override
         returns (bool success)
     {
-        require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), "Sender does not have action key");
+        require(keyHasPurpose(keccak256(abi.encode(msg.sender)), ACTION_KEY), "Sender does not have action key");
 
         emit Approved(id, approve);
 
@@ -516,7 +476,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         bytes memory data
     )
         public
-        delegatedOnly
         override
         payable
         returns (uint256 executionId)
@@ -541,7 +500,7 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
 
         emit ExecutionRequested(executionNonce, _to, _value, _data);
 
-        if (keyHasPurpose(keccak256(abi.encode(msg.sender)), 2)) {
+        if (keyHasPurpose(keccak256(abi.encode(msg.sender)), ACTION_KEY)) {
             approve(executionNonce, true);
         }
 

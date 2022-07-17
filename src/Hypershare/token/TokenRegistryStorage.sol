@@ -41,5 +41,5 @@ contract TokenRegistryStorage {
     IIdentityRegistry internal _identityRegistry;
 
     // @dev Compliance contract linked to the onchain validator system
-    ICompliance internal _compliance;
+    IComplianceLimitHolder internal _compliance;
 }

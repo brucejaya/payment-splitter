@@ -42,13 +42,13 @@ contract EquityToken is IERC3643, AgentRoleUpgradeable, EquityStorage {
         __Ownable_init();
     }
 
-    /// @dev Modifier to make a function callable only when the contract is not paused.
+    // @dev Modifier to make a function callable only when the contract is not paused.
     modifier whenNotPaused() {
         require(!tokenPaused, 'Pausable: paused');
         _;
     }
 
-    /// @dev Modifier to make a function callable only when the contract is paused.
+    // @dev Modifier to make a function callable only when the contract is paused.
     modifier whenPaused() {
         require(tokenPaused, 'Pausable: not paused');
         _;

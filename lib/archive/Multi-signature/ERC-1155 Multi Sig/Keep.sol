@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.4;
 
-/// @dev Interfaces
+// @dev Interfaces
 import {IERC1271} from "./interfaces/IERC1271.sol";
 
-/// @dev Contracts
+// @dev Contracts
 import {ERC721TokenReceiver} from "./utils/ERC721TokenReceiver.sol";
 import {ERC1155TokenReceiver, ERC1155Votes} from "./ERC1155Votes.sol";
 import {Multicall} from "./utils/Multicall.sol";
@@ -264,7 +264,7 @@ contract Keep is
     /// @param value Amount of ETH to send in operation
     /// @param data Payload to send in operation
     /// @param sigs Array of signatures from NFT sorted in ascending order by addresses
-    /// @dev Make sure signatures are sorted in ascending order - otherwise verification will fail
+    // @dev Make sure signatures are sorted in ascending order - otherwise verification will fail
     /// @return success Fetch whether operation succeeded
     function execute(
         Operation op,

@@ -23,7 +23,7 @@ contract IdentityRegistry {
 
 	// TODO ENS domain registration
 
-    //  @dev Returns the root account of an identity
+    // @dev Returns the root account of an identity
 	function identityOwner(
 		bytes32 identity
 	)
@@ -34,7 +34,7 @@ contract IdentityRegistry {
 		return roots[identity];
 	}
 
-    //  @dev Initialises a new identity
+    // @dev Initialises a new identity
     function registerIdentity(
 		string memory identityName,
         address addr,
@@ -47,7 +47,7 @@ contract IdentityRegistry {
         roots[identities.length] = addr;
     }
 
-    //  @dev Transfers an identity
+    // @dev Transfers an identity
 	function changeIdentityOwner(
 		bytes32 identity,
 		address to
@@ -71,7 +71,7 @@ contract IdentityRegistry {
         emit IdentityRemoved(_userAddress, identity(_userAddress));
     }
 
-    //  @dev Updates the home country of an identity
+    // @dev Updates the home country of an identity
     function updateCountry(
         address ,
         uint16 country
@@ -82,7 +82,7 @@ contract IdentityRegistry {
         // Update country
     }
 
-    //  @dev Utility for conversion to bytes 
+    // @dev Utility for conversion to bytes 
 	function stringToBytes32(
 		string memory source
 	)
@@ -98,7 +98,7 @@ contract IdentityRegistry {
 		}
 	}
 
-    //  @dev Utility for conversion to bytes 
+    // @dev Utility for conversion to bytes 
     function addressToBytes32(
         address addr
     )

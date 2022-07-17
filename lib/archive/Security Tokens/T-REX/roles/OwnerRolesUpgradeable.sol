@@ -48,7 +48,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         _;
     }
 
-    /// @dev OwnerAdmin Role _ownerAdmin
+    // @dev OwnerAdmin Role _ownerAdmin
 
     function isOwnerAdmin(address _owner) public view returns (bool) {
         return _ownerAdmin.has(_owner);
@@ -66,7 +66,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev RegistryAddressSetter Role _registryAddressSetter
+    // @dev RegistryAddressSetter Role _registryAddressSetter
 
     function isRegistryAddressSetter(address _owner) public view returns (bool) {
         return _registryAddressSetter.has(_owner);
@@ -84,7 +84,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ComplianceSetter Role _complianceSetter
+    // @dev ComplianceSetter Role _complianceSetter
 
     function isComplianceSetter(address _owner) public view returns (bool) {
         return _complianceSetter.has(_owner);
@@ -102,7 +102,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev ClaimRegistryManager Role _claimRegistryManager
+    // @dev ClaimRegistryManager Role _claimRegistryManager
 
     function isClaimRegistryManager(address _owner) public view returns (bool) {
         return _claimRegistryManager.has(_owner);
@@ -120,7 +120,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev IssuersRegistryManager Role _issuersRegistryManager
+    // @dev IssuersRegistryManager Role _issuersRegistryManager
 
     function isIssuersRegistryManager(address _owner) public view returns (bool) {
         return _issuersRegistryManager.has(_owner);
@@ -138,7 +138,7 @@ contract OwnerRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_owner, _role);
     }
 
-    /// @dev TokenInfoManager Role _tokenInfoManager
+    // @dev TokenInfoManager Role _tokenInfoManager
 
     function isTokenInfoManager(address _owner) public view returns (bool) {
         return _tokenInfoManager.has(_owner);

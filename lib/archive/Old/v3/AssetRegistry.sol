@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 contract AssetRegistry is ERC1155 {
 
-    //  @dev Identity Registry contract used by the validator system
+    // @dev Identity Registry contract used by the validator system
     IIdentityRegistry internal identityRegistry;
 
     // TOKEN STORAGE
@@ -33,16 +33,16 @@ contract AssetRegistry is ERC1155 {
 
     // COMPLIANCE CHECKS
 
-    //  @dev Mapping from token ID to the limit of holders for this token
+    // @dev Mapping from token ID to the limit of holders for this token
     mapping(uint256 => uint256) private holderLimit;
 
-    //  @dev Mapping from token ID to the index of each shareholder in the array `shareholders`
+    // @dev Mapping from token ID to the index of each shareholder in the array `shareholders`
     mapping(uint256 => mapping(address => uint256)) private holderIndices;
 
-    //  @dev Mapping from token ID to the amount of shareholders per country
+    // @dev Mapping from token ID to the amount of shareholders per country
     mapping(uint256 => mapping(uint16 => uint256)) private countryShareHolders;
 
-    //  @dev Mapping from token ID to the addresses of all shareholders
+    // @dev Mapping from token ID to the addresses of all shareholders
     mapping(uint256 => address[]) private shareholders;
 
 
@@ -149,7 +149,7 @@ contract AssetRegistry is ERC1155 {
 
 
 
-    //  @dev Prevalidate a token transfer, ensure that it is ellible
+    // @dev Prevalidate a token transfer, ensure that it is ellible
     function _beforeTokenTransfer(
         address operator,
         address from,
@@ -174,7 +174,7 @@ contract AssetRegistry is ERC1155 {
 		
     }
 
-    //  @dev Update token state to reflect transfer that has occurred
+    // @dev Update token state to reflect transfer that has occurred
     function _afterTokenTransfer(
         address operator,
         address from,
@@ -193,7 +193,7 @@ contract AssetRegistry is ERC1155 {
         }
     }
 
-    //  @dev sets the holder limit as required for compliance purpose 
+    // @dev sets the holder limit as required for compliance purpose 
     function setHolderLimit(
         uint256 id,
         uint256 _holderLimit
@@ -205,7 +205,7 @@ contract AssetRegistry is ERC1155 {
         // event
     }
     
-    //  @dev returns the holder limit as set on the contract
+    // @dev returns the holder limit as set on the contract
     function getHolderLimit(
         uint256 id
     )
@@ -214,7 +214,7 @@ contract AssetRegistry is ERC1155 {
         return holderLimit[id];
     }
 
-    //  @dev returns the amount of token holders
+    // @dev returns the amount of token holders
     function holderCount(
         uint256 id
     )
@@ -224,7 +224,7 @@ contract AssetRegistry is ERC1155 {
     }
 
     
-    //  @dev By counting the number of token holders using `holderCount` you can retrieve the complete list of token holders, one at a time.
+    // @dev By counting the number of token holders using `holderCount` you can retrieve the complete list of token holders, one at a time.
     function holderAt(
         uint256 id,
         uint256 index
@@ -236,7 +236,7 @@ contract AssetRegistry is ERC1155 {
     }
 
     
-    //  @dev If the address is not in the `shareholders` array then push it and update the `holderIndices` mapping. 
+    // @dev If the address is not in the `shareholders` array then push it and update the `holderIndices` mapping. 
     function updateShareholders(
         uint256 id,
         address addr
@@ -252,7 +252,7 @@ contract AssetRegistry is ERC1155 {
     }
 
     
-    //  @dev If the address is in the `shareholders` array and the forthcoming transfer or transferFrom will reduce their balance to 0, then we need to remove them from the shareholders array.
+    // @dev If the address is in the `shareholders` array and the forthcoming transfer or transferFrom will reduce their balance to 0, then we need to remove them from the shareholders array.
     function pruneShareholders(
         uint256 id, 
         address addr
@@ -276,12 +276,12 @@ contract AssetRegistry is ERC1155 {
     }
 
 
-    //  @dev get the amount of shareholders in a country index the index of the country, following ISO 3166-1
+    // @dev get the amount of shareholders in a country index the index of the country, following ISO 3166-1
     function getShareholderCountByCountry(uint256 id, uint16 index) external view returns (uint256) {
         return countryShareHolders[id][index];
     }
 
-    //  @dev Returns true if the amount of holders post-transfer is less or equal to the maximum amount of token holders
+    // @dev Returns true if the amount of holders post-transfer is less or equal to the maximum amount of token holders
     function canTransfer(
         uint256 id,
         address /* from */,
@@ -299,7 +299,7 @@ contract AssetRegistry is ERC1155 {
         return false;
     }
 
-    //  @dev Updates the counter of shareholders if necessary
+    // @dev Updates the counter of shareholders if necessary
     function transferred(
         uint256 id,
         address from,
@@ -312,7 +312,7 @@ contract AssetRegistry is ERC1155 {
         pruneShareholders(id, from);
     }
 
-    //  @dev Updates the counter of shareholders if necessary
+    // @dev Updates the counter of shareholders if necessary
     function created(
         uint256 id,
         address to,

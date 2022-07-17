@@ -11,7 +11,7 @@ contract ClaimValidator is IClaimValidator, Identity {
 
     constructor(address initialManagementKey) Identity(initialManagementKey, false) {}
 
-    //  @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
+    // @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
     function revokeClaim(
         bytes32 claimId,
         address identity
@@ -37,7 +37,7 @@ contract ClaimValidator is IClaimValidator, Identity {
         return true;
     }
 
-    //  @dev Returns revocation status of a claim.
+    // @dev Returns revocation status of a claim.
     function isClaimRevoked(
         bytes memory _sig
     )

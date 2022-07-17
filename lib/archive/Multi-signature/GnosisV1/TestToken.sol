@@ -27,7 +27,7 @@ contract TestToken {
     /*
      * Public functions
      */
-    /// @dev Issues new tokens.
+    // @dev Issues new tokens.
     /// @param _to Address of token receiver.
     /// @param _value Number of tokens to issue.
     function issueTokens(address _to, uint256 _value)
@@ -46,7 +46,7 @@ contract TestToken {
         _;
     }
 
-    /// @dev Transfers sender's tokens to a given address. Returns success.
+    // @dev Transfers sender's tokens to a given address. Returns success.
     /// @param _to Address of token receiver.
     /// @param _value Number of tokens to transfer.
     /// @return Returns success of function call.
@@ -61,7 +61,7 @@ contract TestToken {
         return true;
     }
 
-    /// @dev Allows allowed third party to transfer tokens from one address to another. Returns success.
+    // @dev Allows allowed third party to transfer tokens from one address to another. Returns success.
     /// @param _from Address from where tokens are withdrawn.
     /// @param _to Address to where tokens are sent.
     /// @param _value Number of tokens to transfer.
@@ -78,7 +78,7 @@ contract TestToken {
         return true;
     }
 
-    /// @dev Sets approved amount of tokens for spender. Returns success.
+    // @dev Sets approved amount of tokens for spender. Returns success.
     /// @param _spender Address of allowed account.
     /// @param _value Number of approved tokens.
     /// @return Returns success of function call.
@@ -91,7 +91,7 @@ contract TestToken {
         return true;
     }
 
-    /// @dev Returns number of allowed tokens for given address.
+    // @dev Returns number of allowed tokens for given address.
     /// @param _owner Address of token owner.
     /// @param _spender Address of token spender.
     /// @return Returns remaining allowance for spender.
@@ -103,7 +103,7 @@ contract TestToken {
         return allowed[_owner][_spender];
     }
 
-    /// @dev Returns number of tokens owned by given address.
+    // @dev Returns number of tokens owned by given address.
     /// @param _owner Address of token owner.
     /// @return Returns balance of owner.
     function balanceOf(address _owner)

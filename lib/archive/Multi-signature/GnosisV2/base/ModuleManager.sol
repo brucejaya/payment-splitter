@@ -25,7 +25,7 @@ contract ModuleManager is SelfAuthorized, Executor {
             require(execute(to, 0, data, Enum.Operation.DelegateCall, gasleft()), "GS000");
     }
 
-    /// @dev Allows to add a module to the whitelist.
+    // @dev Allows to add a module to the whitelist.
     ///      This can only be done via a Safe transaction.
     /// @notice Enables the module `module` for the Safe.
     /// @param module Module to be whitelisted.
@@ -39,7 +39,7 @@ contract ModuleManager is SelfAuthorized, Executor {
         emit EnabledModule(module);
     }
 
-    /// @dev Allows to remove a module from the whitelist.
+    // @dev Allows to remove a module from the whitelist.
     ///      This can only be done via a Safe transaction.
     /// @notice Disables the module `module` for the Safe.
     /// @param prevModule Module that pointed to the module to be removed in the linked list
@@ -53,7 +53,7 @@ contract ModuleManager is SelfAuthorized, Executor {
         emit DisabledModule(module);
     }
 
-    /// @dev Allows a Module to execute a Safe transaction without any further confirmations.
+    // @dev Allows a Module to execute a Safe transaction without any further confirmations.
     /// @param to Destination address of module transaction.
     /// @param value Ether value of module transaction.
     /// @param data Data payload of module transaction.
@@ -72,7 +72,7 @@ contract ModuleManager is SelfAuthorized, Executor {
         else emit ExecutionFromModuleFailure(msg.sender);
     }
 
-    /// @dev Allows a Module to execute a Safe transaction without any further confirmations and return data
+    // @dev Allows a Module to execute a Safe transaction without any further confirmations and return data
     /// @param to Destination address of module transaction.
     /// @param value Ether value of module transaction.
     /// @param data Data payload of module transaction.
@@ -100,13 +100,13 @@ contract ModuleManager is SelfAuthorized, Executor {
         }
     }
 
-    /// @dev Returns if an module is enabled
+    // @dev Returns if an module is enabled
     /// @return True if the module is enabled
     function isModuleEnabled(address module) public view returns (bool) {
         return SENTINEL_MODULES != module && modules[module] != address(0);
     }
 
-    /// @dev Returns array of modules.
+    // @dev Returns array of modules.
     /// @param start Start of the page.
     /// @param pageSize Maximum number of modules that should be returned.
     /// @return array Array of modules.

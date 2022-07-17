@@ -6,12 +6,12 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../../Interface/IComplianceLimitHolder.sol';
 
-contract ComplianceDefault is ICompliance, Ownable {
+contract ComplianceDefault is IComplianceLimitHolder, Ownable {
 
-    /// @dev Mapping between agents and their statuses
+    // @dev Mapping between agents and their statuses
     mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
 
-    /// @dev Mapping from id to tokens linked to the compliance contract
+    // @dev Mapping from id to tokens linked to the compliance contract
     mapping(uint256 => bool) private _tokensBound;
 
     function isTokenAgent(

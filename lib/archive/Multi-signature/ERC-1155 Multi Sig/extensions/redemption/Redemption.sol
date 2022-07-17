@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.4;
 
-/// @dev Interfaces
+// @dev Interfaces
 import {IERC20Balances} from "../../interfaces/IERC20Balances.sol";
 import {IKeep} from "../../interfaces/IKeep.sol";
 
-/// @dev Libraries
+// @dev Libraries
 import {MulDivDownLib} from "../../libraries/MulDivDownLib.sol";
 import {SafeTransferLib} from "../../libraries/SafeTransferLib.sol";
 
-/// @dev Contracts
+// @dev Contracts
 import {ERC1155TokenReceiver} from "../../ERC1155Votes.sol";
 import {Multicall} from "../../utils/Multicall.sol";
 
 /// @title Redemption
 /// @notice Fair share redemptions for burnt treasury tokens
-/// @dev Based on Moloch DAO ragequit()
+// @dev Based on Moloch DAO ragequit()
 contract Redemption is ERC1155TokenReceiver, Multicall {
     /// -----------------------------------------------------------------------
     /// LIBRARY USAGE

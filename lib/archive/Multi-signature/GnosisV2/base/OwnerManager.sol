@@ -16,7 +16,7 @@ contract OwnerManager is SelfAuthorized {
     uint256 internal ownerCount;
     uint256 internal threshold;
 
-    /// @dev Setup function sets initial storage of contract.
+    // @dev Setup function sets initial storage of contract.
     /// @param _owners List of Safe owners.
     /// @param _threshold Number of required confirmations for a Safe transaction.
     function setupOwners(address[] memory _owners, uint256 _threshold) internal {
@@ -43,7 +43,7 @@ contract OwnerManager is SelfAuthorized {
         threshold = _threshold;
     }
 
-    /// @dev Allows to add a new owner to the Safe and update the threshold at the same time.
+    // @dev Allows to add a new owner to the Safe and update the threshold at the same time.
     ///      This can only be done via a Safe transaction.
     /// @notice Adds the owner `owner` to the Safe and updates the threshold to `_threshold`.
     /// @param owner New owner address.
@@ -61,7 +61,7 @@ contract OwnerManager is SelfAuthorized {
         if (threshold != _threshold) changeThreshold(_threshold);
     }
 
-    /// @dev Allows to remove an owner from the Safe and update the threshold at the same time.
+    // @dev Allows to remove an owner from the Safe and update the threshold at the same time.
     ///      This can only be done via a Safe transaction.
     /// @notice Removes the owner `owner` from the Safe and updates the threshold to `_threshold`.
     /// @param prevOwner Owner that pointed to the owner to be removed in the linked list
@@ -85,7 +85,7 @@ contract OwnerManager is SelfAuthorized {
         if (threshold != _threshold) changeThreshold(_threshold);
     }
 
-    /// @dev Allows to swap/replace an owner from the Safe with another address.
+    // @dev Allows to swap/replace an owner from the Safe with another address.
     ///      This can only be done via a Safe transaction.
     /// @notice Replaces the owner `oldOwner` in the Safe with `newOwner`.
     /// @param prevOwner Owner that pointed to the owner to be replaced in the linked list
@@ -110,7 +110,7 @@ contract OwnerManager is SelfAuthorized {
         emit AddedOwner(newOwner);
     }
 
-    /// @dev Allows to update the number of required confirmations by Safe owners.
+    // @dev Allows to update the number of required confirmations by Safe owners.
     ///      This can only be done via a Safe transaction.
     /// @notice Changes the threshold of the Safe to `_threshold`.
     /// @param _threshold New threshold.
@@ -131,7 +131,7 @@ contract OwnerManager is SelfAuthorized {
         return owner != SENTINEL_OWNERS && owners[owner] != address(0);
     }
 
-    /// @dev Returns array of owners.
+    // @dev Returns array of owners.
     /// @return Array of Safe owners.
     function getOwners() public view returns (address[] memory) {
         address[] memory array = new address[](ownerCount);

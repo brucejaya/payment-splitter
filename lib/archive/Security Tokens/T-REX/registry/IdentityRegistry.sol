@@ -35,13 +35,13 @@ import '../registry/IIdentityRegistryStorage.sol';
 
 
 contract IdentityRegistry is IIdentityRegistry, AgentRole {
-    /// @dev Address of the ClaimTopicsRegistry Contract
+    // @dev Address of the ClaimTopicsRegistry Contract
     IClaimTopicsRegistry private tokenTopicsRegistry;
 
-    /// @dev Address of the TrustedIssuersRegistry Contract
+    // @dev Address of the TrustedIssuersRegistry Contract
     ITrustedIssuersRegistry private tokenIssuersRegistry;
 
-    /// @dev Address of the IdentityRegistryStorage Contract
+    // @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private tokenIdentityStorage;
 
     /**

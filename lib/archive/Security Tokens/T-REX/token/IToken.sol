@@ -28,7 +28,7 @@ import '../registry/IIdentityRegistry.sol';
 import '../compliance/IComplianceLimitHolder.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
-/// @dev interface
+// @dev interface
 interface IToken is IERC20 {
     /**
      *  this event is emitted when the token information is updated.

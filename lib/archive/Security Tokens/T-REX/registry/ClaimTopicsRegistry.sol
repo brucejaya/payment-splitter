@@ -30,7 +30,7 @@ import '../registry/IClaimTopicsRegistry.sol';
 
 contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable {
     
-    /// @dev All required Claim Topics
+    // @dev All required Claim Topics
     uint256[] private claimTopics;
 
     /**

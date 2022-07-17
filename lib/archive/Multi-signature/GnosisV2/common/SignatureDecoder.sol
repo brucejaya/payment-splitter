@@ -4,7 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 /// @title SignatureDecoder - Decodes signatures that a encoded as bytes
 /// @author Richard Meissner - <richard@gnosis.pm>
 contract SignatureDecoder {
-    /// @dev divides bytes signature into `uint8 v, bytes32 r, bytes32 s`.
+    // @dev divides bytes signature into `uint8 v, bytes32 r, bytes32 s`.
     /// @notice Make sure to perform a bounds check for @param pos, to avoid out of bounds access on @param signatures
     /// @param pos which signature to read. A prior bounds check of this parameter should be performed, to avoid out of bounds access
     /// @param signatures concatenated rsv signatures

@@ -34,10 +34,10 @@ import '@onchain-id/solidity/contracts/interface/IIdentity.sol';
 import '@onchain-id/solidity/contracts/interface/IClaimIssuer.sol';
 
 contract OwnerManager is OwnerRoles {
-    /// @dev the token that is managed by this OwnerManager Contract
+    // @dev the token that is managed by this OwnerManager Contract
     IToken public token;
 
-    /// @dev Event emitted for each executed interaction with the compliance contract.
+    // @dev Event emitted for each executed interaction with the compliance contract.
     ///
     /// For gas efficiency, only the interaction calldata selector (first 4
     /// bytes) is included in the event. For interactions without calldata or
@@ -128,7 +128,7 @@ contract OwnerManager is OwnerRoles {
 
         }
 
-    /// @dev Extracts the Solidity ABI selector for the specified interaction.
+    // @dev Extracts the Solidity ABI selector for the specified interaction.
     /// @param callData Interaction data.
     /// @return result The 4 byte function selector of the call encoded in
     /// this interaction.

@@ -293,7 +293,7 @@ contract OwnerRoles is Ownable {
                                 FREEZE
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev Freezer Role _freezers
+    // @dev Freezer Role _freezers
     function isFreezer(
         address _agent
     )
@@ -330,7 +330,7 @@ contract OwnerRoles is Ownable {
                             TRANSFER MANAGER
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev TransferManager Role _transferManagers
+    // @dev TransferManager Role _transferManagers
     function isTransferManager(
         address _agent
     )
@@ -368,7 +368,7 @@ contract OwnerRoles is Ownable {
                                 RECOVERY
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev RecoveryAgent Role _recoveryAgents
+    // @dev RecoveryAgent Role _recoveryAgents
     function isRecoveryAgent(
         address _agent
     )
@@ -403,7 +403,7 @@ contract OwnerRoles is Ownable {
     //////////////////////////////////////////////////////////////*/
 
 
-    /// @dev ComplianceAgent Role _complianceAgents
+    // @dev ComplianceAgent Role _complianceAgents
     function isComplianceAgent(
         address _agent
     )
@@ -440,7 +440,7 @@ contract OwnerRoles is Ownable {
                                 WHITELIST
     //////////////////////////////////////////////////////////////*/
 
-    /// @dev WhiteListManager Role _whiteListManagers
+    // @dev WhiteListManager Role _whiteListManagers
     function isWhiteListManager(
         address _agent
     )

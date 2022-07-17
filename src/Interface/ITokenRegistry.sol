@@ -30,7 +30,7 @@ interface ITokenRegistry is IERC1155 {
 
     function identityRegistry() external view override returns (IIdentityRegistry);
 
-    function compliance() external view override returns (ICompliance);
+    function compliance() external view override returns (IComplianceLimitHolder);
   
     function paused(uint256 id) external view override returns (bool);
     

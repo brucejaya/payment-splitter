@@ -6,7 +6,7 @@ pragma solidity >=0.7.0 <0.9.0;
 /// @author Richard Meissner - <richard@gnosis.io>
 /// @notice The guard logic is not required here as this contract doesn't support nested delegate calls
 contract MultiSendCallOnly {
-    /// @dev Sends multiple transactions and reverts all if one fails.
+    // @dev Sends multiple transactions and reverts all if one fails.
     /// @param transactions Encoded transactions. Each transaction is encoded as a packed bytes of
     ///                     operation has to be uint8(0) in this version (=> 1 byte),
     ///                     to as a address (=> 20 bytes),

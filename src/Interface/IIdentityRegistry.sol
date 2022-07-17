@@ -46,7 +46,7 @@ interface IIdentityRegistry {
 
     function identity(address _account) external view returns (IIdentity);
 
-    function holderCountry(address _account) external view returns (uint16);
+    function identityCountry(address _account) external view returns (uint16);
 
     function identityRegistryStorage() external view returns (IIdentityRegistryStorage);
 

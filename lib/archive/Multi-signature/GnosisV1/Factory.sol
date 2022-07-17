@@ -16,7 +16,7 @@ contract Factory {
     /*
      * Public functions
      */
-    /// @dev Returns number of instantiations by creator.
+    // @dev Returns number of instantiations by creator.
     /// @param creator Contract creator.
     /// @return Returns number of instantiations by creator.
     function getInstantiationCount(address creator)
@@ -30,7 +30,7 @@ contract Factory {
     /*
      * Internal functions
      */
-    /// @dev Registers contract in factory registry.
+    // @dev Registers contract in factory registry.
     /// @param instantiation Address of contract instantiation.
     function register(address instantiation)
         internal

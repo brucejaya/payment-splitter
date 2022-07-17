@@ -14,7 +14,7 @@ contract SignMessageLib is GnosisSafeStorage {
 
     event SignMsg(bytes32 indexed msgHash);
 
-    /// @dev Marks a message as signed, so that it can be used with EIP-1271
+    // @dev Marks a message as signed, so that it can be used with EIP-1271
     /// @notice Marks a message (`_data`) as signed.
     /// @param _data Arbitrary length data that should be marked as signed on the behalf of address(this)
     function signMessage(bytes calldata _data) external {
@@ -23,7 +23,7 @@ contract SignMessageLib is GnosisSafeStorage {
         emit SignMsg(msgHash);
     }
 
-    /// @dev Returns hash of a message that can be signed by owners.
+    // @dev Returns hash of a message that can be signed by owners.
     /// @param message Message that should be hashed
     /// @return Message hash.
     function getMessageHash(bytes memory message) public view returns (bytes32) {

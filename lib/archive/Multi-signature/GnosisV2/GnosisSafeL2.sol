@@ -25,7 +25,7 @@ contract GnosisSafeL2 is GnosisSafe {
 
     event SafeModuleTransaction(address module, address to, uint256 value, bytes data, Enum.Operation operation);
 
-    /// @dev Allows to execute a Safe transaction confirmed by required number of owners and then pays the account that submitted the transaction.
+    // @dev Allows to execute a Safe transaction confirmed by required number of owners and then pays the account that submitted the transaction.
     ///      Note: The fees are always transferred, even if the user transaction fails.
     /// @param to Destination address of Safe transaction.
     /// @param value Ether value of Safe transaction.
@@ -69,7 +69,7 @@ contract GnosisSafeL2 is GnosisSafe {
         return super.execTransaction(to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, signatures);
     }
 
-    /// @dev Allows a Module to execute a Safe transaction without any further confirmations.
+    // @dev Allows a Module to execute a Safe transaction without any further confirmations.
     /// @param to Destination address of module transaction.
     /// @param value Ether value of module transaction.
     /// @param data Data payload of module transaction.

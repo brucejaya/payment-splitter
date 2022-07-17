@@ -64,7 +64,7 @@ contract GnosisSafe is
         threshold = 1;
     }
 
-    /// @dev Setup function sets initial storage of contract.
+    // @dev Setup function sets initial storage of contract.
     /// @param _owners List of Safe owners.
     /// @param _threshold Number of required confirmations for a Safe transaction.
     /// @param to Contract address for optional delegate call.
@@ -97,7 +97,7 @@ contract GnosisSafe is
         emit SafeSetup(msg.sender, _owners, _threshold, to, fallbackHandler);
     }
 
-    /// @dev Allows to execute a Safe transaction confirmed by required number of owners and then pays the account that submitted the transaction.
+    // @dev Allows to execute a Safe transaction confirmed by required number of owners and then pays the account that submitted the transaction.
     ///      Note: The fees are always transferred, even if the user transaction fails.
     /// @param to Destination address of Safe transaction.
     /// @param value Ether value of Safe transaction.
@@ -305,7 +305,7 @@ contract GnosisSafe is
         }
     }
 
-    /// @dev Allows to estimate a Safe transaction.
+    // @dev Allows to estimate a Safe transaction.
     ///      This method is only meant for estimation purpose, therefore the call will always revert and encode the result in the revert data.
     ///      Since the `estimateGas` function includes refunds, call this method to get an estimated of the costs that are deducted from the safe with `execTransaction`
     /// @param to Destination address of Safe transaction.
@@ -338,7 +338,7 @@ contract GnosisSafe is
         emit ApproveHash(hashToApprove, msg.sender);
     }
 
-    /// @dev Returns the chain id used by this contract.
+    // @dev Returns the chain id used by this contract.
     function getChainId() public view returns (uint256) {
         uint256 id;
         // solhint-disable-next-line no-inline-assembly
@@ -352,7 +352,7 @@ contract GnosisSafe is
         return keccak256(abi.encode(DOMAIN_SEPARATOR_TYPEHASH, getChainId(), this));
     }
 
-    /// @dev Returns the bytes that are hashed to be signed by owners.
+    // @dev Returns the bytes that are hashed to be signed by owners.
     /// @param to Destination address.
     /// @param value Ether value.
     /// @param data Data payload.
@@ -395,7 +395,7 @@ contract GnosisSafe is
         return abi.encodePacked(bytes1(0x19), bytes1(0x01), domainSeparator(), safeTxHash);
     }
 
-    /// @dev Returns hash to be signed by owners.
+    // @dev Returns hash to be signed by owners.
     /// @param to Destination address.
     /// @param value Ether value.
     /// @param data Data payload.

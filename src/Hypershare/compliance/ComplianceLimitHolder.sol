@@ -10,31 +10,31 @@ import '../../Interface/IIdentityRegistry.sol';
 
 contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
-    //  @dev the token on which this compliance contract is applied
+    // @dev the token on which this compliance contract is applied
     ITokenRegistry public _tokenRegistry;
 
-    //  @dev the Identity registry contract linked to `token`
+    // @dev the Identity registry contract linked to `token`
     IIdentityRegistry private _identityRegistry;
     
-    //  @dev Mapping from token id to agents and their statuses
+    // @dev Mapping from token id to agents and their statuses
     mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
 
-    //  @dev Mapping of tokens linked to the compliance contract
+    // @dev Mapping of tokens linked to the compliance contract
     mapping(address => bool) private _tokensBound;
     
-    //  @dev Mapping from token ID to the limit of holders for this token
+    // @dev Mapping from token ID to the limit of holders for this token
     mapping(uint256 => uint256) private _holderLimit;
 
-    //  @dev Mapping from token ID to the index of each shareholder in the array `shareholders`
+    // @dev Mapping from token ID to the index of each shareholder in the array `shareholders`
     mapping(uint256 => mapping(address => uint256)) private _holderIndices;
 
-    //  @dev Mapping from token ID to the amount of shareholders per country
+    // @dev Mapping from token ID to the amount of shareholders per country
     mapping(uint256 => mapping(uint16 => uint256)) private _countryShareHolders;
 
-    //  @dev Mapping from token ID to the addresses of all shareholders
+    // @dev Mapping from token ID to the addresses of all shareholders
     mapping(uint256 => address[]) private _shareholders;
 
-    //  @dev the constructor initiates the smart contract with the initial state variables
+    // @dev the constructor initiates the smart contract with the initial state variables
     constructor(
         address tokenRegistry
     ) {
@@ -77,7 +77,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         emit TokenAgentRemoved(agentAddress);
     }
 
-    //  @dev sets the holder limit as required for compliance purpose
+    // @dev sets the holder limit as required for compliance purpose
     function setHolderLimit(
         uint256 holderLimit,
         uint256 id
@@ -89,7 +89,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         emit HolderLimitSet(holderLimit, id);
     }
 
-    //  @dev returns the holder limit as set for the token id 
+    // @dev returns the holder limit as set for the token id 
     function getHolderLimit(
         uint256 id
     )
@@ -100,7 +100,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         return _holderLimit[id];
     }
 
-    //  @dev returns the amount of token holders
+    // @dev returns the amount of token holders
     function holderCount(
         uint256 id
     )
@@ -132,7 +132,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         if (_holderIndices[id][account] == 0) {
             _shareholders[id].push(account);
             _holderIndices[id][account] = _shareholders[id].length;
-            uint16 country = _identityRegistry.holderCountry(account);
+            uint16 country = _identityRegistry.identityCountry(account);
             _countryShareHolders[id][country]++;
         }
     }
@@ -155,7 +155,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         _holderIndices[id][lastHolder] = _holderIndices[id][account];
         _shareholders[id].pop();
         _holderIndices[id][account] = 0;
-        uint16 country = _identityRegistry.holderCountry(account);
+        uint16 country = _identityRegistry.identityCountry(account);
         _countryShareHolders[id][country]--;
     }
 

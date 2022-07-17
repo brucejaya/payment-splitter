@@ -31,10 +31,10 @@ import '../registry/ITrustedIssuersRegistry.sol';
 
 
 contract TrustedIssuersRegistry is ITrustedIssuersRegistry, Ownable {
-    /// @dev Array containing all TrustedIssuers identity contract address.
+    // @dev Array containing all TrustedIssuers identity contract address.
     IClaimIssuer[] private trustedIssuers;
 
-    /// @dev Mapping between a trusted issuer index and its corresponding claimTopics.
+    // @dev Mapping between a trusted issuer index and its corresponding claimTopics.
     mapping(address => uint256[]) private trustedIssuerClaimTopics;
 
     /**

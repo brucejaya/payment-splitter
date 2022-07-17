@@ -240,7 +240,7 @@ contract KaliWhitelistManager {
         emit WhitelistJoined(listId, index, account);
     }
 
-    /// @dev modified from OpenZeppelin (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/MerkleProof.sol)
+    // @dev modified from OpenZeppelin (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/MerkleProof.sol)
     function _efficientHash(bytes32 a, bytes32 b) internal pure virtual returns (bytes32 value) {
         assembly {
             mstore(0x00, a)

@@ -10,22 +10,23 @@ import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IIdentityRegistryStorage.sol';
 
-import '../../Role/agent/AgentRole.sol';
+// TODO replace owner role with ownable or operatorApprovals?
+// import '../../HyperDAC/owner/OwnerRoles.sol';
 
 import './IdentityFactory.sol';
 
-contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
+contract IdentityRegistry is IdentityFactory, IIdentityRegistry /*, OwnerRole */ {
 
-    //  @dev Address of the IdentityRegistryStorage Contract
+    // @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private identityRegistryStorage_;
 
-    //  @dev Address of the ComplianceClaimsRequired Contract
+    // @dev Address of the ComplianceClaimsRequired Contract
     IComplianceClaimsRequired private complianceClaimsRequired_;
 
-    //  @dev Address of the ClaimVerifiersRegistry Contract
+    // @dev Address of the ClaimVerifiersRegistry Contract
     IClaimVerifiersRegistry private claimVerifiersRegistry_;
 
-    //  @dev the constructor initiates the Identity Registry smart contract
+    // @dev the constructor initiates the Identity Registry smart contract
     constructor(
         address _claimVerifiersRegistry,
         address _complianceClaimsRequired,
@@ -39,7 +40,11 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
-    //  @dev returns the associated address of an identity account
+    /*//////////////////////////////////////////////////////////////
+                            READ FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    // @dev returns the associated address of an identity account
     function identity(
         address _account
     )
@@ -51,7 +56,7 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         return identityRegistryStorage_.storedIdentity(_account);
     }
 
-    function holderCountry(
+    function identityCountry(
         address _account
     )
         external
@@ -97,6 +102,96 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         return identityRegistryStorage_;
     }
 
+    function contains(
+        address _account
+    )
+        external
+        view
+        override
+        returns (bool)
+    {
+        if (address(identity(_account)) == address(0)) {
+            return false;
+        }
+        return true;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                                 AGENT
+    //////////////////////////////////////////////////////////////*/
+
+    /*
+    function addAgentOnIdentityRegistryContract(
+        address _agent
+    )
+        external
+        override
+    {
+        addAgent(_agent);
+    }
+
+    function removeAgentOnIdentityRegistryContract(
+        address _agent
+    )
+        external
+        override
+    {
+        removeAgent(_agent);
+    }
+
+    */
+
+    /*//////////////////////////////////////////////////////////////
+                                CONTRACTS
+    //////////////////////////////////////////////////////////////*/
+
+    function setIdentityRegistryStorage(
+        address _identityRegistryStorage
+    )
+        external
+        override
+        onlyOwner
+    {
+        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
+        emit IdentityStorageSet(_identityRegistryStorage);
+    }
+
+    function setComplianceClaimsRequired(
+        address _complianceClaimsRequired
+    )
+        external
+        override
+        onlyOwner
+    {
+        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
+        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
+    }
+
+    function setClaimVerifiersRegistry(
+        address _claimVerifiersRegistry
+    )
+        external
+        override
+        onlyOwner
+    {
+        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
+        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
+    }
+
+        function transferOwnershipOnIdentityRegistryContract(
+        address _newOwner
+    )
+        external
+        override
+        onlyOwner
+    {
+        transferOwnership(_newOwner);
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            IDENTITY CONTROLS
+    //////////////////////////////////////////////////////////////*/
+
     function registerIdentity(
         address _account,
         IIdentity _identity,
@@ -123,7 +218,7 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         }
     }
 
-    //  @dev updates the country associated with an identity account
+    // @dev updates the country associated with an identity account
     function updateIdentity(
         address _account,
         IIdentity _identity
@@ -137,7 +232,7 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
-    //  @dev updates the country associated with an identity account
+    // @dev updates the country associated with an identity account
     function updateCountry(
         address _account, 
         uint16 _country
@@ -149,8 +244,8 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         identityRegistryStorage_.modifyStoredHolderCountry(_account, _country);
         emit CountryUpdated(_account, _country);
     }
-
-    //  @dev removes an identity from the registry
+    
+    // @dev removes an identity from the registry
     function deleteIdentity(
         address _account
     )
@@ -162,102 +257,12 @@ contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
         emit IdentityRemoved(_account, identity(_account));
     }
 
-    //  @dev Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
-    function isVerified(
-        address _account
-    )
-        external
-        view
-        override
-        returns (bool)
-    {
-        if (address(identity(_account)) == address(0)) {
-            return false;
-        }
-        uint256[] memory requiredClaimTopics = complianceClaimsRequired_.getClaimTopics();
-        if (requiredClaimTopics.length == 0) {
-            return true;
-        }
-        uint256 foundClaimTopic;
-        uint256 scheme;
-        address issuer;
-        bytes memory sig;
-        bytes memory data;
-        uint256 claimTopic;
-        for (claimTopic = 0; claimTopic < requiredClaimTopics.length; claimTopic++) {
-            bytes32[] memory claimIds = identity(_account).getClaimIdsByTopic(requiredClaimTopics[claimTopic]);
-            if (claimIds.length == 0) {
-                return false;
-            }
-            for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_account).getClaim(claimIds[j]);
+    /*//////////////////////////////////////////////////////////////
+                                FACTORY 
+    //////////////////////////////////////////////////////////////*/
 
-                try IClaimValidator(issuer).isClaimValid(
-                    identity(_account),
-                    requiredClaimTopics[claimTopic],
-                    sig,
-                    data
-                )
-                    returns(bool _validity)
-                {
-                    if (
-                        _validity
-                        && claimVerifiersRegistry_.hasClaimTopic(issuer, requiredClaimTopics[claimTopic])
-                        && claimVerifiersRegistry_.isVerifier(issuer)
-                    ) {
-                        j = claimIds.length;
-                    }
-                    if (!claimVerifiersRegistry_.isVerifier(issuer) && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                    if (!claimVerifiersRegistry_.hasClaimTopic(issuer, requiredClaimTopics[claimTopic]) && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                    if (!_validity && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                }
-                catch {
-                    if (j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
-    function setIdentityRegistryStorage(address _identityRegistryStorage) external override onlyOwner {
-        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
-        emit IdentityStorageSet(_identityRegistryStorage);
-    }
+    // TODO, factory
 
-    function setComplianceClaimsRequired(address _complianceClaimsRequired) external override onlyOwner {
-        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
-        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
-    }
 
-    function setClaimVerifiersRegistry(address _claimVerifiersRegistry) external override onlyOwner {
-        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
-        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
-    }
-
-    function contains(address _account) external view override returns (bool) {
-        if (address(identity(_account)) == address(0)) {
-            return false;
-        }
-        return true;
-    }
-
-    function transferOwnershipOnIdentityRegistryContract(address _newOwner) external override onlyOwner {
-        transferOwnership(_newOwner);
-    }
-
-    function addAgentOnIdentityRegistryContract(address _agent) external override {
-        addAgent(_agent);
-    }
-
-    function removeAgentOnIdentityRegistryContract(address _agent) external override {
-        removeAgent(_agent);
-    }
 }

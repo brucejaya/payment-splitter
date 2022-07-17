@@ -11,8 +11,8 @@ contract IdentityStorage {
     uint256 constant CLAIM_SIGNER_KEY = 3;
     uint256 constant ENCRYPTION_KEY = 4;
     
-    mapping(bytes32 => Key) internal keys;
     mapping(uint256 => bytes32[]) internal keysByPurpose;
+    mapping(bytes32 => Key) internal keys;
 
     struct Key {
         uint256[] purposes;

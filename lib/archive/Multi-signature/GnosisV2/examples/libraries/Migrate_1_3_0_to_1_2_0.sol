@@ -20,7 +20,7 @@ contract Migration is GnosisSafeStorage {
 
     bytes32 private guard;
 
-    /// @dev Allows to migrate the contract. This can only be called via a delegatecall.
+    // @dev Allows to migrate the contract. This can only be called via a delegatecall.
     function migrate() public {
         require(address(this) != migrationSingleton, "Migration should only be called via delegatecall");
         // Master copy address cannot be null.

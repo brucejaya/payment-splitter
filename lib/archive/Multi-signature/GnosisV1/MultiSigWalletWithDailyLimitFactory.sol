@@ -10,7 +10,7 @@ contract MultiSigWalletWithDailyLimitFactory is Factory {
     /*
      * Public functions
      */
-    /// @dev Allows verified creation of multisignature wallet.
+    // @dev Allows verified creation of multisignature wallet.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
     /// @param _dailyLimit Amount in wei, which can be withdrawn without confirmations on a daily basis.

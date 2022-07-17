@@ -10,7 +10,7 @@ contract MultiSigWalletFactory is Factory {
     /*
      * Public functions
      */
-    /// @dev Allows verified creation of multisignature wallet.
+    // @dev Allows verified creation of multisignature wallet.
     /// @param _owners List of initial owners.
     /// @param _required Number of required confirmations.
     /// @return Returns wallet address.

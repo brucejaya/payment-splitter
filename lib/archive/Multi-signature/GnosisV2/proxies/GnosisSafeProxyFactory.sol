@@ -9,7 +9,7 @@ import "./IProxyCreationCallback.sol";
 contract GnosisSafeProxyFactory {
     event ProxyCreation(GnosisSafeProxy proxy, address singleton);
 
-    /// @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
+    // @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
     /// @param singleton Address of singleton contract.
     /// @param data Payload for message call sent to new proxy contract.
     function createProxy(address singleton, bytes memory data) public returns (GnosisSafeProxy proxy) {
@@ -24,17 +24,17 @@ contract GnosisSafeProxyFactory {
         emit ProxyCreation(proxy, singleton);
     }
 
-    /// @dev Allows to retrieve the runtime code of a deployed Proxy. This can be used to check that the expected Proxy was deployed.
+    // @dev Allows to retrieve the runtime code of a deployed Proxy. This can be used to check that the expected Proxy was deployed.
     function proxyRuntimeCode() public pure returns (bytes memory) {
         return type(GnosisSafeProxy).runtimeCode;
     }
 
-    /// @dev Allows to retrieve the creation code used for the Proxy deployment. With this it is easily possible to calculate predicted address.
+    // @dev Allows to retrieve the creation code used for the Proxy deployment. With this it is easily possible to calculate predicted address.
     function proxyCreationCode() public pure returns (bytes memory) {
         return type(GnosisSafeProxy).creationCode;
     }
 
-    /// @dev Allows to create new proxy contact using CREATE2 but it doesn't run the initializer.
+    // @dev Allows to create new proxy contact using CREATE2 but it doesn't run the initializer.
     ///      This method is only meant as an utility to be called from other methods
     /// @param _singleton Address of singleton contract.
     /// @param initializer Payload for message call sent to new proxy contract.
@@ -54,7 +54,7 @@ contract GnosisSafeProxyFactory {
         require(address(proxy) != address(0), "Create2 call failed");
     }
 
-    /// @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
+    // @dev Allows to create new proxy contact and execute a message call to the new proxy within one transaction.
     /// @param _singleton Address of singleton contract.
     /// @param initializer Payload for message call sent to new proxy contract.
     /// @param saltNonce Nonce that will be used to generate the salt to calculate the address of the new proxy contract.
@@ -74,7 +74,7 @@ contract GnosisSafeProxyFactory {
         emit ProxyCreation(proxy, _singleton);
     }
 
-    /// @dev Allows to create new proxy contact, execute a message call to the new proxy and call a specified callback within one transaction
+    // @dev Allows to create new proxy contact, execute a message call to the new proxy and call a specified callback within one transaction
     /// @param _singleton Address of singleton contract.
     /// @param initializer Payload for message call sent to new proxy contract.
     /// @param saltNonce Nonce that will be used to generate the salt to calculate the address of the new proxy contract.
@@ -90,7 +90,7 @@ contract GnosisSafeProxyFactory {
         if (address(callback) != address(0)) callback.proxyCreated(proxy, _singleton, initializer, saltNonce);
     }
 
-    /// @dev Allows to get the address for a new proxy contact created via `createProxyWithNonce`
+    // @dev Allows to get the address for a new proxy contact created via `createProxyWithNonce`
     ///      This method is only meant for address calculation purpose when you use an initializer that would revert,
     ///      therefore the response is returned with a revert. When calling this method set `from` to the address of the proxy factory.
     /// @param _singleton Address of singleton contract.

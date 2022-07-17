@@ -15,14 +15,14 @@ contract GnosisSafeProxy {
     // To reduce deployment costs this variable is internal and needs to be retrieved via `getStorageAt`
     address internal singleton;
 
-    /// @dev Constructor function sets address of singleton contract.
+    // @dev Constructor function sets address of singleton contract.
     /// @param _singleton Singleton address.
     constructor(address _singleton) {
         require(_singleton != address(0), "Invalid singleton address provided");
         singleton = _singleton;
     }
 
-    /// @dev Fallback function forwards all transactions and returns all received return data.
+    // @dev Fallback function forwards all transactions and returns all received return data.
     fallback() external payable {
         // solhint-disable-next-line no-inline-assembly
         assembly {

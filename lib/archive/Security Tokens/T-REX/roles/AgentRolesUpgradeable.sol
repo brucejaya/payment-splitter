@@ -49,7 +49,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         _;
     }
 
-    /// @dev AgentAdmin Role _agentAdmin
+    // @dev AgentAdmin Role _agentAdmin
 
     function isAgentAdmin(address _agent) public view returns (bool) {
         return _agentAdmin.has(_agent);
@@ -67,7 +67,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev SupplyModifier Role _supplyModifiers
+    // @dev SupplyModifier Role _supplyModifiers
 
     function isSupplyModifier(address _agent) public view returns (bool) {
         return _supplyModifiers.has(_agent);
@@ -85,7 +85,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev Freezer Role _freezers
+    // @dev Freezer Role _freezers
 
     function isFreezer(address _agent) public view returns (bool) {
         return _freezers.has(_agent);
@@ -103,7 +103,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev TransferManager Role _transferManagers
+    // @dev TransferManager Role _transferManagers
 
     function isTransferManager(address _agent) public view returns (bool) {
         return _transferManagers.has(_agent);
@@ -121,7 +121,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev RecoveryAgent Role _recoveryAgents
+    // @dev RecoveryAgent Role _recoveryAgents
 
     function isRecoveryAgent(address _agent) public view returns (bool) {
         return _recoveryAgents.has(_agent);
@@ -139,7 +139,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev ComplianceAgent Role _complianceAgents
+    // @dev ComplianceAgent Role _complianceAgents
 
     function isComplianceAgent(address _agent) public view returns (bool) {
         return _complianceAgents.has(_agent);
@@ -157,7 +157,7 @@ contract AgentRolesUpgradeable is OwnableUpgradeable
         emit RoleRemoved(_agent, _role);
     }
 
-    /// @dev WhiteListManager Role _whiteListManagers
+    // @dev WhiteListManager Role _whiteListManagers
 
     function isWhiteListManager(address _agent) public view returns (bool) {
         return _whiteListManagers.has(_agent);

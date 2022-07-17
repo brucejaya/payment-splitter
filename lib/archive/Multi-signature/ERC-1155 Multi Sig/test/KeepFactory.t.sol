@@ -13,12 +13,12 @@ contract KeepFactoryTest is Test {
 
     address[] signers;
 
-    /// @dev Users
+    // @dev Users
 
     address public immutable alice = address(0xa);
     address public immutable bob = address(0xb);
 
-    /// @dev Helpers
+    // @dev Helpers
 
     Call[] calls;
 

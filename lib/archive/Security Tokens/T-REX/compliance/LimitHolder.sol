@@ -34,28 +34,28 @@ import '../registry/IIdentityRegistry.sol';
 contract LimitHolder is ICompliance, Ownable
 
  {
-    /// @dev the token on which this compliance contract is applied
+    // @dev the token on which this compliance contract is applied
     IToken public token;
 
-    /// @dev the limit of holders for this token
+    // @dev the limit of holders for this token
     uint256 private holderLimit;
 
-    /// @dev the Identity registry contract linked to `token`
+    // @dev the Identity registry contract linked to `token`
     IIdentityRegistry private identityRegistry;
 
-    /// @dev the index of each shareholder in the array `shareholders`
+    // @dev the index of each shareholder in the array `shareholders`
     mapping(address => uint256) private holderIndices;
 
-    /// @dev the amount of shareholders per country
+    // @dev the amount of shareholders per country
     mapping(uint16 => uint256) private countryShareHolders;
 
-    /// @dev the addresses of all shareholders
+    // @dev the addresses of all shareholders
     address[] private shareholders;
 
-    /// @dev Mapping between agents and their statuses
+    // @dev Mapping between agents and their statuses
     mapping(address => bool) private _tokenAgentsList;
 
-    /// @dev Mapping of tokens linked to the compliance contract
+    // @dev Mapping of tokens linked to the compliance contract
     mapping(address => bool) private _tokensBound;
 
     /**

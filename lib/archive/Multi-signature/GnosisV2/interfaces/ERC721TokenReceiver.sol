@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.7.0 <0.9.0;
 
-/// @dev Note: the ERC-165 identifier for this interface is 0x150b7a02.
+// @dev Note: the ERC-165 identifier for this interface is 0x150b7a02.
 interface ERC721TokenReceiver {
     /// @notice Handle the receipt of an NFT
-    /// @dev The ERC721 smart contract calls this function on the recipient
+    // @dev The ERC721 smart contract calls this function on the recipient
     ///  after a `transfer`. This function MAY throw to revert and reject the
     ///  transfer. Return of other than the magic value MUST result in the
     ///  transaction being reverted.

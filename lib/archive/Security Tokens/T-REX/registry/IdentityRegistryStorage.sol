@@ -30,16 +30,16 @@ import '../roles/AgentRole.sol';
 import '../registry/IIdentityRegistryStorage.sol';
 
 contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
-    /// @dev struct containing the identity contract and the country of the user
+    // @dev struct containing the identity contract and the country of the user
     struct Identity {
         IIdentity identityContract;
         uint16 investorCountry;
     }
 
-    /// @dev mapping between a user address and the corresponding identity
+    // @dev mapping between a user address and the corresponding identity
     mapping(address => Identity) private identities;
 
-    /// @dev array of Identity Registries linked to this storage
+    // @dev array of Identity Registries linked to this storage
     address[] private identityRegistries;
 
     /**

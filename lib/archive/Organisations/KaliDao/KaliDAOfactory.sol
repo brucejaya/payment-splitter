@@ -69,7 +69,7 @@ contract KaliDAOfactory is Multicall {
         emit DAOdeployed(kaliDAO, name_, symbol_, docs_, paused_, extensions_, extensionsData_, voters_, shares_, votingPeriod_, govSettings_);
     }
 
-    /// @dev modified from Aelin (https://github.com/AelinXYZ/aelin/blob/main/contracts/MinimalProxyFactory.sol)
+    // @dev modified from Aelin (https://github.com/AelinXYZ/aelin/blob/main/contracts/MinimalProxyFactory.sol)
     function _cloneAsMinimalProxy(address payable base, string memory name_) internal virtual returns (address payable clone) {
         bytes memory createData = abi.encodePacked(
             // constructor

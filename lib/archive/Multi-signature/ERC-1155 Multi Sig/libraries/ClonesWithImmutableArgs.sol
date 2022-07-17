@@ -12,7 +12,7 @@ library ClonesWithImmutableArgs {
     uint256 private constant ONE_WORD = 0x20;
 
     /// @notice Creates a clone proxy of the implementation contract with immutable args
-    /// @dev `data` cannot exceed 65535 bytes, since 2 bytes are used to store the data length
+    // @dev `data` cannot exceed 65535 bytes, since 2 bytes are used to store the data length
     /// @param implementation The implementation contract to clone
     /// @param data Encoded immutable args
     /// @return ptr The ptr to the clone's bytecode
@@ -81,7 +81,7 @@ library ClonesWithImmutableArgs {
     }
 
     /// @notice Creates a clone proxy of the implementation contract with immutable args
-    /// @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
+    // @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
     /// @param implementation The implementation contract to clone
     /// @param salt The salt for create2
     /// @param data Encoded immutable args
@@ -107,7 +107,7 @@ library ClonesWithImmutableArgs {
     }
 
     /// @notice Predicts the address where a deterministic clone of implementation will be deployed
-    /// @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
+    // @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
     /// @param implementation The implementation contract to clone
     /// @param salt The salt for create2
     /// @param data Encoded immutable args
