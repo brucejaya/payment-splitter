@@ -6,18 +6,22 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../Roles.sol';
 
-// Roles seems to deal exclusively with contract upgrades
+// ! Roles seems to deal exclusively with contract upgrades
 
 contract OwnerRoles is Ownable {
 
-    ////////////////
-    // MISC
-    ////////////////
-
     using Roles for Roles.Role;
+
+    ////////////////
+    // EVENTS
+    ////////////////
 
     event RoleAdded(address indexed _owner, string _role);
     event RoleRemoved(address indexed _owner, string _role);
+
+    ////////////////
+    // ROLES
+    ////////////////
 
     Roles.Role private _ownerAdmin;
     Roles.Role private _registryAddressSetter;
@@ -25,7 +29,6 @@ contract OwnerRoles is Ownable {
     Roles.Role private _complianceManager;
     Roles.Role private _claimRegistryManager;
     Roles.Role private _issuersRegistryManager;
-    Roles.Role private _tokenInfoManager;
 
     ////////////////
     // MODIFIERS

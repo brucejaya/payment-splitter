@@ -6,6 +6,10 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../Roles.sol';
 
+// !    Roles seems to basically all be redundant, no need to for such complex control structures, surely
+// !    Could this all be refactored to as to more directly mimic the ERC-734 key manager
+// !    This could be the basis for HyperDAC
+
 contract AgentRoles is Ownable {
 
     using Roles for Roles.Role;
