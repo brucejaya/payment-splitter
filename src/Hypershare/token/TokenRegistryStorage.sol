@@ -6,24 +6,20 @@ import '../../Interface/IIdentityRegistry.sol';
 
 contract TokenRegistryStorage {
 
-    // @Dev Mapping from token ID to account balances
+    // @dev Mapping from toke id to account of token isser
+    mapping(uint256 => address) internal _tokenIssuer;
+
+    // @dev Mapping from token ID to account balances
     mapping(uint256 => mapping(address => uint256)) internal _balances;
 
-    // @Dev Mapping from account to operator approvals
-    mapping(address => mapping(address => bool)) internal _operatorApprovals;
-    // TODO is this stil in use?
-
-    // @Dev Mapping from token ID to Wrapper contract address
+    // @dev Mapping from token ID to Wrapper contract address
     mapping(uint256 => address) internal _tokenWrapper;
 
-    // @Dev Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
+    // @dev Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
     string internal _uri;
 
     // @dev Mapping from token ID to account balances
     mapping(uint256 => uint256) internal _totalSupply;
-
-    // @dev Token information
-    address internal _tokenIdentity;
 
     // @dev Mapping from token ID to frozen accounts
     mapping(uint256 => mapping(address => bool)) internal _frozen; // internal or internal?

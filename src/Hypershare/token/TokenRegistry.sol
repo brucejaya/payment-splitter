@@ -30,19 +30,23 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         address agentIdentity_
     ) public initializer {
         _uri = uri_;
-        _tokenIdentity = agentIdentity_;
+        _tokenIssuer = agentIdentity_;
         _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired_);
         _complianceLimitHolder = IComplianceLimitHolder(compliance_);
         emit ComplianceClaimsRequiredAdded(complianceClaimsRequired_);
         emit ComplianceAdded(compliance_);
-
-        // emit UpdatedTokenInformation(uri, _tokenIdentity); TODO: update event
-        __Ownable_init();
     }
 
     ////////////////
     // MODIFIERS
     ////////////////
+
+    modifier onlyIssuer(
+        uint256 id
+    ) {
+        require(_msgSender() == _tokenIssuer[id], 'Only token issuer can call this function');
+        _;
+    }
 
     modifier whenNotPaused(
         uint256 id
@@ -73,9 +77,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         return _totalSupply[id];
     }
 
-    function uri(
-        uint256 id
-    ) 
+    function uri() 
         external 
         view 
         returns (string memory)
@@ -83,13 +85,15 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         return _uri;
     }
 
-    function identity()
+    function issuer(
+        uint256 id
+    )
         external
         view
         override
         returns (address)
     {
-        return _tokenIdentity;
+        return _tokenIssuer;
     }
     
     function complianceClaimsRequired()
@@ -165,8 +169,8 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         override
         onlyOwner
     {
-        _tokenIdentity = Identity;
-        // emit UpdatedTokenInformation(_tokenIdentity);
+        _tokenIssuer = Identity;
+        // emit UpdatedTokenInformation(_tokenIssuer);
     }
 
     function pause(
@@ -174,7 +178,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         external
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
         whenNotPaused(id)
     {
         _tokenPaused[id] = true;
@@ -186,7 +190,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         external
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
         whenPaused(id)
     {
         _tokenPaused[id] = false;
@@ -225,30 +229,6 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     {
         transferOwnership(newOwner);
     }
-
-    /*//////////////////////////////////////////////////////////////
-                                 AGENT
-    //////////////////////////////////////////////////////////////*/
-
-    /*
-    function addAgentOnTokenContract(
-        address agent
-    )
-        external
-        override
-    {
-        addAgent(agent);
-    }
-
-    function removeAgentOnTokenContract(
-        address agent
-    )
-        external
-        override
-    {
-        removeAgent(agent);
-    }
-    */
 
     /*//////////////////////////////////////////////////////////////
                                  BALANCE
@@ -446,7 +426,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         public
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
         returns (bool)
     {
         uint256 freeBalance = balanceOf(from, id) - (_frozenTokens[id][from]);
@@ -510,7 +490,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
 	)
 		public
 		override
-		// TODO onlyAgent 
+		onlyIssuer(id) 
 	{
         require(_complianceClaimsRequired.isVerified(to, id), 'Identity is not verified.');
         require(_complianceLimitHolder.canTransfer(to, id, amount, data), 'Compliance not followed');
@@ -569,7 +549,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         public
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
     {
         uint256 freeBalance = balanceOf(from, id) - _frozenTokens[id][from];
         if (amount > freeBalance) {
@@ -632,7 +612,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         public
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
     {
         _frozen[id][account] = freeze;
         emit AddressFrozen(account, freeze, _msgSender());
@@ -661,7 +641,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         public
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
     {
         uint256 balance = balanceOf(account, id);
         require(balance >= _frozenTokens[id][account] + amount, 'Amount exceeds available balance');
@@ -692,7 +672,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         public
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
     {
         
         require(_frozenTokens[id][account] >= amount, 'Amount should be less than or equal to frozen tokens');
@@ -714,7 +694,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     )
         external
         override
-        // TODO onlyAgent 
+        onlyIssuer(id) 
         returns (bool)
     {
         require(balanceOf(lostWallet, id) != 0, 'no tokens to recover');

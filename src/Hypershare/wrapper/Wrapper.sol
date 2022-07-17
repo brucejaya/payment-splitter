@@ -7,7 +7,7 @@ import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol';
 
 import '../../Interface/ITokenRegistry.sol';
 
-abstract contract TokenWrapper is ERC20, IERC1155Receiver {
+abstract contract Wrapper is ERC20, IERC1155Receiver {
     
     ITokenRegistry public _tokenRegistry;
     uint256 public _id;

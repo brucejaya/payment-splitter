@@ -11,47 +11,10 @@ contract ClaimValidator is IClaimValidator, Identity {
 
     constructor(address initialManagementKey) Identity(initialManagementKey, false) {}
 
-    // @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
-    function revokeClaim(
-        bytes32 claimId,
-        address identity
-    )
-        public
-        override
-        delegatedOnly
-        returns(bool)
-    {
-        uint256 foundClaimTopic;
-        uint256 scheme;
-        address issuer;
-        bytes memory  sig;
-        bytes  memory data;
 
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
-        }
-
-        ( foundClaimTopic, scheme, issuer, sig, data, ) = Identity(identity).getClaim(claimId);
-
-        revokedClaims[sig] = true;
-        return true;
-    }
-
-    // @dev Returns revocation status of a claim.
-    function isClaimRevoked(
-        bytes memory _sig
-    )
-        public
-        override
-        view
-        returns (bool)
-    {
-        if (revokedClaims[_sig]) {
-            return true;
-        }
-
-        return false;
-    }
+    /*//////////////////////////////////////////////////////////////
+                            READ FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     //   @dev Checks if a claim is valid.
     function isClaimValid(
@@ -83,6 +46,54 @@ contract ClaimValidator is IClaimValidator, Identity {
 
         return false;
     }
+
+
+    // @dev Returns revocation status of a claim.
+    function isClaimRevoked(
+        bytes memory _sig
+    )
+        public
+        override
+        view
+        returns (bool)
+    {
+        if (revokedClaims[_sig]) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /*//////////////////////////////////////////////////////////////
+                            CLAIM MANAGEMENT
+    //////////////////////////////////////////////////////////////*/
+
+    // @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
+    function revokeClaim(
+        bytes32 claimId,
+        address identity
+    )
+        public
+        override
+        returns(bool)
+    {
+        uint256 foundClaimTopic;
+        uint256 scheme;
+        address issuer;
+        bytes memory  sig;
+        bytes  memory data;
+
+        if (msg.sender != address(this)) {
+            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
+        }
+
+        ( foundClaimTopic, scheme, issuer, sig, data, ) = Identity(identity).getClaim(claimId);
+
+        revokedClaims[sig] = true;
+        return true;
+    }
+    
 
     function getRecoveredAddress(
         bytes memory sig,

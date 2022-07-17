@@ -2,5 +2,5 @@
 pragma solidity ^0.8.6;
 
 import "./IERC734.sol";
-
-interface IIdentity is IERC734 {}
+import "./IERC735.sol";
+interface IIdentity is IERC734, IERC735 {}

@@ -8,35 +8,24 @@ import '../../Interface/IIdentity.sol';
 import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
-import '../../Interface/IIdentityRegistryStorage.sol';
 
 // TODO replace owner role with ownable or operatorApprovals?
-// import '../../HyperDAC/owner/OwnerRoles.sol';
 
-contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
+contract IdentityRegistry is IIdentityRegistry {
 
-    // @dev Address of the IdentityRegistryStorage Contract
-    IIdentityRegistryStorage private identityRegistryStorage_;
+    // @dev mapping between a user address and the corresponding identity
+    mapping(address => Identity) private identities;
 
-    // @dev Address of the ComplianceClaimsRequired Contract
-    IComplianceClaimsRequired private complianceClaimsRequired_;
-
-    // @dev Address of the ClaimVerifiersRegistry Contract
-    IClaimVerifiersRegistry private claimVerifiersRegistry_;
+   // @dev struct containing the identity contract and the country of the user
+    struct Identity {
+        IIdentity identityContract;
+        uint16 identityCountry;
+    }
 
     // @dev the constructor initiates the Identity Registry smart contract
-    constructor(
-        address _claimVerifiersRegistry,
-        address _complianceClaimsRequired,
-        address _identityRegistryStorage
-    ) {
-        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
-        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
-        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
-        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
-        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
-        emit IdentityStorageSet(_identityRegistryStorage);
-    }
+    // constructor(
+    // ) {
+    // }
 
     /*//////////////////////////////////////////////////////////////
                             READ FUNCTIONS
@@ -72,32 +61,6 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
         returns (IClaimVerifiersRegistry)
     {
         return claimVerifiersRegistry_;
-    }
-    function claimRegistry()
-        external
-        view
-        override
-        returns (IClaimVerifiersRegistry)
-    {
-        return claimRegistry_;
-    }
-
-    function complianceClaimsRequired()
-        external
-        view
-        override
-        returns (IComplianceClaimsRequired)
-    {
-        return complianceClaimsRequired_;
-    }
-
-    function identityRegistryStorage()
-        external
-        view
-        override
-        returns (IIdentityRegistryStorage)
-    {
-        return identityRegistryStorage_;
     }
 
     function contains(
@@ -140,53 +103,6 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
     */
 
     /*//////////////////////////////////////////////////////////////
-                                CONTRACTS
-    //////////////////////////////////////////////////////////////*/
-
-    function setIdentityRegistryStorage(
-        address _identityRegistryStorage
-    )
-        external
-        override
-        onlyOwner
-    {
-        identityRegistryStorage_ = IIdentityRegistryStorage(_identityRegistryStorage);
-        emit IdentityStorageSet(_identityRegistryStorage);
-    }
-
-    function setComplianceClaimsRequired(
-        address _complianceClaimsRequired
-    )
-        external
-        override
-        onlyOwner
-    {
-        complianceClaimsRequired_ = IComplianceClaimsRequired(_complianceClaimsRequired);
-        emit ComplianceClaimsRequiredSet(_complianceClaimsRequired);
-    }
-
-    function setClaimVerifiersRegistry(
-        address _claimVerifiersRegistry
-    )
-        external
-        override
-        onlyOwner
-    {
-        claimVerifiersRegistry_ = IClaimVerifiersRegistry(_claimVerifiersRegistry);
-        emit ClaimVerifiersRegistrySet(_claimVerifiersRegistry);
-    }
-
-        function transferOwnershipOnIdentityRegistryContract(
-        address _newOwner
-    )
-        external
-        override
-        onlyOwner
-    {
-        transferOwnership(_newOwner);
-    }
-
-    /*//////////////////////////////////////////////////////////////
                             IDENTITY CONTROLS
     //////////////////////////////////////////////////////////////*/
 
@@ -197,7 +113,6 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
     )
         public
         override
-        onlyAgent
     {
         identityRegistryStorage_.addIdentityToStorage(_account, _identity, _country);
         emit IdentityRegistered(_account, _identity);
@@ -223,8 +138,8 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
     )
         external
         override
-        onlyAgent
     {
+        require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
         IIdentity oldIdentity = identity(_account);
         identityRegistryStorage_.modifyStoredIdentity(_account, _identity);
         emit IdentityUpdated(oldIdentity, _identity);
@@ -239,6 +154,7 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
         override
         onlyAgent
     {
+        require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
         identityRegistryStorage_.modifyStoredHolderCountry(_account, _country);
         emit CountryUpdated(_account, _country);
     }
@@ -251,6 +167,7 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
         override
         onlyAgent
     {
+        require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
         identityRegistryStorage_.removeIdentityFromStorage(_account);
         emit IdentityRemoved(_account, identity(_account));
     }
@@ -262,5 +179,20 @@ contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
 
     // TODO, factory
 
+
+
+    /*//////////////////////////////////////////////////////////////
+                             HYPERSURFACE
+    //////////////////////////////////////////////////////////////*/
+
+    function transferOwnership(
+        address _newOwner
+    )
+        external
+        override
+        onlyOwner
+    {
+        transferOwnership(_newOwner);
+    }
 
 }
