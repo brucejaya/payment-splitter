@@ -13,7 +13,7 @@ import './OwnerRoles.sol';
 
 contract OwnerManager is OwnerRoles {
 
-    /// @dev the tokenRegistry that is managed by this OwnerManager Contract
+    ///  @dev the tokenRegistry that is managed by this OwnerManager Contract
     ITokenRegistry public tokenRegistry;
 
     event ComplianceInteraction(address indexed target, bytes4 selector);

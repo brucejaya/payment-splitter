@@ -12,7 +12,9 @@ import '../../Interface/IIdentityRegistryStorage.sol';
 
 import '../../Role/agent/AgentRole.sol';
 
-contract IdentityRegistry is IIdentityRegistry, AgentRole {
+import './IdentityFactory.sol';
+
+contract IdentityRegistry is IdentityFactory, IIdentityRegistry, AgentRole {
 
     //  @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private identityRegistryStorage_;
@@ -20,7 +22,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
     //  @dev Address of the ComplianceClaimsRequired Contract
     IComplianceClaimsRequired private complianceClaimsRequired_;
 
-    //  @dev Address of the TrustedVerifierssRegistry Contract
+    //  @dev Address of the ClaimVerifiersRegistry Contract
     IClaimVerifiersRegistry private claimVerifiersRegistry_;
 
     //  @dev the constructor initiates the Identity Registry smart contract
@@ -37,6 +39,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityStorageSet(_identityRegistryStorage);
     }
 
+    //  @dev returns the associated address of an identity account
     function identity(
         address _account
     )
@@ -66,6 +69,14 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         returns (IClaimVerifiersRegistry)
     {
         return claimVerifiersRegistry_;
+    }
+    function claimRegistry()
+        external
+        view
+        override
+        returns (IClaimVerifiersRegistry)
+    {
+        return claimRegistry_;
     }
 
     function complianceClaimsRequired()
@@ -112,6 +123,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         }
     }
 
+    //  @dev updates the country associated with an identity account
     function updateIdentity(
         address _account,
         IIdentity _identity
@@ -125,6 +137,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
+    //  @dev updates the country associated with an identity account
     function updateCountry(
         address _account, 
         uint16 _country
@@ -137,6 +150,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit CountryUpdated(_account, _country);
     }
 
+    //  @dev removes an identity from the registry
     function deleteIdentity(
         address _account
     )
@@ -148,7 +162,15 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
         emit IdentityRemoved(_account, identity(_account));
     }
 
-    function isVerified(address _account) external view override returns (bool) {
+    //  @dev Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
+    function isVerified(
+        address _account
+    )
+        external
+        view
+        override
+        returns (bool)
+    {
         if (address(identity(_account)) == address(0)) {
             return false;
         }
@@ -170,8 +192,14 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole {
             for (uint256 j = 0; j < claimIds.length; j++) {
                 (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_account).getClaim(claimIds[j]);
 
-                try IClaimValidator(issuer).isClaimValid(identity(_account), requiredClaimTopics[claimTopic], sig,
-                data) returns(bool _validity){
+                try IClaimValidator(issuer).isClaimValid(
+                    identity(_account),
+                    requiredClaimTopics[claimTopic],
+                    sig,
+                    data
+                )
+                    returns(bool _validity)
+                {
                     if (
                         _validity
                         && claimVerifiersRegistry_.hasClaimTopic(issuer, requiredClaimTopics[claimTopic])

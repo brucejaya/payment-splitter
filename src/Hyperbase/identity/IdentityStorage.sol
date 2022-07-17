@@ -20,6 +20,20 @@ contract IdentityStorage {
         bytes32 key;
     }
 
+    ////////////////
+    // CLAIMS
+    ////////////////
+    mapping(bytes32 => Claim) internal claims;
+    mapping(uint256 => bytes32[]) internal claimsByTopic; 
+
+    struct Claim {
+        uint256 topic;
+        uint256 scheme;
+        address issuer;
+        bytes signature;
+        bytes data;
+        string uri;
+    }
 
     ////////////////
     // EXEUCTIONS
