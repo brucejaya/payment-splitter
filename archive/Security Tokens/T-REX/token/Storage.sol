@@ -23,7 +23,7 @@
  */
 
 pragma solidity ^0.8.0;
-import '../compliance/ICompliance.sol';
+import '../compliance/IComplianceLimitHolder.sol';
 import '../registry/IIdentityRegistry.sol';
 
 contract TokenStorage {

@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.0;
 
-import '..../Interfaces/ICompliance.sol';
+import '..../Interfaces/IComplianceLimitHolder.sol';
 
 // import '.../registry/IIdentityRegistry.sol';
 

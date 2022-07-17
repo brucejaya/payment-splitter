@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol';
 
 import './IIdentityRegistry.sol';
-import './ICompliance.sol';
+import './IComplianceLimitHolder.sol';
 
 interface ITokenRegistry is IERC1155 {
 

@@ -2,7 +2,7 @@ pragma solidity 0.8.0;
 
 import './EquityStorage.sol';
 
-import '..../Interfaces/ICompliance.sol';
+import '..../Interfaces/IComplianceLimitHolder.sol';
 import '..../Interfaces/IERC3643.sol';
 import '..../Interfaces/IERC725.sol';
 import '..../Interfaces/IERC735.sol';

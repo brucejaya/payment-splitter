@@ -3,7 +3,8 @@
 pragma solidity ^0.8.0;
 
 // TODO UPDATE
-interface ICompliance {
+
+interface IComplianceLimitHolder {
     
     event TokenAgentAdded(address agentAddress);
 

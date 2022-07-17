@@ -1,4 +1,4 @@
-contract EthereumClaimsRegistry {
+contract EthereumClaimRegistry {
 
     mapping(address => mapping(address => mapping(bytes32 => bytes32))) public registry;
 

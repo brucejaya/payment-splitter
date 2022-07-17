@@ -14,8 +14,8 @@ import '../../Interface/IERC734.sol';
 import '../../Interface/IERC735.sol';
 import '../../Interface/IIdentity.sol';
 import '../../Interface/IIdentityRegistry.sol';
-import '../../Interface/IComplianceClaimsRequired.sol';
-import '../../Interface/ICompliance.sol';
+// import '../../Interface/IComplianceClaimsRequired.sol';
+import '../../Interface/IComplianceLimitHolder.sol';
 
 import './TokenRegistryStorage.sol';
 import '../../Role/agent/AgentRoleUpgradeable.sol';

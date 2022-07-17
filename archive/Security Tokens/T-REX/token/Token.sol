@@ -30,7 +30,7 @@ import '@onchain-id/solidity/contracts/interface/IERC735.sol';
 import '@onchain-id/solidity/contracts/interface/IIdentity.sol';
 import '../registry/IClaimTopicsRegistry.sol';
 import '../registry/IIdentityRegistry.sol';
-import '../compliance/ICompliance.sol';
+import '../compliance/IComplianceLimitHolder.sol';
 import './Storage.sol';
 import '../roles/AgentRoleUpgradeable.sol';
 

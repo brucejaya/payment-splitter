@@ -6,7 +6,7 @@ import '../../Interface/ITokenRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IComplianceClaimsRequired.sol';
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceLimitHolder.sol';
 import '../../Interface/IIdentity.sol';
 import '../../Interface/IClaimValidator.sol';
 import './OwnerRoles.sol';

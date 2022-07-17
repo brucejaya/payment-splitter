@@ -4,22 +4,22 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceLimitHolder.sol';
 import '../../Interface/ITokenRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
 
-contract Compliance is ICompliance, Ownable  {
+contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
-    // @dev the token on which this compliance contract is applied
+    //  @dev the token on which this compliance contract is applied
     ITokenRegistry public _tokenRegistry;
 
-    // @dev the Identity registry contract linked to `token`
+    //  @dev the Identity registry contract linked to `token`
     IIdentityRegistry private _identityRegistry;
     
-    // @dev Mapping from token id to agents and their statuses
+    //  @dev Mapping from token id to agents and their statuses
     mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
 
-    // @dev Mapping of tokens linked to the compliance contract
+    //  @dev Mapping of tokens linked to the compliance contract
     mapping(address => bool) private _tokensBound;
     
     //  @dev Mapping from token ID to the limit of holders for this token

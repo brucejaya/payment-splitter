@@ -25,7 +25,7 @@ Full folder structure is as follows:
 	│   ├── compliance
 	│   │   ├── ComplianceClaimsRequired.sol
 	│   │   ├── ComplianceDefault.sol
-	│   │   └── Compliance.sol
+	│   │   └── ComplianceLimitHolder.sol
 	│   ├── token
 	│   │   ├── TokenRegistry.sol
 	│   │   └── TokenRegistryStorage.sol

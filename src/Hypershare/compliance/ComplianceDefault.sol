@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/ICompliance.sol';
+import '../../Interface/IComplianceLimitHolder.sol';
 
 contract ComplianceDefault is ICompliance, Ownable {
 

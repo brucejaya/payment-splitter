@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.3;
 
-import "./ClaimsRegistry/Verifier.sol";
+import "./ClaimRegistry/Verifier.sol";
 
 /// @title The claim verification interface expected by the Staking contract
 /// @author Miguel Palhas <miguel@subvisual.co>
-interface IClaimsRegistryVerifier {
+interface IClaimRegistryVerifier {
   /// @notice Verifies that the given `sig` corresponds to a claim about `subject`, signed by `attester`
   /// @param subject The subject the claim refers to
   /// @param attester The account that is expected to have signed the claim
@@ -17,7 +17,7 @@ interface IClaimsRegistryVerifier {
 
 /// @title A claim registry. Does not actually store data, but only signatures of claims and their subjects
 /// @author Miguel Palhas <miguel@subvisual.co>
-contract ClaimsRegistry is IClaimsRegistryVerifier, Verifier {
+contract ClaimRegistry is IClaimRegistryVerifier, Verifier {
   /// @notice The mapping of keys to claims
   mapping(bytes32 => Claim) public registry;
 
@@ -52,7 +52,7 @@ contract ClaimsRegistry is IClaimsRegistryVerifier, Verifier {
   ) public {
     bytes32 signable = computeSignableKey(subject, claimHash);
 
-    require(verifyWithPrefix(signable, sig, attester), "ClaimsRegistry: Claim signature does not match attester");
+    require(verifyWithPrefix(signable, sig, attester), "ClaimRegistry: Claim signature does not match attester");
 
     bytes32 key = computeKey(attester, sig);
 
@@ -99,7 +99,7 @@ contract ClaimsRegistry is IClaimsRegistryVerifier, Verifier {
   ) public {
     bytes32 key = computeKey(msg.sender, sig);
 
-    require(registry[key].subject != address(0), "ClaimsRegistry: Claim not found");
+    require(registry[key].subject != address(0), "ClaimRegistry: Claim not found");
 
     registry[key].revoked = true;
 
