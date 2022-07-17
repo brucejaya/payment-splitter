@@ -32,9 +32,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isRegistryAddressSetter(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Registry Address Setter'
         );
@@ -48,9 +45,6 @@ contract OwnerManager is OwnerRoles {
        external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isComplianceSetter(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Compliance Setter'
         );
@@ -64,9 +58,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isComplianceManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Compliance Manager');
             address target = address(tokenRegistry.compliance()
@@ -120,9 +111,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isTokenInfoManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Token Information Manager'
         );
@@ -136,9 +124,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isRegistryAddressSetter(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Registry Address Setter'
         );
@@ -152,9 +137,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isRegistryAddressSetter(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Registry Address Setter'
         );
@@ -169,9 +151,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT VerifiersRegistryManager'
         );
@@ -185,9 +164,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT VerifiersRegistryManager'
         );
@@ -202,9 +178,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isVerifiersRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT VerifiersRegistryManager'
         );
@@ -218,9 +191,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isClaimRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT ClaimRegistryManager'
         );
@@ -234,9 +204,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isClaimRegistryManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT ClaimRegistryManager'
         );
@@ -340,9 +307,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isTransferManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Transfer Manager'
         );
@@ -360,9 +324,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isTransferManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Transfer Manager'
         );
@@ -375,9 +336,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.pause(_id);
     }
@@ -388,9 +346,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.unpause(_id);
     }
@@ -405,9 +360,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
@@ -424,9 +376,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
@@ -442,9 +391,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
@@ -461,9 +407,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
@@ -478,9 +421,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.setAddressFrozen(_account, _id, _freeze);
     }
@@ -493,9 +433,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.batchSetAddressFrozen(_accounts, _ids, _freeze);
     }
@@ -508,9 +445,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.freezePartialTokens(_account, _id, _amount);
     }
@@ -523,9 +457,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.batchFreezePartialTokens(_accounts, _ids, _amounts);
     }
@@ -538,9 +469,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.unfreezePartialTokens(_account, _ids, _amount);
     }
@@ -553,9 +481,6 @@ contract OwnerManager is OwnerRoles {
     )
         external
     {
-        // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-        // ! It is the responsibility of the identity to gatekeep on the send side
-        // ! It is the reposonsbility of this contract to take care of the recieve side...
         require(isFreezer(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), 'Role: Sender is NOT Freezer');
         tokenRegistry.batchUnfreezePartialTokens(_accounts, _ids, _amounts);
     }
@@ -571,9 +496,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isRecoveryAgent(address(_managerIdentity)) && _managerIdentity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Recovery Agent'
         );
@@ -589,9 +511,6 @@ contract OwnerManager is OwnerRoles {
         external
     {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isWhiteListManager(address(_managerIdentity)) && _managerIdentity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT WhiteList Manager'
         );
@@ -603,9 +522,6 @@ contract OwnerManager is OwnerRoles {
         IIdentity _identity
     ) external {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isWhiteListManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT WhiteList Manager'
         );
@@ -618,9 +534,6 @@ contract OwnerManager is OwnerRoles {
         IIdentity _identity
     ) external {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isWhiteListManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT WhiteList Manager'
         );
@@ -632,9 +545,6 @@ contract OwnerManager is OwnerRoles {
         IIdentity _identity
     ) external {
         require(
-            // ! Why is this verifying the key purpose, why are key checks not being executed through the identity account
-            // ! It is the responsibility of the identity to gatekeep on the send side
-            // ! It is the reposonsbility of this contract to take care of the recieve side...
             isWhiteListManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT WhiteList Manager'
         );
