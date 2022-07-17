@@ -6,6 +6,8 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../Roles.sol';
 
+// Roles seems to deal exclusively with contract upgrades
+
 contract OwnerRoles is Ownable {
 
     ////////////////

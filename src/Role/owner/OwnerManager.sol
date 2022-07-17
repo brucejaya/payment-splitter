@@ -59,7 +59,8 @@ contract OwnerManager is OwnerRoles {
         require(
             isComplianceManager(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Compliance Manager');
-        address target = address(tokenRegistry.compliance());
+            address target = address(tokenRegistry.compliance()
+        );
 
         // solhint-disable-next-line no-inline-assembly
         assembly {
