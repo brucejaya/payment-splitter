@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
-import '../../Interface/IIdentity.sol';
-
-import "./Organisation.sol";
+import "./OrganisationManaged.sol";
 
 contract OrganisationFactory {
 

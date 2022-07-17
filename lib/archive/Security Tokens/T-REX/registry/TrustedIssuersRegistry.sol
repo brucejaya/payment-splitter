@@ -22,7 +22,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import '@onchain-id/solidity/contracts/interface/IClaimIssuer.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';

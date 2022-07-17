@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 contract Organisation {
 
     ////////////////
     // CONSTANTS
     ////////////////
+
+    // TODO, restructure these so as to be more relevant...
    
     // @dev Super user privileges
     uint256 constant MANAGEMENT = 1;
@@ -16,10 +18,10 @@ contract Organisation {
 
     // @dev Manager roles
     uint256 constant COMPLIANCE_MANAGER = 4;
-    uint256 constant CLAIMS_REGISTRY_MANAGE = 5;
+    uint256 constant CLAIMS_REGISTRY_MANAGEr = 5;
     uint256 constant ISSUER_REGISTRY_MANAGER = 6;
 
-    // @dev Agent roles 
+    // @dev token controls 
     uint256 constant SUPPLY_MODIFIER = 7;
     uint256 constant FREEZERS = 8;
     uint256 constant TRANSFER_MANAGER = 9;
@@ -178,6 +180,7 @@ contract Organisation {
         emit OperatorRemoved(operator, role, operatorType);
         return true;
     }
+
 
 
 }

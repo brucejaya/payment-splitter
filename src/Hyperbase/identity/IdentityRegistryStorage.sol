@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
-
-import '../../HyperDAC/owner/OwnerRoles.sol';
+pragma solidity ^0.8.6;
 
 import '../../Interface/IIdentityRegistryStorage.sol';
 import '../../Interface/IIdentity.sol';
 
-contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole {
+contract IdentityRegistryStorage is IIdentityRegistryStorage {
     
     // @dev struct containing the identity contract and the country of the user
     struct Identity {

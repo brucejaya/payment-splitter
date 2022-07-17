@@ -75,8 +75,7 @@ contract KaliDAO is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
 
     uint8 public supermajority; // 1-100
     
-    bytes32 public constant VOTE_HASH = 
-        keccak256('SignVote(address signer,uint256 proposal,bool approve)');
+    bytes32 public constant VOTE_HASH = keccak256('SignVote(address signer,uint256 proposal,bool approve)');
     
     mapping(address => bool) public extensions;
 
@@ -144,7 +143,12 @@ contract KaliDAO is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
         uint256[] calldata shares_,
         uint32 votingPeriod_,
         uint8[13] memory govSettings_
-    ) public payable nonReentrant virtual {
+    )
+        public
+        payable
+        nonReentrant
+        virtual
+    {
         if (extensions_.length != extensionsData_.length) revert NoArrayParity();
 
         if (votingPeriod != 0) revert Initialized();

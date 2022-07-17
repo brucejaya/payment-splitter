@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import '../../Interface/IClaimValidator.sol';
 import '../../Interface/IIdentity.sol';
@@ -13,9 +13,7 @@ import '../../Interface/IIdentityRegistryStorage.sol';
 // TODO replace owner role with ownable or operatorApprovals?
 // import '../../HyperDAC/owner/OwnerRoles.sol';
 
-import './IdentityFactory.sol';
-
-contract IdentityRegistry is IdentityFactory, IIdentityRegistry /*, OwnerRole */ {
+contract IdentityRegistry is IIdentityRegistry /*, OwnerRole */ {
 
     // @dev Address of the IdentityRegistryStorage Contract
     IIdentityRegistryStorage private identityRegistryStorage_;
