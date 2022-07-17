@@ -3,7 +3,9 @@ pragma solidity ^0.8.0;
 
 contract IdentityStorage {
 
-    // Keys
+    ////////////////
+    // KEYS
+    ////////////////
     uint256 constant MANAGEMENT_KEY = 1;
     uint256 constant ACTION_KEY = 2;
     uint256 constant CLAIM_SIGNER_KEY = 3;
@@ -18,25 +20,10 @@ contract IdentityStorage {
         bytes32 key;
     }
 
-    // Claims
-    mapping(bytes32 => Claim) internal claims;
-    mapping(uint256 => bytes32[]) internal claimsByTopic; 
 
-    struct Claim {
-        uint256 topic;
-        uint256 scheme;
-        address issuer;
-        bytes signature;
-        bytes data;
-        string uri;
-    }
-
-    // Multi-signature
-    mapping(uint256 => uint256) sigRequirementByKeyType;
-    mapping(uint256 => bool) supportedOpType;
-    // TODO reference gnosis
-
-    // Executions
+    ////////////////
+    // EXEUCTIONS
+    ////////////////
     uint256 internal executionNonce;
     mapping(uint256 => Execution) internal executions;
     

@@ -122,9 +122,9 @@ contract AgentManager is AgentRoles {
     }
 
     function callBurnBatch(
-        address[] calldata _accounts,
-        uint256[] calldata _ids,
-        uint256[] calldata _amounts,
+        address[] memory _accounts,
+        uint256 _id,
+        uint256[] memory _amounts,
         IIdentity _identity
     )
         external
@@ -133,7 +133,7 @@ contract AgentManager is AgentRoles {
             isSupplyModifier(address(_identity)) && _identity.keyHasPurpose(keccak256(abi.encode(msg.sender)), 2),
             'Role: Sender is NOT Supply Modifier'
         );
-        tokenRegistry.burnBatch(_accounts, _ids, _amounts);
+        tokenRegistry.burnBatch(_accounts, _id, _amounts);
     }
 
     function callSetAddressFrozen(

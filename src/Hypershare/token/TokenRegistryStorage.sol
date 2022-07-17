@@ -11,6 +11,7 @@ contract TokenRegistryStorage {
 
     // @Dev Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) internal _operatorApprovals;
+    // TODO is this stil in use?
 
     // @Dev Mapping from token ID to Wrapper contract address
     mapping(uint256 => address) internal _tokenWrapper;

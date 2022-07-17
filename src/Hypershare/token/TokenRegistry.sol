@@ -23,7 +23,6 @@ import '../../Role/agent/AgentRoleUpgradeable.sol';
 contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistryStorage, ERC165, IERC1155MetadataURI {
 
     using Address for address;
-
     function init(
         string memory uri_,
         address identityRegistry_,
@@ -41,6 +40,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         __Ownable_init();
     }
 
+    ////////////////
+    // MODIFIERS
+    ////////////////
 
     modifier whenNotPaused(
         uint256 id
@@ -56,15 +58,12 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                            READ FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
     function totalSupply(uint256 id) external view override returns (uint256) {
         return _totalSupply[id];
-    }
-
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return
-            interfaceId == type(IERC1155).interfaceId ||
-            interfaceId == type(IERC1155MetadataURI).interfaceId ||
-            super.supportsInterface(interfaceId);
     }
 
     function uri(
@@ -76,7 +75,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     {
         return _uri;
     }
-
 
     function identity()
         external
@@ -139,7 +137,11 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     {
         return _frozenTokens[id][account];
     }
-    
+
+    /*//////////////////////////////////////////////////////////////
+                             OWNER CONTROLS
+    //////////////////////////////////////////////////////////////*/
+
     function setURI(
         string memory uri_
     )
@@ -236,6 +238,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         removeAgent(agent);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                 BALANCE
+    //////////////////////////////////////////////////////////////*/
+
     function balanceOf(
         address account,
         uint256 id
@@ -271,6 +277,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         return batchBalances;
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                 APPROVALS
+    //////////////////////////////////////////////////////////////*/
+
     function setApprovalForAll(
         address operator,
         bool approved
@@ -279,7 +289,7 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         virtual
         override
     {
-        setApprovalForAll(_msgSender(), operator, approved);
+        _setApprovalForAll(_msgSender(), operator, approved);
     }
 
     function isApprovedForAll(
@@ -294,58 +304,23 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
     {
         return _operatorApprovals[account][operator];
     }
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    )
-        public
-        virtual
-        override
-    {
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-        require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
-        require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-        if (_identityRegistry.isVerified(to) && _compliance.canTransfer(to, id, amount, data)) {
-            _compliance.transferred(from, to, id, amount, data);
-            safeTransferFrom(from, to, id, amount, data);
-            // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
-        }
-
-        revert('Transfer not possible');
-    }
     
-    function forcedTransfer(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
+    function _setApprovalForAll(
+        address account,
+        address operator,
+        bool approved
     )
-        public
-        override
-        onlyAgent
-        returns (bool)
+        internal
+        virtual
     {
-        uint256 freeBalance = balanceOf(from, id) - (_frozenTokens[id][from]);
-        if (amount > freeBalance) {
-            uint256 tokensToUnfreeze = amount - (freeBalance);
-            _frozenTokens[id][from] = _frozenTokens[id][from] - (tokensToUnfreeze);
-            emit TokensUnfrozen(from, tokensToUnfreeze);
-        }
-        if (_identityRegistry.isVerified(to)) {
-            _compliance.transferred(from, to, id, amount, data); // TODO update to relect extended fields
-            safeTransferFrom(from, to, id, amount, data); // TODO update to relect extended fields
-            return true;
-        }
-        revert('Transfer not possible');
+        require(account != operator, "ERC1155: setting approval status for self");
+        _operatorApprovals[account][operator] = approved;
+        emit ApprovalForAll(account, operator, approved);
     }
+
+    /*//////////////////////////////////////////////////////////////
+                                SAFE TRANSFER
+    //////////////////////////////////////////////////////////////*/
 
     function safeBatchTransferFrom(
         address from,
@@ -394,7 +369,34 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         uint256 amount,
         bytes memory data
     )
-        external
+        public
+        virtual
+        override
+    {
+        require(
+            from == _msgSender() || isApprovedForAll(from, _msgSender()),
+            "ERC1155: caller is not owner nor approved"
+        );
+        require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
+        require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
+        if (_identityRegistry.isVerified(to) && _compliance.canTransfer(to, id, amount, data)) {
+            _compliance.transferred(from, to, id, amount, data);
+            _safeTransferFrom(from, to, id, amount, data);
+            // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
+        }
+
+        revert('Transfer not possible');
+    }
+
+    function _safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    )
+        internal
+        virtual
     {
         require(to != address(0), "ERC1155: transfer to the zero address");
 
@@ -418,6 +420,36 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         doSafeTransferAcceptanceCheck(operator, from, to, id, amount, data);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                              FORCE TRANSFER
+    //////////////////////////////////////////////////////////////*/
+
+    function forcedTransfer(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    )
+        public
+        override
+        onlyAgent
+        returns (bool)
+    {
+        uint256 freeBalance = balanceOf(from, id) - (_frozenTokens[id][from]);
+        if (amount > freeBalance) {
+            uint256 tokensToUnfreeze = amount - (freeBalance);
+            _frozenTokens[id][from] = _frozenTokens[id][from] - (tokensToUnfreeze);
+            emit TokensUnfrozen(from, tokensToUnfreeze);
+        }
+        if (_identityRegistry.isVerified(to)) {
+            _compliance.transferred(from, to, id, amount, data); // TODO update to relect extended fields
+            safeTransferFrom(from, to, id, amount, data); // TODO update to relect extended fields
+            return true;
+        }
+        revert('Transfer not possible');
+    }
+
     function batchForcedTransfer(
         address[] memory fromList,
         address[] memory toList,
@@ -439,7 +471,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-
+    /*//////////////////////////////////////////////////////////////
+                                 MINT
+    //////////////////////////////////////////////////////////////*/
 
     function mintBatch(
         address[] memory accounts,
@@ -469,8 +503,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-
-
     function mint(
         address to,
         uint256 id,
@@ -487,7 +519,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _mint(to, id, amount, data);
         _compliance.created(to, id, amount, data);
     }
-	
 
     function _mint(
         address to,
@@ -514,6 +545,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         doSafeTransferAcceptanceCheck(operator, address(0), to, id, amount, data);
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                 BURN
+    //////////////////////////////////////////////////////////////*/
 
     function burnBatch(
         address[] memory accounts,
@@ -528,7 +562,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         }
     }
 
-
     function burnMisc(
         address from,
         uint256[] memory ids,
@@ -541,7 +574,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
             burn(from, ids[i], amounts[i]);
         }
     }
-
 
     function burn(
         address from,
@@ -561,7 +593,6 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         _burn(from, id, amount);
         _compliance.destroyed(from, id, amount);		
     }
-
 
     function _burn(
         address from,
@@ -590,6 +621,9 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         afterTokenTransfer(operator, from, address(0), ids, amounts, "");
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                 FREEZE
+    //////////////////////////////////////////////////////////////*/
 
     function batchSetAddressFrozen(
         address[] memory accounts,
@@ -680,6 +714,10 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         // emit TokensUnfrozen(account, id, amount); TODO update event
     }
 
+    /*//////////////////////////////////////////////////////////////
+                                RECOVERY
+    //////////////////////////////////////////////////////////////*/
+
     function recoveryAddress(
         address lostWallet,
         address newWallet,
@@ -713,19 +751,16 @@ contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistrySto
         revert('Recovery not possible');
     }
 
-    function setApprovalForAll(
-        address account,
-        address operator,
-        bool approved
-    )
-        internal
-        virtual
-    {
-        require(account != operator, "ERC1155: setting approval status for self");
-        _operatorApprovals[account][operator] = approved;
-        emit ApprovalForAll(account, operator, approved);
-    }
+    /*//////////////////////////////////////////////////////////////
+                                MISC
+    //////////////////////////////////////////////////////////////*/
 
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+        return
+            interfaceId == type(IERC1155).interfaceId ||
+            interfaceId == type(IERC1155MetadataURI).interfaceId ||
+            super.supportsInterface(interfaceId);
+    }
 
     function beforeTokenTransfer(
         address operator,

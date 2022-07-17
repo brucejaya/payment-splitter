@@ -202,144 +202,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
     }
 
     /*//////////////////////////////////////////////////////////////
-                                 CLAIMS
-    //////////////////////////////////////////////////////////////*/
-
-    function addClaim(
-        uint256 topic,
-        uint256 scheme,
-        address issuer,
-        bytes memory signature,
-        bytes memory data,
-        string memory uri
-    )
-        public
-        delegatedOnly
-        override
-        returns (bytes32 claimRequestId)
-    {
-        bytes32 claimId = keccak256(abi.encode(issuer, topic));
-
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 3), "Permissions: Sender does not have claim signer key");
-        }
-
-        if (claims[claimId].issuer != issuer) {
-            claimsByTopic[topic].push(claimId);
-            claims[claimId].topic = topic;
-            claims[claimId].scheme = scheme;
-            claims[claimId].issuer = issuer;
-            claims[claimId].signature = signature;
-            claims[claimId].data = data;
-            claims[claimId].uri = uri;
-
-            emit ClaimAdded(
-                claimId,
-                topic,
-                scheme,
-                issuer,
-                signature,
-                data,
-                uri
-            );
-        } else {
-            claims[claimId].topic = topic;
-            claims[claimId].scheme = scheme;
-            claims[claimId].issuer = issuer;
-            claims[claimId].signature = signature;
-            claims[claimId].data = data;
-            claims[claimId].uri = uri;
-
-            emit ClaimChanged(
-                claimId,
-                topic,
-                scheme,
-                issuer,
-                signature,
-                data,
-                uri
-            );
-        }
-
-        return claimId;
-    }
-
-    function removeClaim(
-        bytes32 claimId
-    )
-        public
-        delegatedOnly
-        override
-        returns (bool success)
-    {
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 3), "Permissions: Sender does not have CLAIM key");
-        }
-
-        if (claims[claimId].topic == 0) {
-            revert("NonExisting: There is no claim with this ID");
-        }
-
-        uint claimIndex = 0;
-        while (claimsByTopic[claims[claimId].topic][claimIndex] != claimId) {
-            claimIndex++;
-        }
-
-        claimsByTopic[claims[claimId].topic][claimIndex] = claimsByTopic[claims[claimId].topic][claimsByTopic[claims[claimId].topic].length - 1];
-        claimsByTopic[claims[claimId].topic].pop();
-
-        emit ClaimRemoved(
-            claimId,
-            claims[claimId].topic,
-            claims[claimId].scheme,
-            claims[claimId].issuer,
-            claims[claimId].signature,
-            claims[claimId].data,
-            claims[claimId].uri
-        );
-
-        delete claims[claimId];
-
-        return true;
-    }
-
-    function getClaim(
-        bytes32 claimId
-    )
-        public
-        override
-        view
-        returns (
-            uint256 topic,
-            uint256 scheme,
-            address issuer,
-            bytes memory signature,
-            bytes memory data,
-            string memory uri
-        )
-    {
-        return (
-            claims[claimId].topic,
-            claims[claimId].scheme,
-            claims[claimId].issuer,
-            claims[claimId].signature,
-            claims[claimId].data,
-            claims[claimId].uri
-        );
-    }
-
-    function getClaimIdsByTopic(
-        uint256 topic
-    )
-        public
-        override
-        view
-        returns(bytes32[] memory claimIds)
-    {
-        return claimsByTopic[topic];
-    }
-
-    /*//////////////////////////////////////////////////////////////
                                 MULTI-SIGNATURE
     //////////////////////////////////////////////////////////////*/
 
@@ -397,7 +259,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         uint256 numSignatures = messageSignatures.length / 65;
         uint256 validSignatureCount = 0;
 
-        // TODO check gnosis
         for (uint pos = 0; pos < numSignatures; pos++) {
             uint8 v;
             bytes32 r;
@@ -424,70 +285,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
         }
 
         return false;
-    }
-    
-    /*//////////////////////////////////////////////////////////////
-                                EXECUTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    function approve(
-        uint256 id,
-        bool approve
-    )
-        public
-        delegatedOnly
-        override
-        returns (bool success)
-    {
-        require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), "Sender does not have action key");
-
-        emit Approved(id, approve);
-
-        if (approve == true) {
-            executions[id].approved = true;
-
-            (success,) = executions[id].to.call{value:(executions[id].value)}(abi.encode(executions[id].data, 0));
-
-            if (success) {
-                executions[id].executed = true;
-
-                emit Executed(
-                    id,
-                    executions[id].to,
-                    executions[id].value,
-                    executions[id].data
-                );
-
-                return true;
-            } else {
-                emit ExecutionFailed(
-                    id,
-                    executions[id].to,
-                    executions[id].value,
-                    executions[id].data
-                );
-
-                return false;
-            }
-        } else {
-            executions[id].approved = false;
-        }
-        return true;
-    }
-
-    function execute(
-        address to, 
-        uint256 value, 
-        bytes memory data
-    )
-        public
-        delegatedOnly
-        override
-        payable
-        returns (uint256 executionId)
-    {
-        uint256 executionId = _execute(to, value, data);
-        return executionId;
     }
 
     function executeSigned(
@@ -530,6 +327,86 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
             require(IERC20(gasToken).balanceOf(address(this)) > refundAmount);
             require(IERC20(gasToken).transfer(msg.sender, refundAmount));
         }
+    }
+
+    
+    /*//////////////////////////////////////////////////////////////
+                                EXECUTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function approve(
+        uint256 id,
+        bool approve
+    )
+        public
+        delegatedOnly
+        override
+        returns (bool success)
+    {
+        require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 2), "Sender does not have action key");
+
+        emit Approved(id, approve);
+
+        if (approve == true) {
+            executions[id].approved = true;
+
+            (success,) = executions[id].to.call{value:(executions[id].value)}(abi.encode(executions[id].data, 0));
+
+            if (success) {
+                executions[id].executed = true;
+
+                emit Executed(id, executions[id].to, executions[id].value, executions[id].data);
+
+                return true;
+            } else {
+
+                emit ExecutionFailed(id, executions[id].to, executions[id].value, executions[id].data);
+
+                return false;
+            }
+        } else {
+            executions[id].approved = false;
+        }
+        return true;
+    }
+
+    function execute(
+        address to, 
+        uint256 value, 
+        bytes memory data
+    )
+        public
+        delegatedOnly
+        override
+        payable
+        returns (uint256 executionId)
+    {
+        uint256 executionId = _execute(to, value, data);
+        return executionId;
+    }
+
+    function _execute(
+        address _to, 
+        uint256 _value, 
+        bytes memory _data
+    )
+        internal
+        returns (uint256 executionId)
+    {
+        
+        require(!executions[executionNonce].executed, "Already executed");
+        executions[executionNonce].to = _to;
+        executions[executionNonce].value = _value;
+        executions[executionNonce].data = _data;
+
+        emit ExecutionRequested(executionNonce, _to, _value, _data);
+
+        if (keyHasPurpose(keccak256(abi.encode(msg.sender)), 2)) {
+            approve(executionNonce, true);
+        }
+
+        executionNonce++;
+        return executionNonce-1;
     }
 
     function _execute(
