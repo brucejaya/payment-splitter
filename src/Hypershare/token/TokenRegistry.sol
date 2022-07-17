@@ -18,7 +18,7 @@ import '../../Interface/IIdentityRegistry.sol';
 import '../../Interface/IComplianceLimitHolder.sol';
 
 import './TokenRegistryStorage.sol';
-import '../../Role/agent/AgentRoleUpgradeable.sol';
+import '../../HyperDAC/AgentRoleUpgradeable.sol';
 
 contract TokenRegistry is ITokenRegistry, AgentRoleUpgradeable, TokenRegistryStorage, ERC165, IERC1155MetadataURI {
 

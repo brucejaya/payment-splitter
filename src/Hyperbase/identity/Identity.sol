@@ -344,6 +344,7 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
     //////////////////////////////////////////////////////////////*/
 
 	// TODO see ERC-191 for more details on this
+    /*
 	function getMessageHash(
         address to,
         uint256 value,
@@ -466,6 +467,7 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
             require(IERC20(gasToken).transfer(msg.sender, refundAmount));
         }
     }
+    */
 
     
     /*//////////////////////////////////////////////////////////////
@@ -521,30 +523,6 @@ contract Identity is IdentityStorage, IIdentity, ERC1155Holder {
     {
         uint256 executionId = _execute(to, value, data);
         return executionId;
-    }
-
-    function _execute(
-        address _to, 
-        uint256 _value, 
-        bytes memory _data
-    )
-        internal
-        returns (uint256 executionId)
-    {
-        
-        require(!executions[executionNonce].executed, "Already executed");
-        executions[executionNonce].to = _to;
-        executions[executionNonce].value = _value;
-        executions[executionNonce].data = _data;
-
-        emit ExecutionRequested(executionNonce, _to, _value, _data);
-
-        if (keyHasPurpose(keccak256(abi.encode(msg.sender)), 2)) {
-            approve(executionNonce, true);
-        }
-
-        executionNonce++;
-        return executionNonce-1;
     }
 
     function _execute(
