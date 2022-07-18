@@ -355,4 +355,26 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
         return _claimsByTopic[topic];
     }
 
+    // @dev Approves an execution or claim addition.
+    function approve(uint256 _id, bool _approve)
+        public
+        override
+        returns (bool success)
+    {
+        // do stuff
+        return true;
+    }
+
+    // @dev Passes an execution instruction to the keymanager.
+    function execute(address _to, uint256 _value, bytes memory _data)
+        public
+        override
+        payable
+        returns (uint256 executionId)
+    {
+        // do stuff
+    }
+
+
+
 }

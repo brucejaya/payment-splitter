@@ -335,7 +335,10 @@ contract MultiSig {
         address _to,
         uint256 _value,
         bytes _data
-    ) public returns(address) {
+    )
+        public
+        returns(address)
+    {
         return _execute(_identity, msg.sender, _to, _value, _data);
     }
 
@@ -349,7 +352,10 @@ contract MultiSig {
         address _to,
         uint256 _value,
         bytes _data
-    ) public returns(address) {
+    )
+        public
+        returns(address)
+    {
         return _execute(_identity, ecrecover(_hash, _sigV, _sigR, _sigS), _to, _value, _data);
     }
 
@@ -368,6 +374,7 @@ contract MultiSig {
 	{
         return _approve(_identity, ecrecover(_hash, _sigV, _sigR, _sigS), _id, _approve);
     }
+    
     function approve(
         bytes32 _identity,
         uint256 _id,
