@@ -44,39 +44,6 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
     event HolderLimitSet(uint256 _holderLimit, uint256 _id);
 
-    function isTokenAgent(
-        address agentAddress,
-        uint256 id
-    ) public view override returns (bool) {
-        return (_tokenAgentsList[id][agentAddress]);
-    }
-
-    function addTokenAgent(
-        address agentAddress,
-        uint256 id
-    )
-        external
-        override
-        onlyOwner
-    {
-        require(!_tokenAgentsList[id][agentAddress], 'This Agent is already registered');
-        _tokenAgentsList[id][agentAddress] = true;
-        emit TokenAgentAdded(agentAddress);
-    }
-
-    function removeTokenAgent(
-        address agentAddress,
-        uint256 id
-    )
-        external
-        override
-        onlyOwner
-    {
-        require(_tokenAgentsList[id][agentAddress], 'This Agent is not registered yet');
-        _tokenAgentsList[id][agentAddress] = false;
-        emit TokenAgentRemoved(agentAddress);
-    }
-
     // @dev sets the holder limit as required for compliance purpose
     function setHolderLimit(
         uint256 holderLimit,
@@ -172,13 +139,10 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
     function canTransfer(
         address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
+        uint256 id
     )
         external
         view
-        override
         returns (bool)
     {
         if (_holderIndices[id][to] != 0) {
@@ -193,12 +157,9 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     function transferred(
         address from,
         address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
+        uint256 id
     )
         external
-        override
     {
         require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         updateShareholders(to, id);
@@ -208,11 +169,9 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     function created(
         address to,
         uint256 id,
-        uint256 amount,
-        bytes memory data
+        uint256 amount
     )
         external
-        override
     {
         require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         require(amount > 0, 'No token created');
@@ -221,23 +180,12 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
     function destroyed(
         address from,
-        uint256 id,
-        uint256 amount
+        uint256 id
     )
         external
-        override
     {
         require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
         pruneShareholders(from, id);
     }
 
-    function transferOwnershipOnComplianceContract(
-        address _newOwner
-    )
-        external
-        override
-        onlyOwner
-    {
-        transferOwnership(_newOwner);
-    }
 }

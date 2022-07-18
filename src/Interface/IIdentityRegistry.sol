@@ -17,12 +17,6 @@ interface IIdentityRegistry {
 
     function deleteIdentity(address _account) external;
 
-    function setIdentityRegistryStorage(address _identityRegistryStorage) external;
-
-    function setComplianceClaimsRequired(address _complianceClaimsRequired) external;
-
-    function setClaimVerifiersRegistry(address _trustedVerifiersRegistry) external;
-
     function updateCountry(address _account, uint16 _country) external;
 
     function updateIdentity(address _account, IIdentity _identity) external;
@@ -35,10 +29,4 @@ interface IIdentityRegistry {
 
     function identityCountry(address _account) external view returns (uint16);
 
-    function transferOwnershipOnIdentityRegistryContract(address _newOwner) external;
-
-    function addAgentOnIdentityRegistryContract(address _agent) external;
-
-    function removeAgentOnIdentityRegistryContract(address _agent) external;
-    
 }

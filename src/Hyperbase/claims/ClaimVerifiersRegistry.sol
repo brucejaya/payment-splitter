@@ -15,7 +15,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) private claimVerifierTopics;
     
-    function getverifiers()
+    function getTrustedVerifiers()
         external
         view
         override
@@ -41,7 +41,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         return false;
     }
 
-    function getclaimVerifierTopics(
+    function getTrustedVerifierClaimTopics(
         IClaimValidator _verifier
     )
         external

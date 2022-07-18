@@ -3,10 +3,8 @@
 pragma solidity ^0.8.6;
 
 import '../../Interface/IClaimValidator.sol';
-
-import '../identity/Identity.sol';
-
-contract ClaimValidator is IClaimValidator, Identity {
+import '../../Interface/IIdentity.sol';
+abstract contract ClaimValidator is IClaimValidator {
     
     mapping (bytes => bool) public revokedClaims;
 
@@ -38,7 +36,7 @@ contract ClaimValidator is IClaimValidator, Identity {
         bytes32 hashedAddr = keccak256(abi.encode(recovered));
 
         // Does the trusted identifier have they key which signed the user's claim?
-        if (keyHasPurpose(hashedAddr, 3) && (isClaimRevoked(sig) == false)) {
+        if (IIdentity(identity).keyHasPurpose(hashedAddr, 3) && (isClaimRevoked(sig) == false)) {
             return true;
         }
 
@@ -82,10 +80,10 @@ contract ClaimValidator is IClaimValidator, Identity {
         bytes  memory data;
 
         if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
+            require(IIdentity(identity).keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
         }
 
-        ( foundClaimTopic, scheme, issuer, sig, data, ) = Identity(identity).getClaim(claimId);
+        ( foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(identity).getClaim(claimId);
 
         revokedClaims[sig] = true;
         return true;

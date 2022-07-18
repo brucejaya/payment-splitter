@@ -47,7 +47,6 @@ contract MultiSig {
         uint256[] purposes;
         uint256 keyType;
         bytes32 key;
-		bool exists; // TODO 
     }
 
     ////////////////
@@ -84,15 +83,14 @@ contract MultiSig {
     }
 
     modifier keyExists() {
-        require(_keys[addressToKey(_msgSender())].exists, "Key does not exist on account");
+        require(!_keys[addressToKey(_msgSender())].key == 0, "Key does not exist on account");
         _;
     }
 
     modifier keyDoesNotExist() {
-        require(!_keys[addressToKey(_msgSender())].exists);
+        require(_keys[addressToKey(_msgSender())].key == 0);
         _;
     }
-
 
     modifier transactionExists(
 		uint256 transactionId

@@ -51,26 +51,19 @@ contract OrganisationManaged is IOrganisationManaged, Context {
     ////////////////
   
     function init(
-        address account
+        address[] accounts,
+        address[] permissions
     )
         internal
     {
-        addOperator(account, MANAGEMENT);
+        uint256 managementCount;
+        require (acccounts.lengths == permissions.length, "Accounts/permissions length mismatch");
+        for (uint i=0; i < accounts.length; i++) {
+            addOperator(accounts[i], permissions[i]);
+            if (permissions[i] == MANAGEMENT) managementCount++;
+        }
+        revert(managementCount == 0, "Need at least one account manager");
     }
-
-    // TODO 
-    // function MultiSigWallet(address[] _owners, uint _required)
-    //     public
-    //     validRequirement(_owners.length, _required)
-    // {
-    //     for (uint i=0; i<_owners.length; i++) {
-    //         require(!isOwner[_owners[i]] && _owners[i] != 0);
-    //         isOwner[_owners[i]] = true;
-    //     }
-    //     owners = _owners;
-    //     required = _required;
-    // }
-
 
     ////////////////
     // MODIFIERS
@@ -153,8 +146,8 @@ contract OrganisationManaged is IOrganisationManaged, Context {
         override
         returns (bool success)
     {
-        if (msg.sender != address(this)) {
-            require(operatorHasRole(msg.sender, MANAGEMENT), "Permissions: Sender does not have management operator");
+        if (_msgSender() != address(this)) {
+            require(operatorHasRole(_msgSender(), MANAGEMENT), "Permissions: Sender does not have management operator");
         }
         if (operators[account].exists) {
             for (uint operatorRoleIndex = 0; operatorRoleIndex < operators[account].roles.length; operatorRoleIndex++) {
@@ -183,8 +176,8 @@ contract OrganisationManaged is IOrganisationManaged, Context {
         returns (bool success)
     {
         require(operators[account].exists, "NonExisting: Operator isn't registered");
-        if (msg.sender != address(this)) {
-            require(operatorHasRole(msg.sender, MANAGEMENT), "Permissions: Sender does not have management operator");
+        if (_msgSender() != address(this)) {
+            require(operatorHasRole(_msgSender(), MANAGEMENT), "Permissions: Sender does not have management operator");
         }
         require(operators[account].roles.length > 0, "NonExisting: Operator doesn't have such role");
         uint roleIndex = 0;

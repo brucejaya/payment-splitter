@@ -4,18 +4,20 @@ pragma solidity ^0.8.6;
 
 import "openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
+import 'openzeppelin-contracts/contracts/utils/Context.sol';
 
 import '../../Interface/IIdentity.sol';
 
-contract Identity is Context, IIdentity, ERC1155Holder {
+// marked as abstract as lacking execution logic from erc734
+abstract contract Identity is Context, IIdentity, ERC1155Holder {
     
     ////////////////
     // KEYS
     ////////////////
-    uint256 constant MANAGEMENT_KEY = 1;
-    uint256 constant ACTION_KEY = 2;
-    uint256 constant CLAIM_SIGNER_KEY = 3;
-    uint256 constant ENCRYPTION_KEY = 4;
+    uint256 constant MANAGEMENT = 1;
+    uint256 constant ACTION = 2;
+    uint256 constant CLAIM = 3;
+    uint256 constant ENCRYPTION = 4;
     
     mapping(uint256 => bytes32[]) internal _keysByPurpose;
     mapping(bytes32 => Key) internal _keys;
@@ -75,7 +77,8 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         address account
     )
         public 
-        view 
+        pure
+        returns (bytes32 key)
     {
         return keccak256(abi.encode(account));
     }
@@ -108,7 +111,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         public
         override
         view
-        returns(bytes32[] memory _keys)
+        returns(bytes32[] memory keys_)
     {
         return _keysByPurpose[purpose];
     }
@@ -123,18 +126,15 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         returns (bool success)
     {
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), 1, "Permissions: Sender does not have management key");
+            require(keyHasPurpose(addressToKey(_msgSender()), MANAGEMENT), "Permissions: Sender does not have management key");
         }
-
         if (_keys[key].key == key) {
             for (uint keyPurposeIndex = 0; keyPurposeIndex < _keys[key].purposes.length; keyPurposeIndex++) {
-                uint256 purpose = _keys[key].purposes[keyPurposeIndex];
-
-                if (purpose == purpose) {
+                uint256 purpose_ = _keys[key].purposes[keyPurposeIndex];
+                if (purpose == purpose_) {
                     revert("Conflict: Key already has purpose");
                 }
             }
-
             _keys[key].purposes.push(purpose);
         } else {
             _keys[key].key = key;
@@ -160,7 +160,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         require(_keys[key].key == key, "NonExisting: Key isn't registered");
 
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), MANAGEMENT_KEY, "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
+            require(keyHasPurpose(addressToKey(_msgSender()), MANAGEMENT), "Permissions: Sender does not have management key");
         }
 
         require(_keys[key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
@@ -208,13 +208,12 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         view
         returns(bool result)
     {
-        Key memory key = _keys[key];
-        if (key.key == 0) return false;
+        if (_keys[key].key != 0) return false;
 
-        for (uint keyPurposeIndex = 0; keyPurposeIndex < key.purposes.length; keyPurposeIndex++) {
-            uint256 purpose = key.purposes[keyPurposeIndex];
+        for (uint keyPurposeIndex = 0; keyPurposeIndex < _keys[key].purposes.length; keyPurposeIndex++) {
+            uint256 purpose_ = _keys[key].purposes[keyPurposeIndex];
 
-            if (purpose == 1 || purpose == purpose) return true;
+            if (purpose == 1 || purpose == purpose_) return true;
         }
 
         return false;
@@ -239,7 +238,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         bytes32 claimId = keccak256(abi.encode(issuer, topic));
 
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY, "Permissions: Sender does not have claim signer key");
+            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have claim signer key");
         }
 
         if (_claims[claimId].issuer != issuer) {
@@ -290,7 +289,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         returns (bool success)
     {
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY), "Permissions: Sender does not have CLAIM key");
+            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have CLAIM key");
         }
 
         if (_claims[claimId].topic == 0) {

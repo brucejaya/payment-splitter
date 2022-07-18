@@ -5,12 +5,15 @@ import 'openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol';
 
 import './IIdentityRegistry.sol';
 import './IComplianceLimitHolder.sol';
+import './IComplianceClaimsRequired.sol';
 
 interface ITokenRegistry is IERC1155 {
 
     event ComplianceLimitHolderAdded(address indexed complianceHolderLimit);
 
     event ComplianceClaimsRequiredAdded(address indexed complianceClaimsRequired);
+
+    event IdentityRegistryAdded(address indexed identityRegistry);
 
     event RecoverySuccess(address lostWallet, address newWallet, address holderIdentity);
 
@@ -24,19 +27,21 @@ interface ITokenRegistry is IERC1155 {
 
     event Unpaused(address account, uint256 id);
 
-    function totalSupply(uint256 id) external view override returns (uint256);
+    function totalSupply(uint256 id) external view returns (uint256);
     
-    function identityRegistry() external view override returns (IIdentityRegistry);
+    function identityRegistry() external view returns (IIdentityRegistry);
 
-    function compliance() external view override returns (IComplianceLimitHolder);
+    function complianceClaimsRequired() external view returns (IComplianceClaimsRequired);
+
+    function complianceLimitHolder() external view returns (IComplianceLimitHolder);
   
-    function paused(uint256 id) external view override returns (bool);
+    function paused(uint256 id) external view returns (bool);
     
-    function isFrozen(address account, uint256 id) external view override returns (bool);
+    function isFrozen(address account, uint256 id) external view returns (bool);
 
-    function getFrozenTokens(address account, uint256 id) external view override returns (uint256);
+    function getFrozenTokens(address account, uint256 id) external view returns (uint256);
     
-    function uri() external view returns (string memory);
+    function uri(uint256) external view returns (string memory);
     
     function setURI(string memory uri) external;
 
@@ -44,17 +49,11 @@ interface ITokenRegistry is IERC1155 {
 
     function unpause(uint256 id) external;
 
-    function setCompliance(address complianceAddress) external override;
-    
-    function transferOwnershipOnTokenContract(address newOwner) external;
-    
-    function addAgentOnTokenContract(address agent) external;
-
     function forcedTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) external returns (bool);
 
-    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data) external;
+    function safeTransferFrom( address from, address to, uint256 id, uint256 amount, bytes memory data) external;
 
-    function batchForcedTransfer(address[] memory fromList, address[] memory toList, uint256[] memory ids, uint256[] memory amounts, bytes[] memory dataList) external override;
+    function batchForcedTransfer(address[] memory fromList, address[] memory toList, uint256[] memory ids, uint256[] memory amounts, bytes[] memory dataList) external;
 
     function mint(address to, uint256 id, uint256 amount, bytes memory data) external;
 
@@ -62,20 +61,28 @@ interface ITokenRegistry is IERC1155 {
 
     function setAddressFrozen(address account, uint256 id, bool freeze) external;
 
-    function batchSetAddressFrozen(address[] memory accounts, uint256[] memory ids, bool[] memory freeze) external override;
+    function batchSetAddressFrozen(address[] memory accounts, uint256[] memory ids, bool[] memory freeze) external;
 
     function freezePartialTokens(address account, uint256 id, uint256 amount) external;
 
-    function batchFreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external override;
+    function batchFreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external;
 
     function unfreezePartialTokens(address account, uint256 id, uint256 amount) external;
 
-    function batchUnfreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external override;
+    function batchUnfreezePartialTokens(address[] memory accounts, uint256[] memory ids, uint256[] memory amounts) external;
     
     function burn(address from, uint256 id, uint256 amount) external;
     
     function burnBatch(address[] memory accounts, uint256 id, uint256[] memory amounts) external;
 
-    function recoveryAddress(address lostWallet, address newWallet, uint256 id, address holderIdentity, bytes memory data) external override returns (bool);
+    function recoveryAddress(address lostWallet, address newWallet, uint256 id, address holderIdentity, bytes memory data) external returns (bool);
 
+    function setIdentityRegistry(address identityRegistry) external;
+
+    function setComplianceClaimsRequired(address complianceClaimsRequired) external;
+
+    function setComplianceLimitHolder(address complianceLimitHolder) external;
+    
+    function transferOwnershipOnTokenContract(address newOwner) external;
+    
 }

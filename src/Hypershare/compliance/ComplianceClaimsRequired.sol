@@ -18,16 +18,15 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
 
     // @dev the constructor initiates the Identity Registry smart contract
     constructor(
-        address claimVerifiersRegistry
+        address claimVerifiersRegistry_
     ) {
-        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry);
-        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry);
+        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
+        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
     }
 
     function claimVerifiersRegistry()
         external
         view
-        override
         returns (IClaimVerifiersRegistry)
     {
         return _claimVerifiersRegistry;
@@ -35,14 +34,13 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
 
     
     function setClaimVerifiersRegistry(
-        address claimVerifiersRegistry
+        address claimVerifiersRegistry_
     )
         external
-        override
         onlyOwner
     {
-        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry);
-        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry);
+        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
+        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
     }
 
     // @dev Gets claim topics by token id
@@ -51,7 +49,6 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     )
         external
         view
-        override
         returns (uint256[] memory)
     {
         return claimTopics[id];
@@ -63,7 +60,6 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         uint256 id
     )
         external
-        override
         onlyOwner
     {
         uint256 length = claimTopics[id].length;
@@ -71,7 +67,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
             require(claimTopics[id][i] != claimTopic, 'claimTopic already exists');
         }
         claimTopics[id].push(claimTopic);
-        emit ClaimTopicAdded(claimTopic);
+        emit ClaimTopicAdded(claimTopic, id);
     }
 
     // @dev Remove claim topic required of holders
@@ -80,7 +76,6 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         uint256 id
     )
         external
-        override
         onlyOwner
     {
         uint256 length = claimTopics[id].length;
@@ -88,7 +83,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
             if (claimTopics[id][i] == claimTopic) {
                 claimTopics[id][i] = claimTopics[id][length - 1];
                 claimTopics[id].pop();
-                emit ClaimTopicRemoved(claimTopic);
+                emit ClaimTopicRemoved(claimTopic, id);
                 break;
             }
         }
@@ -96,15 +91,14 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
 
     // @dev Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
     function isVerified(
-        address _account,
+        address account,
         uint256 id
     )
         external
         view
-        override
         returns (bool)
     {
-        if (address(IIdentity(_account)) == address(0)) {
+        if (address(IIdentity(account)) == address(0)) {
             return false;
         }
         if (claimTopics[id].length == 0) {
@@ -117,15 +111,15 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         bytes memory data;
         uint256 claimTopic;
         for (claimTopic = 0; claimTopic < claimTopics[id].length; claimTopic++) {
-            bytes32[] memory claimIds = IIdentity(_account).getClaimIdsByTopic(claimTopics[id][claimTopic]);
+            bytes32[] memory claimIds = IIdentity(account).getClaimIdsByTopic(claimTopics[id][claimTopic]);
             if (claimIds.length == 0) {
                 return false;
             }
             for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(_account).getClaim(claimIds[j]);
+                (foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(account).getClaim(claimIds[j]);
 
                 try IClaimValidator(issuer).isClaimValid(
-                    IIdentity(_account),
+                    IIdentity(account),
                     claimTopics[id][claimTopic],
                     sig,
                     data
@@ -165,7 +159,6 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         address _newOwner
     )
         external
-        override
         onlyOwner
     {
         transferOwnership(_newOwner);

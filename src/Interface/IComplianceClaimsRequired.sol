@@ -6,18 +6,18 @@ interface IComplianceClaimsRequired {
 
     event ClaimVerifiersRegistrySet(address indexed trustedVerifiersRegistry);
 
-    event ClaimTopicAdded(uint256 indexed claimTopic);
+    event ClaimTopicAdded(uint256 indexed claimTopic, uint256 indexed id);
 
-    event ClaimTopicRemoved(uint256 indexed claimTopic);
+    event ClaimTopicRemoved(uint256 indexed claimTopic, uint256 indexed id);
 
-    function addClaimTopic(uint256 _claimTopic) external;
+    function addClaimTopic(uint256 claimTopic, uint256 id) external;
 
-    function removeClaimTopic(uint256 _claimTopic) external;
+    function removeClaimTopic(uint256 claimTopic, uint256 id) external;
 
-    function getClaimTopics() external view returns (uint256[] memory);
+    function getClaimTopics(uint256 id) external view returns (uint256[] memory);
 
-    function transferOwnershipOnComplianceClaimsRequiredContract(address _newOwner) external;
+    function transferOwnershipOnComplianceClaimsRequiredContract(address newOwner) external;
     
-    function isVerified(address _account) external view returns (bool);
+    function isVerified(address account, uint256 id) external view returns (bool);
     
 }
