@@ -14,6 +14,7 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
     ////////////////
     // KEYS
     ////////////////
+
     uint256 constant MANAGEMENT = 1;
     uint256 constant ACTION = 2;
     uint256 constant CLAIM = 3;
@@ -26,12 +27,12 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
         uint256[] purposes;
         uint256 keyType;
         bytes32 key;
-        bool exists; // TODO, add
     }
 
     ////////////////
     // CLAIMS
     ////////////////
+    
     mapping(bytes32 => Claim) internal _claims;
     mapping(uint256 => bytes32[]) internal _claimsByTopic; 
 
@@ -45,8 +46,9 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
     }
 
     ////////////////
-    // EXEUCTIONS
+    // EXECTIONS
     ////////////////
+
     mapping(uint256 => Transaction) internal _transactions;
     uint256 internal _transactionNonce;
     
@@ -58,6 +60,10 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
         bool executed;
     }
 
+    ////////////////
+    // INIT
+    ////////////////
+
     function init(
         address initialManagementKey
     ) internal {
@@ -68,6 +74,21 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
         _keysByPurpose[1].push(key);
         emit KeyAdded(key, 1, 1);
     }
+
+    // function init(
+    //     address[] accounts,
+    //     address[] permissions
+    // )
+    //     internal
+    // {
+    //     uint256 managementCount;
+    //     require (acccounts.lengths == permissions.length, "Accounts/permissions length mismatch");
+    //     for (uint i=0; i < accounts.length; i++) {
+    //         addOperator(accounts[i], permissions[i]);
+    //         if (permissions[i] == MANAGEMENT) managementCount++;
+    //     }
+    //     revert(managementCount == 0, "Need at least one account manager");
+    // }
 
     /*//////////////////////////////////////////////////////////////
                                  KEYS
@@ -354,27 +375,5 @@ abstract contract Identity is Context, IIdentity, ERC1155Holder {
     {
         return _claimsByTopic[topic];
     }
-
-    // @dev Approves an execution or claim addition.
-    function approve(uint256 _id, bool _approve)
-        public
-        override
-        returns (bool success)
-    {
-        // do stuff
-        return true;
-    }
-
-    // @dev Passes an execution instruction to the keymanager.
-    function execute(address _to, uint256 _value, bytes memory _data)
-        public
-        override
-        payable
-        returns (uint256 executionId)
-    {
-        // do stuff
-    }
-
-
 
 }
