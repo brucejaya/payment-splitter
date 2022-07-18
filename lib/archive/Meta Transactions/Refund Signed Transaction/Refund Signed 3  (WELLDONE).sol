@@ -5,8 +5,6 @@ import "../token/ERC20Token.sol";
 
 /**
  * @title IdentityGasRelay
- * @author Ricardo Guilherme Schmidt (Status Research & Development GmbH) 
- * @notice enables economic abstraction for Identity
  */
 contract IdentityGasRelay is Identity {
     
@@ -58,7 +56,7 @@ contract IdentityGasRelay is Identity {
         
         //verify if signatures are valid and came from correct actors;
         verifySignatures(
-            _to == address(this) ? MANAGEMENT_KEY : ACTION_KEY,
+            _to == address(this) ? MANAGEMENT : ACTION,
             signHash, 
             _messageSignatures
         );
@@ -134,7 +132,7 @@ contract IdentityGasRelay is Identity {
         
         //verify if signatures are valid and came from correct actors;
         verifySignatures(
-            ACTION_KEY, //no management with approveAndCall
+            ACTION, //no management with approveAndCall
             signHash, 
             _messageSignatures
         );
@@ -162,7 +160,7 @@ contract IdentityGasRelay is Identity {
 
     /**
      * @notice reverts if signatures are not valid for the signed hash and required key type. 
-     * @param _requiredKey key required to call, if _to from payload is the identity itself, is `MANAGEMENT_KEY`, else `ACTION_KEY`
+     * @param _requiredKey key required to call, if _to from payload is the identity itself, is `MANAGEMENT`, else `ACTION`
      * @param _signHash ethereum signable callGasRelayHash message provided for the payload
      * @param _messageSignatures ethereum signed `_signHash` messages
      * @return true case valid

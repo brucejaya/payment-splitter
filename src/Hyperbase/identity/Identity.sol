@@ -123,7 +123,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         returns (bool success)
     {
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), 1), "Permissions: Sender does not have management key");
+            require(keyHasPurpose(addressToKey(_msgSender())), 1, "Permissions: Sender does not have management key");
         }
 
         if (_keys[key].key == key) {
@@ -160,7 +160,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         require(_keys[key].key == key, "NonExisting: Key isn't registered");
 
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), MANAGEMENT_KEY), "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
+            require(keyHasPurpose(addressToKey(_msgSender())), MANAGEMENT_KEY, "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
         }
 
         require(_keys[key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
@@ -239,7 +239,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         bytes32 claimId = keccak256(abi.encode(issuer, topic));
 
         if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY), "Permissions: Sender does not have claim signer key");
+            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY, "Permissions: Sender does not have claim signer key");
         }
 
         if (_claims[claimId].issuer != issuer) {
@@ -354,207 +354,6 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         returns(bytes32[] memory claimIds)
     {
         return _claimsByTopic[topic];
-    }
-
-    /*//////////////////////////////////////////////////////////////
-                                MULTI-SIGNATURE
-    //////////////////////////////////////////////////////////////*/
-
-	// TODO see ERC-191 for more details on this
-    /*
-	function getMessageHash(
-        address to,
-        uint256 value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        uint gasLimit,
-        address gasToken,
-        uint8 operationType,
-        bytes memory extraHash
-    )
-        public
-        view
-        returns (bytes32 messageHash)
-    {
-        // bytes4 callPrefix;
-        // assembly {
-            // callPrefix := mload(add(data, 32))
-        // }
-
-        return keccak256(
-            abi.encodePacked(
-                // byte(0x19),      // ERC-191 - the initial 0x19 byte
-                // byte(0x0),       // ERC-191 - the version byte
-                address(this),      // this
-                to,
-                value,
-                keccak256(data),   // data hash
-                nonce,
-                gasPrice,
-                gasLimit,
-                gasToken,
-                operationType,
-                // callPrefix,
-                extraHash
-                
-            )
-        );
-    }
-
-    function haveEnoughValidSignatures(
-        uint256 operationType,
-        bytes32 messageHash,
-        bytes memory messageSignatures
-    )
-        internal
-        view
-        returns (bool hasEnough)
-    {
-
-        uint256 numSignatures = messageSignatures.length / 65;
-        uint256 validSignatureCount = 0;
-
-        for (uint pos = 0; pos < numSignatures; pos++) {
-            uint8 v;
-            bytes32 r;
-            bytes32 s;
-
-            assembly{
-                r := mload(add(messageSignatures, add(32, mul(65,pos))))
-                s := mload(add(messageSignatures, add(64, mul(65,pos))))
-                // Here we are loading the last 32 bytes, including 31 bytes
-                // of 's'. There is no 'mload8' to do this.
-                //
-                // 'byte' is not working due to the Solidity parser, so lets
-                // use the second best option, 'and'
-                v := mload(add(messageSignatures, add(65, mul(65,pos))))
-            }
-
-            if (keyHasPurpose(_keys[bytes32(ecrecover(messageHash, v, r, s))], operationType)) {
-                validSignatureCount++;
-            }
-        }
-
-        if (validSignatureCount >= sigRequirementByKeyType[operationType]) {
-            return true;
-        }
-
-        return false;
-    }
-
-    function executeSigned(
-        address to,
-        address from,
-        uint256 value,
-        bytes memory data,
-        uint nonce,
-        uint gasPrice,
-        uint gasLimit,
-        address gasToken,
-        uint8 operationType,
-        bytes memory extraHash,
-        bytes memory messageSignatures
-    )
-        public
-    {
-
-        uint256 startGas = gasleft();
-        require(supportedOpType[operationType]);
-        
-        require(startGas >= gasLimit);
-
-        bytes32 msgHash = getMessageHash(to, value, data, nonce, gasPrice, gasLimit, gasToken, operationType, extraHash);
-        
-        uint256 requiredKeyType = ACTION_KEY;
-        if (to == address(this)) {
-            requiredKeyType = MANAGEMENT_KEY;
-        }
-        require(haveEnoughValidSignatures(requiredKeyType, msgHash, messageSignatures));
-
-        uint256 _transactionId = _execute(to, value, data);
-
-        uint256 refundAmount = (startGas - gasleft()) * gasPrice;
-
-        if (gasToken == address(0)) {
-            require(address(this).balance > refundAmount);
-            payable(_msgSender()).transfer(refundAmount);
-        } else {
-            require(IERC20(gasToken).balanceOf(address(this)) > refundAmount);
-            require(IERC20(gasToken).transfer(_msgSender(), refundAmount));
-        }
-    }
-    */
-
-    /*//////////////////////////////////////////////////////////////
-                                EXECUTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    function approve(
-        uint256 id,
-        bool approve
-    )
-        public
-        override
-        returns (bool success)
-    {
-        require(keyHasPurpose(addressToKey(_msgSender())), ACTION_KEY), "Sender does not have action key");
-
-        emit Approved(id, approve);
-
-        if (approve == true) {
-            _transactions[id].approved = true;
-            (success,) = _transactions[id].to.call{value:(_transactions[id].value)}(abi.encode(_transactions[id].data, 0));
-            if (success) {
-                _transactions[id].executed = true;
-                emit Executed(id, _transactions[id].to, _transactions[id].value, _transactions[id].data);
-                return true;
-            } else {
-                emit TransactionFailed(id, _transactions[id].to, _transactions[id].value, _transactions[id].data);
-                return false;
-            }
-        } else {
-            _transactions[id].approved = false;
-        }
-        return true;
-    }
-
-    function execute(
-        address to, 
-        uint256 value, 
-        bytes memory data
-    )
-        public
-        override
-        payable
-        returns (uint256 _transactionId)
-    {
-        uint256 _transactionId = _execute(to, value, data);
-        return _transactionId;
-    }
-
-    function _execute(
-        address _to, 
-        uint256 _value, 
-        bytes memory _data
-    )
-        internal
-        returns (uint256 _transactionId)
-    {
-        
-        require(!_transactions[_transactionNonce].executed, "Already executed");
-        _transactions[_transactionNonce].to = _to;
-        _transactions[_transactionNonce].value = _value;
-        _transactions[_transactionNonce].data = _data;
-
-        emit TransactionRequested(_transactionNonce, _to, _value, _data);
-
-        if (keyHasPurpose(addressToKey(_msgSender())), ACTION_KEY)) {
-            approve(_transactionNonce, true);
-        }
-
-        _transactionNonce++;
-        return _transactionNonce-1;
     }
 
 }
