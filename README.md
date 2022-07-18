@@ -1,16 +1,16 @@
 # Hypersurface Protocol
 
-Welcome to Hypersurface. A digital equity infrastructure for the internet age. 
+Welcome to Hypersurface. A digital equity infrastructure for the internet age. Hypersurface reconfigures many of the control structures that businesses operate on using non-legal code based mechanisms. The Hypersurface core protocol enables lightweight, accessible and open digital equity on the blockchain, making the issuance, management, and transfer of tokenised assets as easy as sending email. 
 
-Hypersurface reconfigures many of the control structures that businesses operate on using non-legal code based mechanisms.  
+## To-do
+The core protocol is (remarkably) approaching complete MVP. It is not tidy. The protocol needs to go through the wash many, many times. However, the fundamental structure and core components are present. Next steps are: 
 
-
-
-
-
-# Hypersurface Protocol
-
-Welcome to Hypersurface. A protocol for lightweight, accessible and open digital equity on the blockchain. Hypersurface makes the issuance, management, and transfer of digital equity as easy as sending email. 
+1. Consider the relative strengths of an ERC-745 claims holder as compared to an ERC-780 claims registry
+2. Bool based approvals in `identity/MultiSignature.sol` and identity is complete...
+3. Same controls applied recursively to form organisation accounts?
+4. Refactor Kali code base with support for Hypercores, particular focus on modularity and extensibility
+5. Subdomains!
+6. Factory, storage, upgradeability 
 
 ## Structure
 The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders.
@@ -49,19 +49,10 @@ Hypershare is the home of all things **equity** related.
 
 2.3. [subdomain](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/subdomain) is currently empty but will be responsible for registering new ENS subdomains to an account e.g. "john.hype.surf", "acme.hype.surf". Currently looking for an adequate third-party library that interfaces with ENS.
 
-Rather than continuously upgrading, the protocol should be stabilised as quickly as possible. The ideal is a minimalist control structure that enables a simple, effective base for subsequent development (see below, "Next steps"). If any areas of the core protocol will see significant change in the long-term, it will most likely be the on-chain compliance controls. By adding further sophistication to the compliance contract we will be able to reduce the general tedium of compliance and further increase transferability in a meaningful way for users.
-
-## To-do
-The core protocol is (remarkably) approaching complete MVP. It is not tidy. The protocol needs to go through the wash many, many times. However, the fundamental structure and core components are present. Next steps are: 
-
-1. Consider the relative strengths of an ERC-745 claims holder as compared to an ERC-780 claims registry
-2. Bool based approvals in `identity/MultiSignature.sol` and identity is complete...
-3. Same controls applied recursively to form organisation accounts?
-4. Refactor Kali code base with support for Hypercores, particular focus on modularity and extensibility
-5. Subdomains!
-6. Factory, storage, upgradeability 
 
 ## Next steps
+Rather than continuously upgrading, the protocol should be stabilised as quickly as possible. The ideal is a minimalist control structure that enables a simple, effective base for subsequent development (see below, "Addons"). If any areas of the core protocol will see significant change in the long-term, it will most likely be the on-chain compliance controls. By adding further sophistication to the compliance contract we will be able to reduce the general tedium of compliance and further increase transferability in a meaningful way for users.
+
 The Hypersurface Protocol itself serves as the foundational infrastructure layer for subsequent development, be it a web application or further applications at the protocol-level extension addons (see below). Primarily, the protocol provides an open standard that enables equity to be represented in a way that is uniform. This enables it to be worked with quickly and safely, whether by Hypersurface, users, or other marketplace actors. As such Hypersurface in it's final form will most likely consist of a minimum of three core libraries: the protocol (this), the application, and the legal modules.
 
 ## Addons
