@@ -1,7 +1,7 @@
 pragma solidity ^0.4.15;
 
 
-/// @title Contract for testing low-level calls issued from the multisig wallet
+// @title Contract for testing low-level calls issued from the multisig wallet
 contract TestCalls {
 
 	// msg.data.length of the latest call to "receive" methods

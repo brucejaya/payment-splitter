@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice Helper utility that enables calling multiple local methods in a single call.
-/// @author Modified from Uniswap (https://github.com/Uniswap/v3-periphery/blob/main/contracts/base/Multicall.sol)
+// @notice Helper utility that enables calling multiple local methods in a single call.
+// @author Modified from Uniswap (https://github.com/Uniswap/v3-periphery/blob/main/contracts/base/Multicall.sol)
 abstract contract Multicall {
     function multicall(bytes[] calldata data) public virtual returns (bytes[] memory results) {
         results = new bytes[](data.length);

@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice Ricardian LLC formation interface.
+// @notice Ricardian LLC formation interface.
 interface IRicardianLLC {
     function mintLLC(address to) external payable;
 }

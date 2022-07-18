@@ -3,8 +3,8 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "../base/Executor.sol";
 
-/// @title Simulate Transaction Accessor - can be used with StorageAccessible to simulate Safe transactions
-/// @author Richard Meissner - <richard@gnosis.pm>
+// @title Simulate Transaction Accessor - can be used with StorageAccessible to simulate Safe transactions
+// @author Richard Meissner - <richard@gnosis.pm>
 contract SimulateTxAccessor is Executor {
     address private immutable accessorSingleton;
 

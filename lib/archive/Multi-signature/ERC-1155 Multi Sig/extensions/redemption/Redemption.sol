@@ -13,8 +13,8 @@ import {SafeTransferLib} from "../../libraries/SafeTransferLib.sol";
 import {ERC1155TokenReceiver} from "../../ERC1155Votes.sol";
 import {Multicall} from "../../utils/Multicall.sol";
 
-/// @title Redemption
-/// @notice Fair share redemptions for burnt treasury tokens
+// @title Redemption
+// @notice Fair share redemptions for burnt treasury tokens
 // @dev Based on Moloch DAO ragequit()
 contract Redemption is ERC1155TokenReceiver, Multicall {
     /// -----------------------------------------------------------------------
@@ -61,9 +61,9 @@ contract Redemption is ERC1155TokenReceiver, Multicall {
     /// CONFIGURATIONS
     /// -----------------------------------------------------------------------
 
-    /// @notice Redemption configuration for treasuries
-    /// @param id The token ID to set redemption configuration for
-    /// @param redemptionStart The unix timestamp at which redemption starts
+    // @notice Redemption configuration for treasuries
+    // @param id The token ID to set redemption configuration for
+    // @param redemptionStart The unix timestamp at which redemption starts
     function setRedemptionStart(uint256 id, uint256 redemptionStart)
         external
         payable
@@ -77,11 +77,11 @@ contract Redemption is ERC1155TokenReceiver, Multicall {
     /// REDEMPTIONS
     /// -----------------------------------------------------------------------
 
-    /// @notice Redemption option for treasury holders
-    /// @param treasury Treasury contract address
-    /// @param assets Array of assets to redeem out
-    /// @param id The token ID to burn from
-    /// @param redemption Amount of token ID to burn
+    // @notice Redemption option for treasury holders
+    // @param treasury Treasury contract address
+    // @param assets Array of assets to redeem out
+    // @param id The token ID to burn from
+    // @param redemption Amount of token ID to burn
     function redeem(
         address treasury,
         address[] calldata assets,

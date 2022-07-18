@@ -6,7 +6,7 @@ import '../../interfaces/IRicardianLLC.sol';
 
 import './Org.sol';
 
-/// @notice Factory to deploy Kali DAO.
+// @notice Factory to deploy Kali DAO.
 contract OrgFactory is Multicall {
     
     event DAOdeployed(

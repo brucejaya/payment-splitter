@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice Helper utility for NFT 'safe' transfers.
+// @notice Helper utility for NFT 'safe' transfers.
 abstract contract NFThelper {
     function onERC721Received(
         address,

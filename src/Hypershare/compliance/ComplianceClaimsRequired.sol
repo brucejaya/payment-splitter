@@ -5,11 +5,45 @@ pragma solidity ^0.8.6;
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../../Interface/IComplianceClaimsRequired.sol';
+import '../../Interface/IClaimVerifiersRegistry.sol';
+import '../../Interface/IIdentity.sol';
 
 contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     
     // @dev Mapping from token id to required Claim Topics
     mapping(uint256 => uint256[]) private claimTopics;
+
+    // @dev Claim verifiers contract
+    IClaimVerifiersRegistry public _claimVerifiersRegistry;
+
+    // @dev the constructor initiates the Identity Registry smart contract
+    constructor(
+        address claimVerifiersRegistry
+    ) {
+        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry);
+        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry);
+    }
+
+    function claimVerifiersRegistry()
+        external
+        view
+        override
+        returns (IClaimVerifiersRegistry)
+    {
+        return _claimVerifiersRegistry;
+    }
+
+    
+    function setClaimVerifiersRegistry(
+        address claimVerifiersRegistry
+    )
+        external
+        override
+        onlyOwner
+    {
+        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry);
+        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry);
+    }
 
     // @dev Gets claim topics by token id
     function getClaimTopics(
@@ -70,7 +104,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         override
         returns (bool)
     {
-        if (address(identity(_account)) == address(0)) {
+        if (address(IIdentity(_account)) == address(0)) {
             return false;
         }
         if (claimTopics[id].length == 0) {
@@ -83,15 +117,15 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         bytes memory data;
         uint256 claimTopic;
         for (claimTopic = 0; claimTopic < claimTopics[id].length; claimTopic++) {
-            bytes32[] memory claimIds = identity(_account).getClaimIdsByTopic(claimTopics[id][claimTopic]);
+            bytes32[] memory claimIds = IIdentity(_account).getClaimIdsByTopic(claimTopics[id][claimTopic]);
             if (claimIds.length == 0) {
                 return false;
             }
             for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = identity(_account).getClaim(claimIds[j]);
+                (foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(_account).getClaim(claimIds[j]);
 
                 try IClaimValidator(issuer).isClaimValid(
-                    identity(_account),
+                    IIdentity(_account),
                     claimTopics[id][claimTopic],
                     sig,
                     data
@@ -100,15 +134,15 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
                 {
                     if (
                         _validity
-                        && claimVerifiersRegistry_.hasClaimTopic(issuer, claimTopics[id][claimTopic])
-                        && claimVerifiersRegistry_.isVerifier(issuer)
+                        && _claimVerifiersRegistry.hasClaimTopic(issuer, claimTopics[id][claimTopic])
+                        && _claimVerifiersRegistry.isVerifier(issuer)
                     ) {
                         j = claimIds.length;
                     }
-                    if (!claimVerifiersRegistry_.isVerifier(issuer) && j == (claimIds.length - 1)) {
+                    if (!_claimVerifiersRegistry.isVerifier(issuer) && j == (claimIds.length - 1)) {
                         return false;
                     }
-                    if (!claimVerifiersRegistry_.hasClaimTopic(issuer, claimTopics[id][claimTopic]) && j == (claimIds.length - 1)) {
+                    if (!_claimVerifiersRegistry.hasClaimTopic(issuer, claimTopics[id][claimTopic]) && j == (claimIds.length - 1)) {
                         return false;
                     }
                     if (!_validity && j == (claimIds.length - 1)) {

@@ -2,7 +2,10 @@
 
 pragma solidity ^0.8.6;
 
-contract Organisation {
+import '../../Interface/IOrganisationManaged.sol';
+import 'openzeppelin-contracts/contracts/utils/Context.sol';
+
+contract OrganisationManaged is IOrganisationManaged, Context {
 
     ////////////////
     // CONSTANTS
@@ -36,12 +39,38 @@ contract Organisation {
     ////////////////
 
     mapping(address => Operator) internal operators;
-    mapping(uint256 => bytes32[]) internal operatorsByRole;
+    mapping(uint256 => address[]) internal operatorsByRole;
 
     struct Operator {
         bool exists;
         uint256[] roles;
     }
+
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+  
+    function init(
+        address account
+    )
+        internal
+    {
+        addOperator(account, MANAGEMENT);
+    }
+
+    // TODO 
+    // function MultiSigWallet(address[] _owners, uint _required)
+    //     public
+    //     validRequirement(_owners.length, _required)
+    // {
+    //     for (uint i=0; i<_owners.length; i++) {
+    //         require(!isOwner[_owners[i]] && _owners[i] != 0);
+    //         isOwner[_owners[i]] = true;
+    //     }
+    //     owners = _owners;
+    //     required = _required;
+    // }
+
 
     ////////////////
     // MODIFIERS
@@ -102,7 +131,7 @@ contract Organisation {
         returns(bool result)
     {
         Operator memory operator = operators[account];
-        if (operator.operator == 0) return false;
+        if (!operator.exists) return false;
         for (uint operatorRoleIndex = 0; operatorRoleIndex < operator.roles.length; operatorRoleIndex++) {
             uint256 role = operator.roles[operatorRoleIndex];
 
@@ -138,10 +167,10 @@ contract Organisation {
         }
         else {
             operators[account].exists = true;
-            operators[account].roles = role;
+            operators[account].roles.push(role);
         }
-        operatorsByRole[role].push(operator);
-        emit OperatorAdded(operator, role, operatorType);
+        operatorsByRole[role].push(account);
+        emit OperatorAdded(account, role);
         return true;
     }
 
@@ -169,7 +198,7 @@ contract Organisation {
         operators[account].roles[roleIndex] = operators[account].roles[operators[account].roles.length - 1];
         operators[account].roles.pop();
         uint operatorIndex = 0;
-        while (operatorsByRole[role][operatorIndex] != operator) {
+        while (operatorsByRole[role][operatorIndex] != account) {
             operatorIndex++;
         }
         operatorsByRole[role][operatorIndex] = operatorsByRole[role][operatorsByRole[role].length - 1];
@@ -178,10 +207,8 @@ contract Organisation {
         if (operators[account].roles.length == 0) {
             delete operators[account];
         }
-        emit OperatorRemoved(operator, role, operatorType);
+        emit OperatorRemoved(account, role);
         return true;
     }
-
-
 
 }

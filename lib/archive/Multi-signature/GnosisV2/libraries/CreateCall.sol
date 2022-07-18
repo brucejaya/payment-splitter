@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.7.0 <0.9.0;
 
-/// @title Create Call - Allows to use the different create opcodes to deploy a contract
-/// @author Richard Meissner - <richard@gnosis.io>
+// @title Create Call - Allows to use the different create opcodes to deploy a contract
+// @author Richard Meissner - <richard@gnosis.io>
 contract CreateCall {
     event ContractCreation(address newContract);
 

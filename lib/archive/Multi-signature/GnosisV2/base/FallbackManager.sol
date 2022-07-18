@@ -3,8 +3,8 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "../common/SelfAuthorized.sol";
 
-/// @title Fallback Manager - A contract that manages fallback calls made to this contract
-/// @author Richard Meissner - <richard@gnosis.pm>
+// @title Fallback Manager - A contract that manages fallback calls made to this contract
+// @author Richard Meissner - <richard@gnosis.pm>
 contract FallbackManager is SelfAuthorized {
     event ChangedFallbackHandler(address handler);
 
@@ -22,7 +22,7 @@ contract FallbackManager is SelfAuthorized {
     // @dev Allows to add a contract to handle fallback calls.
     ///      Only fallback calls without value and with data will be forwarded.
     ///      This can only be done via a Safe transaction.
-    /// @param handler contract to handle fallback calls.
+    // @param handler contract to handle fallback calls.
     function setFallbackHandler(address handler) public authorized {
         internalSetFallbackHandler(handler);
         emit ChangedFallbackHandler(handler);

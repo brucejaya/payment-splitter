@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.4;
 
-/// @notice Keep interface
+// @notice Keep interface
 interface IKeep {
     function balanceOf(address account, uint256 id)
         external

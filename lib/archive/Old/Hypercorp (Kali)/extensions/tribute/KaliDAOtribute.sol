@@ -7,7 +7,7 @@ import './interfaces/IKaliDAOtribute.sol';
 import '../../utils/Multicall.sol';
 import '../../utils/ReentrancyGuard.sol';
 
-/// @notice Tribute contract that escrows ETH or tokens for DAO proposals.
+// @notice Tribute contract that escrows ETH or tokens for DAO proposals.
 contract KaliDAOtribute is ReentrancyGuard {
     using SafeTransferLib for address;
 

@@ -4,8 +4,8 @@ pragma solidity >=0.8.4;
 
 import '../utils/Multicall.sol';
 
-/// @notice Kali DAO whitelist manager.
-/// @author Modified from SushiSwap 
+// @notice Kali DAO whitelist manager.
+// @author Modified from SushiSwap 
 /// (https://github.com/sushiswap/trident/blob/master/contracts/pool/franchised/WhiteListManager.sol)
 contract KaliWhitelistManager {
     /*//////////////////////////////////////////////////////////////

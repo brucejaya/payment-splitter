@@ -8,9 +8,9 @@ import './IComplianceLimitHolder.sol';
 
 interface ITokenRegistry is IERC1155 {
 
-    event IdentityRegistryAdded(address indexed identityRegistry);
+    event ComplianceLimitHolderAdded(address indexed complianceHolderLimit);
 
-    event ComplianceAdded(address indexed compliance);
+    event ComplianceClaimsRequiredAdded(address indexed complianceClaimsRequired);
 
     event RecoverySuccess(address lostWallet, address newWallet, address holderIdentity);
 
@@ -26,8 +26,6 @@ interface ITokenRegistry is IERC1155 {
 
     function totalSupply(uint256 id) external view override returns (uint256);
     
-    function Identity() external view override returns (address);
-
     function identityRegistry() external view override returns (IIdentityRegistry);
 
     function compliance() external view override returns (IComplianceLimitHolder);
@@ -38,23 +36,19 @@ interface ITokenRegistry is IERC1155 {
 
     function getFrozenTokens(address account, uint256 id) external view override returns (uint256);
     
+    function uri() external view returns (string memory);
+    
     function setURI(string memory uri) external;
-
-    function setIdentity(address Identity) external override;
 
     function pause(uint256 id) external;
 
     function unpause(uint256 id) external;
-
-    function setIdentityRegistry(address identityRegistry) external override;
 
     function setCompliance(address complianceAddress) external override;
     
     function transferOwnershipOnTokenContract(address newOwner) external;
     
     function addAgentOnTokenContract(address agent) external;
-
-    function removeAgentOnTokenContract(address agent) external;
 
     function forcedTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) external returns (bool);
 

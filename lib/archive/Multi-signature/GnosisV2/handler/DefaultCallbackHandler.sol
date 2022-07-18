@@ -6,8 +6,8 @@ import "../interfaces/ERC721TokenReceiver.sol";
 import "../interfaces/ERC777TokensRecipient.sol";
 import "../interfaces/IERC165.sol";
 
-/// @title Default Callback Handler - returns true for known token callbacks
-/// @author Richard Meissner - <richard@gnosis.pm>
+// @title Default Callback Handler - returns true for known token callbacks
+// @author Richard Meissner - <richard@gnosis.pm>
 contract DefaultCallbackHandler is ERC1155TokenReceiver, ERC777TokensRecipient, ERC721TokenReceiver, IERC165 {
     string public constant NAME = "Default Callback Handler";
     string public constant VERSION = "1.0.0";

@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 
 import '../../Interface/IERC735.sol';
 
-contract OrganisationClaims is ERC735 {
+contract OrganisationClaims is IERC735 {
 	
     ////////////////
     // CLAIMS

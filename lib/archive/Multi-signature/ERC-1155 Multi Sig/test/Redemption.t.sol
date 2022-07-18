@@ -61,7 +61,7 @@ contract RedemptionTest is Test {
     /// Club Setup Tests
     /// -----------------------------------------------------------------------
 
-    /// @notice Set up the testing suite
+    // @notice Set up the testing suite
 
     function setUp() public {
         club = new Keep();

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
+
 pragma solidity ^0.8.6;
 
 import '../../Interface/IClaimValidator.sol';
@@ -8,9 +9,6 @@ import '../identity/Identity.sol';
 contract ClaimValidator is IClaimValidator, Identity {
     
     mapping (bytes => bool) public revokedClaims;
-
-    constructor(address initialManagementKey) Identity(initialManagementKey, false) {}
-
 
     /*//////////////////////////////////////////////////////////////
                             READ FUNCTIONS
@@ -64,7 +62,6 @@ contract ClaimValidator is IClaimValidator, Identity {
         return false;
     }
 
-
     /*//////////////////////////////////////////////////////////////
                             CLAIM MANAGEMENT
     //////////////////////////////////////////////////////////////*/
@@ -94,7 +91,6 @@ contract ClaimValidator is IClaimValidator, Identity {
         return true;
     }
     
-
     function getRecoveredAddress(
         bytes memory sig,
         bytes32 dataHash
@@ -128,4 +124,5 @@ contract ClaimValidator is IClaimValidator, Identity {
 
         return (recoveredAddress);
     }
+
 }

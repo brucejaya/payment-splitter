@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
 pragma solidity ^0.8.6;
 
@@ -10,32 +10,76 @@ import 'openzeppelin-contracts/contracts/utils/introspection/ERC165.sol';
 import 'openzeppelin-contracts/contracts/utils/Address.sol';
 import 'openzeppelin-contracts/contracts/utils/Context.sol';
 
+import 'openzeppelin-contracts/contracts/access/Ownable.sol';
+
 import '../../Interface/ITokenRegistry.sol';
 import '../../Interface/IIdentity.sol';
 import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/IComplianceLimitHolder.sol';
 
-import './TokenRegistryStorage.sol';
-
-// TODO is ownable and deployed per organisation or is _operatorApprovals ???
-
-contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155MetadataURI {
+contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, Ownable {
 
     using Address for address;
+    
+    // @dev Mapping from toke id to account of token isser
+    mapping(uint256 => address) internal _tokenIssuer;
 
-    function init(
+    // Mapping from account to operator approvals
+    mapping(address => mapping(address => bool)) private _operatorApprovals;
+
+    // @dev Mapping from token ID to account balances
+    mapping(uint256 => mapping(address => uint256)) internal _balances;
+
+    // @dev Mapping from token ID to Wrapper contract address
+    mapping(uint256 => address) internal _tokenWrapper;
+
+    // @dev Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
+    string internal _uri;
+
+    // @dev Mapping from token ID to account balances
+    mapping(uint256 => uint256) internal _totalSupply;
+
+    // @dev Mapping from token ID to frozen accounts
+    mapping(uint256 => mapping(address => bool)) internal _frozen; // internal or internal?
+
+    // @dev Mapping from token ID to freeze and pause functions
+	mapping(uint256 => mapping(address => uint256)) internal _frozenTokens;
+    
+    // @dev Mapping from user address to freeze bool
+    mapping(address => bool) internal _frozenAll;
+
+    // @dev Mapping from token id to pause
+    mapping(uint256 => bool) internal _tokenPaused;
+
+    // @dev Compliance contract linked to the compliance token limit validator
+    IComplianceLimitHolder internal _complianceLimitHolder;
+
+    // @dev Compliance contract linked to the compliance claims checker
+    IComplianceClaimsRequired internal _complianceClaimsRequired;
+    
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+
+    constructor(
         string memory uri_,
         address complianceClaimsRequired_,
-        address compliance_,
-        address agentIdentity_
-    ) public initializer {
+        address complianceLimitHolder_
+    ) {
         _uri = uri_;
-        _tokenIssuer = agentIdentity_;
         _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired_);
-        _complianceLimitHolder = IComplianceLimitHolder(compliance_);
+        _complianceLimitHolder = IComplianceLimitHolder(complianceLimitHolder_);
         emit ComplianceClaimsRequiredAdded(complianceClaimsRequired_);
-        emit ComplianceAdded(compliance_);
+        emit ComplianceLimitHolderAdded(complianceLimitHolder_);
     }
+
+    // TODO @dev initialise a new token
+
+    /*
+    function init() {
+        _tokenIssuer = tokenIssuer;
+    } 
+    */
 
     ////////////////
     // MODIFIERS
@@ -93,7 +137,8 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         override
         returns (address)
     {
-        return _tokenIssuer;
+
+        return _tokenIssuer[id];
     }
     
     function complianceClaimsRequired()
@@ -150,26 +195,58 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     }
 
     /*//////////////////////////////////////////////////////////////
+                                 APPROVALS
+    //////////////////////////////////////////////////////////////*/
+
+    function setApprovalForAll(
+        address operator,
+        bool approved
+    )
+        public
+        virtual
+        override
+    {
+        _setApprovalForAll(_msgSender(), operator, approved);
+    }
+
+    function isApprovedForAll(
+        address account,
+        address operator
+    )
+        public
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return _operatorApprovals[account][operator];
+    }
+    
+    function _setApprovalForAll(
+        address account,
+        address operator,
+        bool approved
+    )
+        internal
+        virtual
+    {
+        require(account != operator, "ERC1155: setting approval status for self");
+        _operatorApprovals[account][operator] = approved;
+        emit ApprovalForAll(account, operator, approved);
+    }
+
+    /*//////////////////////////////////////////////////////////////
                              OWNER CONTROLS
     //////////////////////////////////////////////////////////////*/
 
-    function setURI(
-        string memory uri_
-    )
-        public
-        onlyOwner
-    {
-        _uri = uri_;
-    }
-
     function setIdentity(
+        uint256 id,
         address Identity
     )
         external
         override
-        onlyOwner
     {
-        _tokenIssuer = Identity;
+        _tokenIssuer[id] = Identity;
         // emit UpdatedTokenInformation(_tokenIssuer);
     }
 
@@ -195,39 +272,6 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     {
         _tokenPaused[id] = false;
         emit Unpaused(_msgSender(), id);
-    }
-
-    function setComplianceClaimsRequired(
-        address complianceClaimsRequired
-    )
-        external
-        override
-        onlyOwner
-    {
-        _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired);
-        emit ComplianceClaimsRequiredAdded(complianceClaimsRequired);
-    }
-
-    function setCompliance(
-        address compliance
-    )
-        external
-        override
-        onlyOwner
-    {
-        _complianceLimitHolder = IComplianceLimitHolder(compliance);
-        emit ComplianceAdded(compliance);
-    }
-
-    
-    function transferOwnershipOnTokenContract(
-        address newOwner
-    )
-        external
-        override
-        onlyOwner
-    {
-        transferOwnership(newOwner);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -270,47 +314,6 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
     }
 
     /*//////////////////////////////////////////////////////////////
-                                 APPROVALS
-    //////////////////////////////////////////////////////////////*/
-
-    function setApprovalForAll(
-        address operator,
-        bool approved
-    )
-        public
-        virtual
-        override
-    {
-        _setApprovalForAll(_msgSender(), operator, approved);
-    }
-
-    function isApprovedForAll(
-        address account,
-        address operator
-    )
-        public
-        view
-        virtual
-        override
-        returns (bool)
-    {
-        return _operatorApprovals[account][operator];
-    }
-    
-    function _setApprovalForAll(
-        address account,
-        address operator,
-        bool approved
-    )
-        internal
-        virtual
-    {
-        require(account != operator, "ERC1155: setting approval status for self");
-        _operatorApprovals[account][operator] = approved;
-        emit ApprovalForAll(account, operator, approved);
-    }
-
-    /*//////////////////////////////////////////////////////////////
                                 SAFE TRANSFER
     //////////////////////////////////////////////////////////////*/
 
@@ -325,10 +328,7 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         virtual
         override
     {
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: transfer caller is not owner nor approved"
-        );
+        require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
 
         address operator = _msgSender();
         
@@ -366,10 +366,8 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
         virtual
         override
     {
-        require(
-            from == _msgSender() || isApprovedForAll(from, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
+        require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
+
         require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
         require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
         if (_complianceClaimsRequired.isVerified(to, id) && _complianceLimitHolder.canTransfer(to, id, amount, data)) {
@@ -809,4 +807,50 @@ contract TokenRegistry is ITokenRegistry, TokenRegistryStorage, ERC165, IERC1155
 
         return array;
     }
+
+    /*//////////////////////////////////////////////////////////////
+                              HYPERSURFACE
+    //////////////////////////////////////////////////////////////*/
+
+    function setURI(
+        string memory uri_
+    )
+        public
+        onlyOwner
+    {
+        _uri = uri_;
+    }
+    
+    function setComplianceClaimsRequired(
+        address complianceClaimsRequired
+    )
+        external
+        override
+        onlyOwner
+    {
+        _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired);
+        emit ComplianceClaimsRequiredAdded(complianceClaimsRequired);
+    }
+
+    function setCompliance(
+        address complianceLimitHolder
+    )
+        external
+        override
+        onlyOwner
+    {
+        _complianceLimitHolder = IComplianceLimitHolder(complianceLimitHolder);
+        emit ComplianceLimitHolderAdded(complianceLimitHolder);
+    }
+    
+    function transferOwnershipOnTokenContract(
+        address newOwner
+    )
+        external
+        override
+        onlyOwner
+    {
+        transferOwnership(newOwner);
+    }
+    
 }

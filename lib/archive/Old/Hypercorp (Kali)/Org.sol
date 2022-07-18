@@ -9,7 +9,7 @@ import './utils/Multicall.sol';
 import './utils/NFThelper.sol';
 import './utils/ReentrancyGuard.sol';
 
-/// @notice Simple gas-optimized Kali DAO core module.
+// @notice Simple gas-optimized Kali DAO core module.
 contract Org is Orgtoken, Multicall, NFThelper, ReentrancyGuard {
     
     /*//////////////////////////////////////////////////////////////

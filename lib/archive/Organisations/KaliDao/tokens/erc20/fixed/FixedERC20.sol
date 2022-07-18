@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 
 import '../ERC20.sol';
 
-/// @notice ERC-20 with fixed supply.
+// @notice ERC-20 with fixed supply.
 contract FixedERC20 is ERC20 {
     constructor(
         string memory name_, 

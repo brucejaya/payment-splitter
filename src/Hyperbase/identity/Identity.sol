@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
+
 pragma solidity ^0.8.6;
 
 import "openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol";
@@ -6,7 +7,7 @@ import 'openzeppelin-contracts/contracts/token/ERC20/IERC20.sol';
 
 import '../../Interface/IIdentity.sol';
 
-contract Identity is IIdentity, ERC1155Holder {
+contract Identity is Context, IIdentity, ERC1155Holder {
     
     ////////////////
     // KEYS
@@ -16,20 +17,21 @@ contract Identity is IIdentity, ERC1155Holder {
     uint256 constant CLAIM_SIGNER_KEY = 3;
     uint256 constant ENCRYPTION_KEY = 4;
     
-    mapping(uint256 => bytes32[]) internal keysByPurpose;
-    mapping(bytes32 => Key) internal keys;
+    mapping(uint256 => bytes32[]) internal _keysByPurpose;
+    mapping(bytes32 => Key) internal _keys;
 
     struct Key {
         uint256[] purposes;
         uint256 keyType;
         bytes32 key;
+        bool exists; // TODO, add
     }
 
     ////////////////
     // CLAIMS
     ////////////////
-    mapping(bytes32 => Claim) internal claims;
-    mapping(uint256 => bytes32[]) internal claimsByTopic; 
+    mapping(bytes32 => Claim) internal _claims;
+    mapping(uint256 => bytes32[]) internal _claimsByTopic; 
 
     struct Claim {
         uint256 topic;
@@ -43,10 +45,10 @@ contract Identity is IIdentity, ERC1155Holder {
     ////////////////
     // EXEUCTIONS
     ////////////////
-    uint256 internal executionNonce;
-    mapping(uint256 => Execution) internal executions;
+    mapping(uint256 => Transaction) internal _transactions;
+    uint256 internal _transactionNonce;
     
-    struct Execution {
+    struct Transaction {
         address to;
         uint256 value;
         bytes data;
@@ -58,16 +60,25 @@ contract Identity is IIdentity, ERC1155Holder {
         address initialManagementKey
     ) internal {
         bytes32 key = keccak256(abi.encode(initialManagementKey));
-        keys[key].key = key;
-        keys[key].purposes = [1];
-        keys[key].keyType = 1;
-        keysByPurpose[1].push(key);
+        _keys[key].key = key;
+        _keys[key].purposes = [1];
+        _keys[key].keyType = 1;
+        _keysByPurpose[1].push(key);
         emit KeyAdded(key, 1, 1);
     }
 
     /*//////////////////////////////////////////////////////////////
                                  KEYS
     //////////////////////////////////////////////////////////////*/
+
+    function addressToKey(
+        address account
+    )
+        public 
+        view 
+    {
+        return keccak256(abi.encode(account));
+    }
 
     function getKey(
         bytes32 key
@@ -77,7 +88,7 @@ contract Identity is IIdentity, ERC1155Holder {
         view
         returns(uint256[] memory purpose_, uint256 keyType_, bytes32 key_)
     {
-        return (keys[key].purposes, keys[key].keyType, keys[key].key);
+        return (_keys[key].purposes, _keys[key].keyType, _keys[key].key);
     }
 
     function getKeyPurposes(
@@ -88,7 +99,7 @@ contract Identity is IIdentity, ERC1155Holder {
         view
         returns(uint256[] memory purposes)
     {
-        return (keys[key].purposes);
+        return (_keys[key].purposes);
     }
 
     function getKeysByPurpose(
@@ -97,9 +108,9 @@ contract Identity is IIdentity, ERC1155Holder {
         public
         override
         view
-        returns(bytes32[] memory keys)
+        returns(bytes32[] memory _keys)
     {
-        return keysByPurpose[purpose];
+        return _keysByPurpose[purpose];
     }
 
     function addKey(
@@ -111,27 +122,27 @@ contract Identity is IIdentity, ERC1155Holder {
         override
         returns (bool success)
     {
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
+        if (_msgSender() != address(this)) {
+            require(keyHasPurpose(addressToKey(_msgSender())), 1), "Permissions: Sender does not have management key");
         }
 
-        if (keys[key].key == key) {
-            for (uint keyPurposeIndex = 0; keyPurposeIndex < keys[key].purposes.length; keyPurposeIndex++) {
-                uint256 purpose = keys[key].purposes[keyPurposeIndex];
+        if (_keys[key].key == key) {
+            for (uint keyPurposeIndex = 0; keyPurposeIndex < _keys[key].purposes.length; keyPurposeIndex++) {
+                uint256 purpose = _keys[key].purposes[keyPurposeIndex];
 
                 if (purpose == purpose) {
                     revert("Conflict: Key already has purpose");
                 }
             }
 
-            keys[key].purposes.push(purpose);
+            _keys[key].purposes.push(purpose);
         } else {
-            keys[key].key = key;
-            keys[key].purposes = [purpose];
-            keys[key].keyType = keyType;
+            _keys[key].key = key;
+            _keys[key].purposes = [purpose];
+            _keys[key].keyType = keyType;
         }
 
-        keysByPurpose[purpose].push(key);
+        _keysByPurpose[purpose].push(key);
 
         emit KeyAdded(key, purpose, keyType);
 
@@ -146,41 +157,41 @@ contract Identity is IIdentity, ERC1155Holder {
         override
         returns (bool success)
     {
-        require(keys[key].key == key, "NonExisting: Key isn't registered");
+        require(_keys[key].key == key, "NonExisting: Key isn't registered");
 
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), MANAGEMENT_KEY), "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
+        if (_msgSender() != address(this)) {
+            require(keyHasPurpose(addressToKey(_msgSender())), MANAGEMENT_KEY), "Permissions: Sender does not have management key"); // Sender has MANAGEMENTKEY
         }
 
-        require(keys[key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
+        require(_keys[key].purposes.length > 0, "NonExisting: Key doesn't have such purpose");
 
         uint purposeIndex = 0;
-        while (keys[key].purposes[purposeIndex] != purpose) {
+        while (_keys[key].purposes[purposeIndex] != purpose) {
             purposeIndex++;
 
-            if (purposeIndex >= keys[key].purposes.length) {
+            if (purposeIndex >= _keys[key].purposes.length) {
                 break;
             }
         }
 
-        require(purposeIndex < keys[key].purposes.length, "NonExisting: Key doesn't have such purpose");
+        require(purposeIndex < _keys[key].purposes.length, "NonExisting: Key doesn't have such purpose");
 
-        keys[key].purposes[purposeIndex] = keys[key].purposes[keys[key].purposes.length - 1];
-        keys[key].purposes.pop();
+        _keys[key].purposes[purposeIndex] = _keys[key].purposes[_keys[key].purposes.length - 1];
+        _keys[key].purposes.pop();
 
         uint keyIndex = 0;
 
-        while (keysByPurpose[purpose][keyIndex] != key) {
+        while (_keysByPurpose[purpose][keyIndex] != key) {
             keyIndex++;
         }
 
-        keysByPurpose[purpose][keyIndex] = keysByPurpose[purpose][keysByPurpose[purpose].length - 1];
-        keysByPurpose[purpose].pop();
+        _keysByPurpose[purpose][keyIndex] = _keysByPurpose[purpose][_keysByPurpose[purpose].length - 1];
+        _keysByPurpose[purpose].pop();
 
-        uint keyType = keys[key].keyType;
+        uint keyType = _keys[key].keyType;
 
-        if (keys[key].purposes.length == 0) {
-            delete keys[key];
+        if (_keys[key].purposes.length == 0) {
+            delete _keys[key];
         }
 
         emit KeyRemoved(key, purpose, keyType);
@@ -197,7 +208,7 @@ contract Identity is IIdentity, ERC1155Holder {
         view
         returns(bool result)
     {
-        Key memory key = keys[key];
+        Key memory key = _keys[key];
         if (key.key == 0) return false;
 
         for (uint keyPurposeIndex = 0; keyPurposeIndex < key.purposes.length; keyPurposeIndex++) {
@@ -227,18 +238,18 @@ contract Identity is IIdentity, ERC1155Holder {
     {
         bytes32 claimId = keccak256(abi.encode(issuer, topic));
 
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), CLAIM_SIGNER_KEY), "Permissions: Sender does not have claim signer key");
+        if (_msgSender() != address(this)) {
+            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY), "Permissions: Sender does not have claim signer key");
         }
 
-        if (claims[claimId].issuer != issuer) {
-            claimsByTopic[topic].push(claimId);
-            claims[claimId].topic = topic;
-            claims[claimId].scheme = scheme;
-            claims[claimId].issuer = issuer;
-            claims[claimId].signature = signature;
-            claims[claimId].data = data;
-            claims[claimId].uri = uri;
+        if (_claims[claimId].issuer != issuer) {
+            _claimsByTopic[topic].push(claimId);
+            _claims[claimId].topic = topic;
+            _claims[claimId].scheme = scheme;
+            _claims[claimId].issuer = issuer;
+            _claims[claimId].signature = signature;
+            _claims[claimId].data = data;
+            _claims[claimId].uri = uri;
 
             emit ClaimAdded(
                 claimId,
@@ -250,12 +261,12 @@ contract Identity is IIdentity, ERC1155Holder {
                 uri
             );
         } else {
-            claims[claimId].topic = topic;
-            claims[claimId].scheme = scheme;
-            claims[claimId].issuer = issuer;
-            claims[claimId].signature = signature;
-            claims[claimId].data = data;
-            claims[claimId].uri = uri;
+            _claims[claimId].topic = topic;
+            _claims[claimId].scheme = scheme;
+            _claims[claimId].issuer = issuer;
+            _claims[claimId].signature = signature;
+            _claims[claimId].data = data;
+            _claims[claimId].uri = uri;
 
             emit ClaimChanged(
                 claimId,
@@ -278,33 +289,33 @@ contract Identity is IIdentity, ERC1155Holder {
         override
         returns (bool success)
     {
-        if (msg.sender != address(this)) {
-            require(keyHasPurpose(keccak256(abi.encode(msg.sender)), CLAIM_SIGNER_KEY), "Permissions: Sender does not have CLAIM key");
+        if (_msgSender() != address(this)) {
+            require(keyHasPurpose(addressToKey(_msgSender())), CLAIM_SIGNER_KEY), "Permissions: Sender does not have CLAIM key");
         }
 
-        if (claims[claimId].topic == 0) {
+        if (_claims[claimId].topic == 0) {
             revert("NonExisting: There is no claim with this ID");
         }
 
         uint claimIndex = 0;
-        while (claimsByTopic[claims[claimId].topic][claimIndex] != claimId) {
+        while (_claimsByTopic[_claims[claimId].topic][claimIndex] != claimId) {
             claimIndex++;
         }
 
-        claimsByTopic[claims[claimId].topic][claimIndex] = claimsByTopic[claims[claimId].topic][claimsByTopic[claims[claimId].topic].length - 1];
-        claimsByTopic[claims[claimId].topic].pop();
+        _claimsByTopic[_claims[claimId].topic][claimIndex] = _claimsByTopic[_claims[claimId].topic][_claimsByTopic[_claims[claimId].topic].length - 1];
+        _claimsByTopic[_claims[claimId].topic].pop();
 
         emit ClaimRemoved(
             claimId,
-            claims[claimId].topic,
-            claims[claimId].scheme,
-            claims[claimId].issuer,
-            claims[claimId].signature,
-            claims[claimId].data,
-            claims[claimId].uri
+            _claims[claimId].topic,
+            _claims[claimId].scheme,
+            _claims[claimId].issuer,
+            _claims[claimId].signature,
+            _claims[claimId].data,
+            _claims[claimId].uri
         );
 
-        delete claims[claimId];
+        delete _claims[claimId];
 
         return true;
     }
@@ -325,12 +336,12 @@ contract Identity is IIdentity, ERC1155Holder {
         )
     {
         return (
-            claims[claimId].topic,
-            claims[claimId].scheme,
-            claims[claimId].issuer,
-            claims[claimId].signature,
-            claims[claimId].data,
-            claims[claimId].uri
+            _claims[claimId].topic,
+            _claims[claimId].scheme,
+            _claims[claimId].issuer,
+            _claims[claimId].signature,
+            _claims[claimId].data,
+            _claims[claimId].uri
         );
     }
 
@@ -342,7 +353,7 @@ contract Identity is IIdentity, ERC1155Holder {
         view
         returns(bytes32[] memory claimIds)
     {
-        return claimsByTopic[topic];
+        return _claimsByTopic[topic];
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -420,7 +431,7 @@ contract Identity is IIdentity, ERC1155Holder {
                 v := mload(add(messageSignatures, add(65, mul(65,pos))))
             }
 
-            if (keyHasPurpose(keys[bytes32(ecrecover(messageHash, v, r, s))], operationType)) {
+            if (keyHasPurpose(_keys[bytes32(ecrecover(messageHash, v, r, s))], operationType)) {
                 validSignatureCount++;
             }
         }
@@ -461,16 +472,16 @@ contract Identity is IIdentity, ERC1155Holder {
         }
         require(haveEnoughValidSignatures(requiredKeyType, msgHash, messageSignatures));
 
-        uint256 executionId = _execute(to, value, data);
+        uint256 _transactionId = _execute(to, value, data);
 
         uint256 refundAmount = (startGas - gasleft()) * gasPrice;
 
         if (gasToken == address(0)) {
             require(address(this).balance > refundAmount);
-            payable(msg.sender).transfer(refundAmount);
+            payable(_msgSender()).transfer(refundAmount);
         } else {
             require(IERC20(gasToken).balanceOf(address(this)) > refundAmount);
-            require(IERC20(gasToken).transfer(msg.sender, refundAmount));
+            require(IERC20(gasToken).transfer(_msgSender(), refundAmount));
         }
     }
     */
@@ -487,29 +498,23 @@ contract Identity is IIdentity, ERC1155Holder {
         override
         returns (bool success)
     {
-        require(keyHasPurpose(keccak256(abi.encode(msg.sender)), ACTION_KEY), "Sender does not have action key");
+        require(keyHasPurpose(addressToKey(_msgSender())), ACTION_KEY), "Sender does not have action key");
 
         emit Approved(id, approve);
 
         if (approve == true) {
-            executions[id].approved = true;
-
-            (success,) = executions[id].to.call{value:(executions[id].value)}(abi.encode(executions[id].data, 0));
-
+            _transactions[id].approved = true;
+            (success,) = _transactions[id].to.call{value:(_transactions[id].value)}(abi.encode(_transactions[id].data, 0));
             if (success) {
-                executions[id].executed = true;
-
-                emit Executed(id, executions[id].to, executions[id].value, executions[id].data);
-
+                _transactions[id].executed = true;
+                emit Executed(id, _transactions[id].to, _transactions[id].value, _transactions[id].data);
                 return true;
             } else {
-
-                emit ExecutionFailed(id, executions[id].to, executions[id].value, executions[id].data);
-
+                emit TransactionFailed(id, _transactions[id].to, _transactions[id].value, _transactions[id].data);
                 return false;
             }
         } else {
-            executions[id].approved = false;
+            _transactions[id].approved = false;
         }
         return true;
     }
@@ -522,10 +527,10 @@ contract Identity is IIdentity, ERC1155Holder {
         public
         override
         payable
-        returns (uint256 executionId)
+        returns (uint256 _transactionId)
     {
-        uint256 executionId = _execute(to, value, data);
-        return executionId;
+        uint256 _transactionId = _execute(to, value, data);
+        return _transactionId;
     }
 
     function _execute(
@@ -534,22 +539,22 @@ contract Identity is IIdentity, ERC1155Holder {
         bytes memory _data
     )
         internal
-        returns (uint256 executionId)
+        returns (uint256 _transactionId)
     {
         
-        require(!executions[executionNonce].executed, "Already executed");
-        executions[executionNonce].to = _to;
-        executions[executionNonce].value = _value;
-        executions[executionNonce].data = _data;
+        require(!_transactions[_transactionNonce].executed, "Already executed");
+        _transactions[_transactionNonce].to = _to;
+        _transactions[_transactionNonce].value = _value;
+        _transactions[_transactionNonce].data = _data;
 
-        emit ExecutionRequested(executionNonce, _to, _value, _data);
+        emit TransactionRequested(_transactionNonce, _to, _value, _data);
 
-        if (keyHasPurpose(keccak256(abi.encode(msg.sender)), ACTION_KEY)) {
-            approve(executionNonce, true);
+        if (keyHasPurpose(addressToKey(_msgSender())), ACTION_KEY)) {
+            approve(_transactionNonce, true);
         }
 
-        executionNonce++;
-        return executionNonce-1;
+        _transactionNonce++;
+        return _transactionNonce-1;
     }
 
 }

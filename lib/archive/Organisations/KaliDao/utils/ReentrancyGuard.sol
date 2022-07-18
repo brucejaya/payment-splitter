@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice Gas-optimized reentrancy protection.
-/// @author Modified from OpenZeppelin 
+// @notice Gas-optimized reentrancy protection.
+// @author Modified from OpenZeppelin 
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/security/ReentrancyGuard.sol)
 /// License-Identifier: MIT
 abstract contract ReentrancyGuard {

@@ -28,7 +28,7 @@ contract KeepFactoryTest is Test {
     bytes32 name2 =
         0x5445535432000000000000000000000000000000000000000000000000000000;
 
-    /// @notice Set up the testing suite
+    // @notice Set up the testing suite
 
     function setUp() public {
         // create the templates

@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice ETH dispersal contract.
+// @notice ETH dispersal contract.
 contract DropETH { 
     event ETHDropped(string indexed message);
     

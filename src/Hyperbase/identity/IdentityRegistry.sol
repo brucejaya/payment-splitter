@@ -2,16 +2,14 @@
 
 pragma solidity ^0.8.6;
 
-import '../../Interface/IClaimValidator.sol';
-import '../../Interface/IIdentity.sol';
+import 'openzeppelin-contracts/contracts/utils/Context.sol';
 
-import '../../Interface/IComplianceClaimsRequired.sol';
-import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentityRegistry.sol';
+import '../../Interface/IIdentity.sol';
 
 // TODO replace owner role with ownable or operatorApprovals?
 
-contract IdentityRegistry is IIdentityRegistry {
+contract IdentityRegistry is Context, IIdentityRegistry {
 
     // @dev mapping between a user address and the corresponding identity
     mapping(address => Identity) private identities;
@@ -40,7 +38,7 @@ contract IdentityRegistry is IIdentityRegistry {
         override
         returns (IIdentity)
     {
-        return identityRegistryStorage_.storedIdentity(_account);
+        return identities[_account].identityContract; 
     }
 
     function identityCountry(
@@ -51,16 +49,7 @@ contract IdentityRegistry is IIdentityRegistry {
         override
         returns (uint16)
     {
-        return identityRegistryStorage_.storedHolderCountry(_account);
-    }
-
-    function claimVerifiersRegistry()
-        external
-        view
-        override
-        returns (IClaimVerifiersRegistry)
-    {
-        return claimVerifiersRegistry_;
+        return identities[_account].identityCountry; 
     }
 
     function contains(
@@ -78,31 +67,6 @@ contract IdentityRegistry is IIdentityRegistry {
     }
 
     /*//////////////////////////////////////////////////////////////
-                                 AGENT
-    //////////////////////////////////////////////////////////////*/
-
-    /*
-    function addAgentOnIdentityRegistryContract(
-        address _agent
-    )
-        external
-        override
-    {
-        addAgent(_agent);
-    }
-
-    function removeAgentOnIdentityRegistryContract(
-        address _agent
-    )
-        external
-        override
-    {
-        removeAgent(_agent);
-    }
-
-    */
-
-    /*//////////////////////////////////////////////////////////////
                             IDENTITY CONTROLS
     //////////////////////////////////////////////////////////////*/
 
@@ -114,7 +78,10 @@ contract IdentityRegistry is IIdentityRegistry {
         public
         override
     {
-        identityRegistryStorage_.addIdentityToStorage(_account, _identity, _country);
+        require(address(_identity) != address(0), 'contract address can\'t be a zero address');
+        require(address(identities[_account].identityContract) == address(0), 'identity contract already exists, please use update');
+        identities[_account].identityContract = _identity;
+        identities[_account].identityCountry = _country;
         emit IdentityRegistered(_account, _identity);
     }
 
@@ -140,8 +107,11 @@ contract IdentityRegistry is IIdentityRegistry {
         override
     {
         require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
-        IIdentity oldIdentity = identity(_account);
-        identityRegistryStorage_.modifyStoredIdentity(_account, _identity);
+        require(address(identities[_account].identityContract) != address(0), 'this user has no identity registered');
+        require(address(_identity) != address(0), 'contract address can\'t be a zero address');
+        IIdentity oldIdentity = identities[_account].identityContract;
+        identities[_account].identityContract = _identity;
+
         emit IdentityUpdated(oldIdentity, _identity);
     }
 
@@ -152,10 +122,11 @@ contract IdentityRegistry is IIdentityRegistry {
     )
         external
         override
-        onlyAgent
     {
         require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
-        identityRegistryStorage_.modifyStoredHolderCountry(_account, _country);
+        
+        require(address(identities[_account].identityContract) != address(0), 'this user has no identity registered');
+        identities[_account].identityCountry = _country;
         emit CountryUpdated(_account, _country);
     }
     
@@ -165,10 +136,10 @@ contract IdentityRegistry is IIdentityRegistry {
     )
         external
         override
-        onlyAgent
     {
         require(_account == _msgSender(), "Only the owner of an identity can make changes to it");
-        identityRegistryStorage_.removeIdentityFromStorage(_account);
+        require(address(identities[_account].identityContract) != address(0), 'you haven\'t registered an identity yet');
+        delete identities[_account];
         emit IdentityRemoved(_account, identity(_account));
     }
 
@@ -180,19 +151,5 @@ contract IdentityRegistry is IIdentityRegistry {
     // TODO, factory
 
 
-
-    /*//////////////////////////////////////////////////////////////
-                             HYPERSURFACE
-    //////////////////////////////////////////////////////////////*/
-
-    function transferOwnership(
-        address _newOwner
-    )
-        external
-        override
-        onlyOwner
-    {
-        transferOwnership(_newOwner);
-    }
 
 }

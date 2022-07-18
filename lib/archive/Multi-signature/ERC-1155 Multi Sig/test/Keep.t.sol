@@ -143,7 +143,7 @@ contract KeepTest is Test {
     /// Club Setup Tests
     /// -----------------------------------------------------------------------
 
-    /// @notice Set up the testing suite
+    // @notice Set up the testing suite
 
     function setUp() public {
         club = new Keep();
@@ -171,7 +171,7 @@ contract KeepTest is Test {
         mockDai.approve(address(club), type(uint256).max);
     }
 
-    /// @notice Check setup malconditions
+    // @notice Check setup malconditions
 
     function testRepeatClubSetup() public {
         clubRepeat = new Keep();
@@ -250,7 +250,7 @@ contract KeepTest is Test {
     /// Operations Tests
     /// -----------------------------------------------------------------------
 
-    /// @notice Check execution
+    // @notice Check execution
 
     function testExecuteGovernance() public {
         uint256 nonceInit = club.nonce();
@@ -376,7 +376,7 @@ contract KeepTest is Test {
         );
     }
 
-    /// @notice Check execution malconditions
+    // @notice Check execution malconditions
 
     function testExecuteWithImproperSignatures() public {
         mockDai.transfer(address(club), 100);
@@ -538,7 +538,7 @@ contract KeepTest is Test {
         club.execute(Operation.call, address(mockDai), 0, tx_data, sigs);
     }
 
-    /// @notice Check governance
+    // @notice Check governance
     /*
     function testGovernMint() public {
         assert(club.totalSupply(EXECUTE_ID) == 2);

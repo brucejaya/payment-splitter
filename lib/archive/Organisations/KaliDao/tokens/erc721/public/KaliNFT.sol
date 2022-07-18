@@ -4,7 +4,7 @@ pragma solidity >=0.8.4;
 
 import '../ERC721.sol';
 
-/// @notice Public NFT minter for Kali DAO.
+// @notice Public NFT minter for Kali DAO.
 contract KaliNFT is ERC721 {
     constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_) {}
     

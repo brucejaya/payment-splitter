@@ -129,8 +129,8 @@ contract OwnerManager is OwnerRoles {
         }
 
     // @dev Extracts the Solidity ABI selector for the specified interaction.
-    /// @param callData Interaction data.
-    /// @return result The 4 byte function selector of the call encoded in
+    // @param callData Interaction data.
+    // @return result The 4 byte function selector of the call encoded in
     /// this interaction.
     function selector(bytes calldata callData) internal pure returns (bytes4 result) {
         if (callData.length >= 4) {

@@ -4,9 +4,9 @@ import "../common/Enum.sol";
 import "../common/SelfAuthorized.sol";
 import "./Executor.sol";
 
-/// @title Module Manager - A contract that manages modules that can execute transactions via this contract
-/// @author Stefan George - <stefan@gnosis.pm>
-/// @author Richard Meissner - <richard@gnosis.pm>
+// @title Module Manager - A contract that manages modules that can execute transactions via this contract
+// @author Stefan George - <stefan@gnosis.pm>
+// @author Richard Meissner - <richard@gnosis.pm>
 contract ModuleManager is SelfAuthorized, Executor {
     event EnabledModule(address module);
     event DisabledModule(address module);
@@ -27,8 +27,8 @@ contract ModuleManager is SelfAuthorized, Executor {
 
     // @dev Allows to add a module to the whitelist.
     ///      This can only be done via a Safe transaction.
-    /// @notice Enables the module `module` for the Safe.
-    /// @param module Module to be whitelisted.
+    // @notice Enables the module `module` for the Safe.
+    // @param module Module to be whitelisted.
     function enableModule(address module) public authorized {
         // Module address cannot be null or sentinel.
         require(module != address(0) && module != SENTINEL_MODULES, "GS101");
@@ -41,9 +41,9 @@ contract ModuleManager is SelfAuthorized, Executor {
 
     // @dev Allows to remove a module from the whitelist.
     ///      This can only be done via a Safe transaction.
-    /// @notice Disables the module `module` for the Safe.
-    /// @param prevModule Module that pointed to the module to be removed in the linked list
-    /// @param module Module to be removed.
+    // @notice Disables the module `module` for the Safe.
+    // @param prevModule Module that pointed to the module to be removed in the linked list
+    // @param module Module to be removed.
     function disableModule(address prevModule, address module) public authorized {
         // Validate module address and check that it corresponds to module index.
         require(module != address(0) && module != SENTINEL_MODULES, "GS101");
@@ -54,10 +54,10 @@ contract ModuleManager is SelfAuthorized, Executor {
     }
 
     // @dev Allows a Module to execute a Safe transaction without any further confirmations.
-    /// @param to Destination address of module transaction.
-    /// @param value Ether value of module transaction.
-    /// @param data Data payload of module transaction.
-    /// @param operation Operation type of module transaction.
+    // @param to Destination address of module transaction.
+    // @param value Ether value of module transaction.
+    // @param data Data payload of module transaction.
+    // @param operation Operation type of module transaction.
     function execTransactionFromModule(
         address to,
         uint256 value,
@@ -73,10 +73,10 @@ contract ModuleManager is SelfAuthorized, Executor {
     }
 
     // @dev Allows a Module to execute a Safe transaction without any further confirmations and return data
-    /// @param to Destination address of module transaction.
-    /// @param value Ether value of module transaction.
-    /// @param data Data payload of module transaction.
-    /// @param operation Operation type of module transaction.
+    // @param to Destination address of module transaction.
+    // @param value Ether value of module transaction.
+    // @param data Data payload of module transaction.
+    // @param operation Operation type of module transaction.
     function execTransactionFromModuleReturnData(
         address to,
         uint256 value,
@@ -101,16 +101,16 @@ contract ModuleManager is SelfAuthorized, Executor {
     }
 
     // @dev Returns if an module is enabled
-    /// @return True if the module is enabled
+    // @return True if the module is enabled
     function isModuleEnabled(address module) public view returns (bool) {
         return SENTINEL_MODULES != module && modules[module] != address(0);
     }
 
     // @dev Returns array of modules.
-    /// @param start Start of the page.
-    /// @param pageSize Maximum number of modules that should be returned.
-    /// @return array Array of modules.
-    /// @return next Start of the next page.
+    // @param start Start of the page.
+    // @param pageSize Maximum number of modules that should be returned.
+    // @return array Array of modules.
+    // @return next Start of the next page.
     function getModulesPaginated(address start, uint256 pageSize) external view returns (address[] memory array, address next) {
         // Init array with max page size
         array = new address[](pageSize);

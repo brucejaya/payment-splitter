@@ -4,7 +4,7 @@ pragma solidity >=0.8.0;
 
 import './FixedERC20.sol';
 
-/// @notice Factory for ERC-20 with fixed supply.
+// @notice Factory for ERC-20 with fixed supply.
 contract FixedERC20factory {
     event TokenDeployed(string indexed name, ERC20 indexed fixedERC20);
     

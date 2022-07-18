@@ -5,8 +5,9 @@ pragma solidity >=0.8.4;
 import './KaliDAO.sol';
 import './interfaces/IRicardianLLC.sol';
 
-/// @notice Factory to deploy Kali DAO.
+// @notice Factory to deploy Kali DAO.
 contract KaliDAOfactory is Multicall {
+
     event DAOdeployed(
         KaliDAO indexed kaliDAO, 
         string name, 
@@ -93,4 +94,5 @@ contract KaliDAOfactory is Multicall {
         // if CREATE2 fails for some reason, address(0) is returned
         if (clone == address(0)) revert NullDeploy();
     }
+    
 }

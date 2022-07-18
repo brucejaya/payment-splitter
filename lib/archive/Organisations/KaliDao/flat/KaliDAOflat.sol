@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice Modern and gas-optimized ERC-20 + EIP-2612 implementation with COMP-style governance and pausing.
-/// @author Modified from RariCapital (https://github.com/Rari-Capital/solmate/blob/main/src/erc20/ERC20.sol)
+// @notice Modern and gas-optimized ERC-20 + EIP-2612 implementation with COMP-style governance and pausing.
+// @author Modified from RariCapital (https://github.com/Rari-Capital/solmate/blob/main/src/erc20/ERC20.sol)
 /// License-Identifier: AGPL-3.0-only
 abstract contract KaliDAOtoken {
     /*//////////////////////////////////////////////////////////////
@@ -440,8 +440,8 @@ abstract contract KaliDAOtoken {
     }
 }
 
-/// @notice Helper utility that enables calling multiple local methods in a single call.
-/// @author Modified from Uniswap (https://github.com/Uniswap/v3-periphery/blob/main/contracts/base/Multicall.sol)
+// @notice Helper utility that enables calling multiple local methods in a single call.
+// @author Modified from Uniswap (https://github.com/Uniswap/v3-periphery/blob/main/contracts/base/Multicall.sol)
 abstract contract Multicall {
     function multicall(bytes[] calldata data) public virtual returns (bytes[] memory results) {
         results = new bytes[](data.length);
@@ -466,7 +466,7 @@ abstract contract Multicall {
     }
 }
 
-/// @notice Helper utility for NFT 'safe' transfers.
+// @notice Helper utility for NFT 'safe' transfers.
 abstract contract NFThelper {
     function onERC721Received(
         address,
@@ -498,8 +498,8 @@ abstract contract NFThelper {
     }
 }
 
-/// @notice Gas-optimized reentrancy protection.
-/// @author Modified from OpenZeppelin 
+// @notice Gas-optimized reentrancy protection.
+// @author Modified from OpenZeppelin 
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/security/ReentrancyGuard.sol)
 /// License-Identifier: MIT
 abstract contract ReentrancyGuard {
@@ -522,7 +522,7 @@ abstract contract ReentrancyGuard {
     }
 }
 
-/// @notice Kali DAO membership extension interface.
+// @notice Kali DAO membership extension interface.
 interface IKaliDAOextension {
     function setExtension(bytes calldata extensionData) external;
 
@@ -533,7 +533,7 @@ interface IKaliDAOextension {
     ) external payable returns (bool mint, uint256 amountOut);
 }
 
-/// @notice Simple gas-optimized Kali DAO core module.
+// @notice Simple gas-optimized Kali DAO core module.
 contract KaliDAOflat is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
     /*//////////////////////////////////////////////////////////////
                             EVENTS

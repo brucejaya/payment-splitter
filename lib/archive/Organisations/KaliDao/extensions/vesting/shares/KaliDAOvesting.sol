@@ -4,7 +4,7 @@ pragma solidity >=0.8.4;
 
 import '../../../utils/ReentrancyGuard.sol';
 
-/// @notice Vesting contract for KaliDAO tokens.
+// @notice Vesting contract for KaliDAO tokens.
 contract KaliDAOvesting is ReentrancyGuard {
     event ExtensionSet(address indexed dao, address[] accounts, uint256[] amounts, uint256[] startTimes, uint256[] endTimes);
 

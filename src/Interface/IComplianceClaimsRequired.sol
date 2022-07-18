@@ -4,6 +4,8 @@ pragma solidity ^0.8.6;
 
 interface IComplianceClaimsRequired {
 
+    event ClaimVerifiersRegistrySet(address indexed trustedVerifiersRegistry);
+
     event ClaimTopicAdded(uint256 indexed claimTopic);
 
     event ClaimTopicRemoved(uint256 indexed claimTopic);
@@ -15,5 +17,7 @@ interface IComplianceClaimsRequired {
     function getClaimTopics() external view returns (uint256[] memory);
 
     function transferOwnershipOnComplianceClaimsRequiredContract(address _newOwner) external;
+    
+    function isVerified(address _account) external view returns (bool);
     
 }

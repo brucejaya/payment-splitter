@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.4;
 
-/// @notice Enables creating clone contracts with immutable arguments
-/// @author Modified from wighawag, zefram.eth, Saw-mon & Natalie, will@0xsplits.xyz
+// @notice Enables creating clone contracts with immutable arguments
+// @author Modified from wighawag, zefram.eth, Saw-mon & Natalie, will@0xsplits.xyz
 /// (https://github.com/wighawag/clones-with-immutable-args/blob/master/src/ClonesWithImmutableArgs.sol)
 library ClonesWithImmutableArgs {
     error CREATE2_FAILED();
@@ -11,12 +11,12 @@ library ClonesWithImmutableArgs {
     uint256 private constant BOOTSTRAP_LENGTH = 0x3f;
     uint256 private constant ONE_WORD = 0x20;
 
-    /// @notice Creates a clone proxy of the implementation contract with immutable args
+    // @notice Creates a clone proxy of the implementation contract with immutable args
     // @dev `data` cannot exceed 65535 bytes, since 2 bytes are used to store the data length
-    /// @param implementation The implementation contract to clone
-    /// @param data Encoded immutable args
-    /// @return ptr The ptr to the clone's bytecode
-    /// @return creationSize The size of the clone to be created
+    // @param implementation The implementation contract to clone
+    // @param data Encoded immutable args
+    // @return ptr The ptr to the clone's bytecode
+    // @return creationSize The size of the clone to be created
     function cloneCreationCode(address implementation, bytes memory data)
         internal
         pure
@@ -80,12 +80,12 @@ library ClonesWithImmutableArgs {
         }
     }
 
-    /// @notice Creates a clone proxy of the implementation contract with immutable args
+    // @notice Creates a clone proxy of the implementation contract with immutable args
     // @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
-    /// @param implementation The implementation contract to clone
-    /// @param salt The salt for create2
-    /// @param data Encoded immutable args
-    /// @return instance The address of the created clone
+    // @param implementation The implementation contract to clone
+    // @param salt The salt for create2
+    // @param data Encoded immutable args
+    // @return instance The address of the created clone
     function clone(
         address implementation,
         bytes32 salt,
@@ -106,13 +106,13 @@ library ClonesWithImmutableArgs {
         }
     }
 
-    /// @notice Predicts the address where a deterministic clone of implementation will be deployed
+    // @notice Predicts the address where a deterministic clone of implementation will be deployed
     // @dev data cannot exceed 65535 bytes, since 2 bytes are used to store the data length
-    /// @param implementation The implementation contract to clone
-    /// @param salt The salt for create2
-    /// @param data Encoded immutable args
-    /// @return predicted The predicted address of the created clone
-    /// @return exists Whether the clone already exists
+    // @param implementation The implementation contract to clone
+    // @param salt The salt for create2
+    // @param data Encoded immutable args
+    // @return predicted The predicted address of the created clone
+    // @return exists Whether the clone already exists
     function predictDeterministicAddress(
         address implementation,
         bytes32 salt,

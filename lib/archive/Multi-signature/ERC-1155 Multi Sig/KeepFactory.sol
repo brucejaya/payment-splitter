@@ -7,7 +7,7 @@ import {Call, Multicall, Keep} from "./Keep.sol";
 // @dev Libraries
 import {ClonesWithImmutableArgs} from "./libraries/ClonesWithImmutableArgs.sol";
 
-/// @notice Keep Factory
+// @notice Keep Factory
 contract KeepFactory is Multicall {
     /// -----------------------------------------------------------------------
     /// LIBRARY USAGE

@@ -9,9 +9,9 @@ import {ERC721TokenReceiver} from "./utils/ERC721TokenReceiver.sol";
 import {ERC1155TokenReceiver, ERC1155Votes} from "./ERC1155Votes.sol";
 import {Multicall} from "./utils/Multicall.sol";
 
-/// @title Keep
-/// @notice EIP-712 multi-sig with ERC-1155 interface
-/// @author Modified from LilGnosis (https://github.com/m1guelpf/lil-web3/blob/main/src/LilGnosis.sol)
+// @title Keep
+// @notice EIP-712 multi-sig with ERC-1155 interface
+// @author Modified from LilGnosis (https://github.com/m1guelpf/lil-web3/blob/main/src/LilGnosis.sol)
 
 enum Operation {
     call,
@@ -43,58 +43,58 @@ contract Keep is
     /// EVENTS
     /// -----------------------------------------------------------------------
 
-    /// @notice Emitted when Keep executes call
+    // @notice Emitted when Keep executes call
     event Executed(Operation op, address indexed to, uint256 value, bytes data);
 
-    /// @notice Emitted when Keep creates contract
+    // @notice Emitted when Keep creates contract
     event ContractCreated(
         Operation op,
         address indexed creation,
         uint256 value
     );
 
-    /// @notice Emitted when quorum threshold is updated
+    // @notice Emitted when quorum threshold is updated
     event QuorumSet(address indexed caller, uint256 threshold);
 
     /// -----------------------------------------------------------------------
     /// ERRORS
     /// -----------------------------------------------------------------------
 
-    /// @notice Throws if init() is called more than once
+    // @notice Throws if init() is called more than once
     error ALREADY_INIT();
 
-    /// @notice Throws if quorum exceeds totalSupply(EXECUTE_ID)
+    // @notice Throws if quorum exceeds totalSupply(EXECUTE_ID)
     error QUORUM_OVER_SUPPLY();
 
-    /// @notice Throws if signature doesn't verify execute()
+    // @notice Throws if signature doesn't verify execute()
     error INVALID_SIG();
 
-    /// @notice Throws if execute() doesn't complete operation
+    // @notice Throws if execute() doesn't complete operation
     error EXECUTE_FAILED();
 
     /// -----------------------------------------------------------------------
     /// KEEP STORAGE/LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice Record of states for verifying execute()
+    // @notice Record of states for verifying execute()
     uint64 public nonce;
 
-    /// @notice EXECUTE_ID threshold to execute()
+    // @notice EXECUTE_ID threshold to execute()
     uint64 public quorum;
 
-    /// @notice init() Keep domain value
+    // @notice init() Keep domain value
     bytes32 internal _INITIAL_DOMAIN_SEPARATOR;
 
-    /// @notice execute() ID permission
+    // @notice execute() ID permission
     uint256 internal constant EXECUTE_ID =
         uint256(bytes32(this.execute.selector));
 
-    /// @notice ID metadata tracking
+    // @notice ID metadata tracking
     mapping(uint256 => string) internal _uris;
 
-    /// @notice ID metadata fetcher
-    /// @param id ID to fetch from
-    /// @return URI ID metadata reference
+    // @notice ID metadata fetcher
+    // @param id ID to fetch from
+    // @return URI ID metadata reference
     function uri(uint256 id)
         public
         view
@@ -105,7 +105,7 @@ contract Keep is
         return _uris[id];
     }
 
-    /// @notice Access control for ID balance owners
+    // @notice Access control for ID balance owners
     function _authorized() internal view virtual returns (bool) {
         if (
             msg.sender == address(this) ||
@@ -118,9 +118,9 @@ contract Keep is
     /// ERC-165 LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice ERC-165 interface detection
-    /// @param interfaceId Interface ID to check
-    /// @return Interface Fetch detection success
+    // @notice ERC-165 interface detection
+    // @param interfaceId Interface ID to check
+    // @return Interface Fetch detection success
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -138,8 +138,8 @@ contract Keep is
     /// EIP-712 LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice Fetches domain for EXECUTE_ID signatures
-    /// @return Domain hash
+    // @notice Fetches domain for EXECUTE_ID signatures
+    // @return Domain hash
     function DOMAIN_SEPARATOR() public view virtual returns (bytes32) {
         return
             block.chainid == _INITIAL_CHAIN_ID()
@@ -186,10 +186,10 @@ contract Keep is
     /// INITIALIZATION LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice Initialize Keep configuration
-    /// @param calls Initial Keep operations
-    /// @param signers Initial signer set
-    /// @param threshold Initial quorum
+    // @notice Initialize Keep configuration
+    // @param calls Initial Keep operations
+    // @param signers Initial signer set
+    // @param threshold Initial quorum
     function init(
         Call[] calldata calls,
         address[] calldata signers,
@@ -258,14 +258,14 @@ contract Keep is
     /// EXECUTION LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice Execute operation from Keep with signatures
-    /// @param op Enum operation to execute
-    /// @param to Address to send operation to
-    /// @param value Amount of ETH to send in operation
-    /// @param data Payload to send in operation
-    /// @param sigs Array of signatures from NFT sorted in ascending order by addresses
+    // @notice Execute operation from Keep with signatures
+    // @param op Enum operation to execute
+    // @param to Address to send operation to
+    // @param value Amount of ETH to send in operation
+    // @param data Payload to send in operation
+    // @param sigs Array of signatures from NFT sorted in ascending order by addresses
     // @dev Make sure signatures are sorted in ascending order - otherwise verification will fail
-    /// @return success Fetch whether operation succeeded
+    // @return success Fetch whether operation succeeded
     function execute(
         Operation op,
         address to,
@@ -331,9 +331,9 @@ contract Keep is
         success = _execute(op, to, value, data);
     }
 
-    /// @notice Execute operations from Keep with signed execute() or as Keep key holder
-    /// @param calls Keep operations as arrays of `op, to, value, data`
-    /// @return successes Fetches whether operations succeeded
+    // @notice Execute operations from Keep with signed execute() or as Keep key holder
+    // @param calls Keep operations as arrays of `op, to, value, data`
+    // @return successes Fetches whether operations succeeded
     function multiExecute(Call[] calldata calls)
         public
         payable
@@ -431,11 +431,11 @@ contract Keep is
     /// MINT/BURN LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice ID minter
-    /// @param to Recipient of mint
-    /// @param id ID to mint
-    /// @param amount ID balance to mint
-    /// @param data Optional data payload
+    // @notice ID minter
+    // @param to Recipient of mint
+    // @param id ID to mint
+    // @param amount ID balance to mint
+    // @param data Optional data payload
     function mint(
         address to,
         uint256 id,
@@ -449,10 +449,10 @@ contract Keep is
         _safeCastTo192(totalSupply[id]);
     }
 
-    /// @notice ID burner
-    /// @param from Account to burn from
-    /// @param id ID to burn
-    /// @param amount Balance to burn
+    // @notice ID burner
+    // @param from Account to burn from
+    // @param id ID to burn
+    // @param amount Balance to burn
     function burn(
         address from,
         uint256 id,
@@ -474,8 +474,8 @@ contract Keep is
     /// THRESHOLD SETTING LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice Update Keep quorum threshold
-    /// @param threshold Signature threshold for execute()
+    // @notice Update Keep quorum threshold
+    // @param threshold Signature threshold for execute()
     function setQuorum(uint32 threshold) public payable virtual {
         _authorized();
 
@@ -498,9 +498,9 @@ contract Keep is
     /// ID SETTING LOGIC
     /// -----------------------------------------------------------------------
 
-    /// @notice ID transferability setter
-    /// @param id ID to set transferability for
-    /// @param transferability Transferability setting
+    // @notice ID transferability setter
+    // @param id ID to set transferability for
+    // @param transferability Transferability setting
     function setTransferability(uint256 id, bool transferability)
         public
         payable
@@ -511,9 +511,9 @@ contract Keep is
         _setTransferability(id, transferability);
     }
 
-    /// @notice ID metadata setter
-    /// @param id ID to set metadata for
-    /// @param tokenURI Metadata setting
+    // @notice ID metadata setter
+    // @param id ID to set metadata for
+    // @param tokenURI Metadata setting
     function setURI(uint256 id, string calldata tokenURI)
         public
         payable

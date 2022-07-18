@@ -2,8 +2,8 @@
 
 pragma solidity >=0.8.4;
 
-/// @notice A generic interface for a contract which properly accepts ERC721 tokens.
-/// @author Modified from Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol)
+// @notice A generic interface for a contract which properly accepts ERC721 tokens.
+// @author Modified from Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC721.sol)
 /// License-Identifier: AGPL-3.0-only
 interface ERC721TokenReceiver {
     function onERC721Received(
@@ -14,7 +14,7 @@ interface ERC721TokenReceiver {
     ) external returns (bytes4);
 }
 
-/// @notice Modern and gas efficient ERC-721 + ERC-20/EIP-2612-like implementation.
+// @notice Modern and gas efficient ERC-721 + ERC-20/EIP-2612-like implementation.
 abstract contract ERC721 {
     /*//////////////////////////////////////////////////////////////
                             EVENTS

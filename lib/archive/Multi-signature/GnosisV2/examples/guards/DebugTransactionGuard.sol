@@ -5,9 +5,9 @@ import "../../common/Enum.sol";
 import "../../base/GuardManager.sol";
 import "../../GnosisSafe.sol";
 
-/// @title Debug Transaction Guard - A guard that will emit events with extended information.
-/// @notice This guard is only meant as a development tool and example
-/// @author Richard Meissner - <richard@gnosis.pm>
+// @title Debug Transaction Guard - A guard that will emit events with extended information.
+// @notice This guard is only meant as a development tool and example
+// @author Richard Meissner - <richard@gnosis.pm>
 contract DebugTransactionGuard is BaseGuard {
     // solhint-disable-next-line payable-fallback
     fallback() external {

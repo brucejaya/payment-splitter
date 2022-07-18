@@ -5,12 +5,6 @@ pragma solidity ^0.8.6;
 import './IIdentity.sol';
 interface IIdentityRegistry {
 
-    event ComplianceClaimsRequiredSet(address indexed claimTopicsRegistry);
-
-    event IdentityStorageSet(address indexed identityStorage);
-
-    event ClaimVerifiersRegistrySet(address indexed trustedVerifiersRegistry);
-
     event IdentityRegistered(address indexed holderAddress, IIdentity indexed identity);
 
     event IdentityRemoved(address indexed holderAddress, IIdentity indexed identity);
@@ -37,17 +31,9 @@ interface IIdentityRegistry {
 
     function contains(address _account) external view returns (bool);
 
-    function isVerified(address _account) external view returns (bool);
-
     function identity(address _account) external view returns (IIdentity);
 
     function identityCountry(address _account) external view returns (uint16);
-
-    function identityRegistryStorage() external view returns (IIdentityRegistryStorage);
-
-    function claimVerifiersRegistry() external view returns (IClaimVerifiersRegistry);
-
-    function complianceClaimsRequired() external view returns (IComplianceClaimsRequired);
 
     function transferOwnershipOnIdentityRegistryContract(address _newOwner) external;
 

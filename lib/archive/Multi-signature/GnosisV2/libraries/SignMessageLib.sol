@@ -4,8 +4,8 @@ pragma solidity >=0.7.0 <0.9.0;
 import "./GnosisSafeStorage.sol";
 import "../GnosisSafe.sol";
 
-/// @title SignMessageLib - Allows to set an entry in the signedMessages
-/// @author Richard Meissner - <richard@gnosis.io>
+// @title SignMessageLib - Allows to set an entry in the signedMessages
+// @author Richard Meissner - <richard@gnosis.io>
 contract SignMessageLib is GnosisSafeStorage {
     //keccak256(
     //    "SafeMessage(bytes message)"
@@ -15,8 +15,8 @@ contract SignMessageLib is GnosisSafeStorage {
     event SignMsg(bytes32 indexed msgHash);
 
     // @dev Marks a message as signed, so that it can be used with EIP-1271
-    /// @notice Marks a message (`_data`) as signed.
-    /// @param _data Arbitrary length data that should be marked as signed on the behalf of address(this)
+    // @notice Marks a message (`_data`) as signed.
+    // @param _data Arbitrary length data that should be marked as signed on the behalf of address(this)
     function signMessage(bytes calldata _data) external {
         bytes32 msgHash = getMessageHash(_data);
         signedMessages[msgHash] = 1;
@@ -24,8 +24,8 @@ contract SignMessageLib is GnosisSafeStorage {
     }
 
     // @dev Returns hash of a message that can be signed by owners.
-    /// @param message Message that should be hashed
-    /// @return Message hash.
+    // @param message Message that should be hashed
+    // @return Message hash.
     function getMessageHash(bytes memory message) public view returns (bytes32) {
         bytes32 safeMessageHash = keccak256(abi.encode(SAFE_MSG_TYPEHASH, keccak256(message)));
         return
