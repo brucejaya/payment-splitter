@@ -1,6 +1,8 @@
 # Hypersurface Protocol
 
-Welcome to Hypersurface: a digital equity infrastructure for the internet age. Hypersurface reconfigures many of the control structures that businesses operate on using non-legal code based mechanisms. The core protocol enables lightweight, accessible and open digital equity on the blockchain, making the issuance, management, and transfer of tokenised assets as easy as sending email. 
+**Welcome to Hypersurface: a digital equity infrastructure for the internet age.**
+
+Hypersurface reconfigures many of the control structures that businesses operate on using non-legal, code-based mechanisms. The protocol enables lightweight, accessible and open digital equity on the blockchain. The aim of the  protocol is to provide a complete suite of tools, allowing issuers and holders to engage with tokenised equity assets easily, effectively, and securely. 
 
 ## To-do
 The core protocol is (remarkably) approaching complete MVP. It is not tidy. The protocol needs to go through the wash many, many times. However, the fundamental structure and core components are mostly present. Next steps are: 
@@ -12,10 +14,9 @@ The core protocol is (remarkably) approaching complete MVP. It is not tidy. The 
 5. Subdomains!
 6. Factory, storage, upgradeability 
 
-## Structure
-The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders.
+## Protocol Architecture
 
-Full folder structure is as follows:
+The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders. The following section will provide a brief overview of each of the core technical components within the protocol, explaining the different functions of its constituent smart contracts. Full folder structure is as follows:
 
 	Hypersurface (src)
 	├── Hyperbase
@@ -34,26 +35,38 @@ Full folder structure is as follows:
 	└── Interface
 		└── ...
 
-## Directories
-The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders.
+### 1.0.0 Hyperbase is the home of all things **identity** related.
 
-### 1. Hypershare is the home of all things **equity** related. 
+#### 1.1.0 [`identity`](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/identity) the core identity account and identity registries.
 
-1.1. [token](https://github.com/blit-man/hypersurface-forge/src/Hypershare/token) is a permissioned multi-token asset registry that has been structured with ERC-1155 as its core standard. This important distinction strips away all unnecessary logic to create a lean, efficient, and flexible equity token implementation which is deployed one-per-organisation (rather than one per asset). By virtue of its ERC-1155 compliance the token also embeds agreements and agreement metadata in it's URI tag.
+1.1.1 `IdentityRegistry.sol` stores the address of all the identity accounts within the protocol. The identity registry also stores and serves the corresponding country code for each identity, allowing for easy reference access. 
 
-1.2. [compliance](https://github.com/blit-man/hypersurface-forge/src/Hypershare/compliance) enforces on-chain transfer controls. Unlike other crypto assets, Hypershare transactions can fail for a variety of reasons. These reasons include the receiver not having verified KYC (`ComplianceClaimsRequired.sol`), assets having been locked or frozen, and economic and jurisdictional constraints such as holder, acquisition, and geographic limits (`ComplianceLimitHolder.sol`).
+1.1.2 `Identity.sol` is an ERC-734 standard key-value pair store and ERC-735 claims, holder. The ERC-734 enables key management, allowing an arbitrary number of keys and permission levels to be added to an account, as well as managing the signature requirements for each type of operation. The ERC-734 claims holder stores “claims”, signed digital attestations that the identity has a given attribute. Claims in combination with an identity account create something equivalent to a digital ID card or passport.  The identity contract also features a number of execution functions that allow it to interact with other contracts on the blockchain. When calling the executeSigned function via a relay the Identity will refund a portion of tokens allowing for gasless single-token transactions. 
 
-### 2. Hyperbase is the home of all things **identity** related.
+1.2.0 [claims](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/claims) are signed digital attestations that an identity has some property that are attached to an identity account. This directory is related to verifying claims in credential based interactions. 
 
-2.1 [identity](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/identity) is both executions and claims holder, also includes sophisticated lightweight access controls, even for personal accounts.
+1.2.1 `ClaimVerifiersRegistry.sol` stores the identity addresses of trusted claim verifiers. When establishing an identity has the requisite claims for a particular action, the protocol will also check that claims have come from a reputable source, recorded herein. 
 
-2.2. [claims](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/claims) records verifiable digital claims from a Hyperbase and also records a registry of trusted claim issuers (e.g. KPMG, etc) and claim topics (e.g. accredited: y/n, nationality, etc.)
+1.2.2 `ClaimsValidator.sol` evaluates and verifies the veracity of claims attached to an identity account. If a token transfer requires a claim signed by a trusted verifier the ClaimsValidator references ClaimVerifiersRegistry.
 
-2.3. [subdomain](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/subdomain) is currently empty but will be responsible for registering new ENS subdomains to an account e.g. "john.hype.surf", "acme.hype.surf". Currently looking for an adequate third-party library that interfaces with ENS.
+1.3.0 [subdomain](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/subdomain) is currently empty but will be responsible for registering new ENS subdomains to an account e.g. "john.hype.surf", "acme.hype.surf". Currently looking for an adequate third-party library that interfaces with ENS.
+
+
+### 2.0.0 Hypershare is the home of all things **equity** related. 
+
+2.1.0 [token](https://github.com/blit-man/hypersurface-forge/src/Hypershare/token) is responsible for tracking and handling transfers of tokenised equity.
+
+2.1.1. TokenRegistry.sol: is a permissioned multi-token asset registry based on the ERC-1155 standard. This important distinction strips away all unnecessary logic to create a lean, efficient, and flexible equity token implementation whereby, unlike an ERC-20 standard token, TokenRegistry can contain an infinite number of tokens within the same contract. This provides users with a single point of access to all assets within the Hypersurface ecosystem. TokenRegistry implements the transfer function in a conditional way, such that should the compliance checks fail, or the receiver not be eligible, the token transfer will revert. TokenRegistry also includes a number of fine-grain issuer control designed for permissioned assets, such as freezing and recovery. By virtue of its ERC-1155 compliance, TokenRegistry embeds agreements and structured agreement metadata in its URI tag.
+
+2.2.0 [compliance](https://github.com/blit-man/hypersurface-forge/src/Hypershare/compliance) enforces on-chain transfer control thereby automating the process of compliance for users.
+
+2.2.1 `ComplianceLimitHolder.sol` enforces limit-based transfer controls, such as ensuring the maximum number of holders has not been exceeded or that specific jurisdictional limits have not been exceeded. 
+
+2.2.2 `ComplianceClaimsRequired.sol` stores claim topics that are required for holders, directly referencing the Identity claims of the receiver to verify that they have the appropriate credentials. 
 
 ## Next steps
 
-The Hypersurface Protocol itself serves as the foundational infrastructure layer for subsequent development, be it a web application or further applications at the protocol-level extension addons. Rather than continuously upgrading, the protocol should be stabilised as quickly as possible. Primarily, the protocol provides an open standard that enables equity to be represented in a way that is uniform. The ideal is a minimalist control structure that enables a simple, effective base for subsequent development (see below, "Addons"). This enables it to be worked with quickly and safely, whether by Hypersurface, users, or other marketplace actors. As such Hypersurface in it's final form will most likely consist of a minimum of three core libraries: the protocol (this), the application, and the legal modules. If any areas of the core protocol will see significant change in the long-term, it will most likely be the on-chain compliance controls. By adding further sophistication to the compliance contract we will be able to reduce the general tedium of compliance and further increase transferability in a meaningful way for users.
+The Hypersurface core protocol serves as the foundational infrastructure layer for subsequent development, be it a web application or further applications at the protocol-level extension addons. Rather than continuously upgrading, the protocol should be stabilised as quickly as possible. Primarily, the protocol provides an open standard that enables equity to be represented in a way that is uniform. The ideal is a minimalist control structure that enables a simple, effective base for subsequent development (see below, "Addons"). This enables it to be worked with quickly and safely, whether by Hypersurface, users, or other marketplace actors. As such Hypersurface in it's final form will most likely consist of a minimum of three core libraries: the protocol (this), the application, and the legal modules. If any areas of the core protocol will see significant change in the long-term, it will most likely be the on-chain compliance controls. By adding further sophistication to the compliance contract we will be able to reduce the general tedium of compliance and further increase transferability in a meaningful way for users.
 
 ## Addons
 
