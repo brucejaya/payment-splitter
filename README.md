@@ -38,6 +38,10 @@ Basic folder structure is as follows:
 	│   │   └── ComplianceLimitHolder.sol
 	│   └── token
 	│       └── TokenRegistry.sol
+	├── Hypercores
+	│   ├── ...
+	│   └── ...
+	│       
 	└── Interface
 		└── ...
 
