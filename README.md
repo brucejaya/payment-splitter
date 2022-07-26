@@ -13,21 +13,25 @@ The core protocol is (remarkably) approaching complete MVP. It is not tidy. The 
 4. Refactor Kali code base with support for Hypercores, particular focus on modularity and extensibility
 5. Subdomains!
 6. Factory, storage, upgradeability 
+7. Access controls everywhere
+8. Events everywhere
 
 ## Protocol Architecture
 
 The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders. The following section will provide a brief overview of each of the core technical components within the protocol, explaining the different functions of its constituent smart contracts. 
 
-The full folder structure is as follows:
+Basic folder structure is as follows:
 
 	Hypersurface (src)
 	├── Hyperbase
 	│   ├── claims
 	│   │   ├── ClaimValidator.sol
 	│   │   └── ClaimVerifiersRegistry.sol
-	│   └── identity
-	│       ├── IdentityRegistry.sol
-	│       └── Identity.sol
+	│   ├── identity
+	│   │   ├── IdentityRegistry.sol
+	│   │   └── Identity.sol
+	│   └── domain
+	│       └── DomainRegistry.sol
 	├── Hypershare
 	│   ├── compliance
 	│   │   ├── ComplianceClaimsRequired.sol
@@ -51,8 +55,7 @@ The full folder structure is as follows:
 
 1.2.2 `ClaimsValidator.sol` evaluates and verifies the veracity of claims attached to an identity account. If a token transfer requires a claim signed by a trusted verifier the ClaimsValidator references ClaimVerifiersRegistry.
 
-1.3.0 [`subdomain`](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/subdomain) is currently empty but will be responsible for registering new ENS subdomains to an account e.g. "john.hype.surf", "acme.hype.surf". Currently looking for an adequate third-party library that interfaces with ENS.
-
+1.3.0 [`sudomain`](https://github.com/blit-man/hypersurface-forge/src/Hyperbase/sudomain) is currently empty but will be responsible for registering new  subdomains to an account. Currently assesing the relative merits of ENS vs the newer ERC-4834 standard.
 
 ### 2.0.0 Hypershare is the home of all things **equity** related. 
 

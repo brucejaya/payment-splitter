@@ -11,6 +11,10 @@ import '../../Interface/IIdentity.sol';
 
 contract IdentityRegistry is Context, IIdentityRegistry {
 
+    ////////////////
+    // STATES
+    ////////////////
+
     // @dev mapping between a user address and the corresponding identity
     mapping(address => Identity) private identities;
 
@@ -20,13 +24,16 @@ contract IdentityRegistry is Context, IIdentityRegistry {
         uint16 identityCountry;
     }
 
-    // @dev the constructor initiates the Identity Registry smart contract
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+    
     // constructor(
     // ) {
     // }
 
     ////////////////////////////////////////////////////////////////
-                            READ FUNCTIONS
+    //                       READ FUNCTIONS
     ////////////////////////////////////////////////////////////////
 
     // @dev returns the associated address of an identity account

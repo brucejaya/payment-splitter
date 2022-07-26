@@ -42,7 +42,7 @@ contract MultiSig {
     mapping(uint256 => uint256) internal _approvalThreshold;
     
     ////////////////
-    // TRANSACTIONS
+    // TX
     ////////////////
 
     mapping(uint256 => Transaction) internal _transactions;
@@ -381,9 +381,7 @@ contract MultiSig {
     ////////////////////////////////////////////////////////////////
 
 	// !  this need to change to signing transactions, rather than just setting bool to true, right?
-
 	// !  so the first gnosis does not allow for gasless tx, it just collects peoples approvals and when it has enought it executs
-
 	// !  the second version of gnosis, same as ___ takes offline signatures and allows 
 
 	// @dev Allows an key to approved a transaction.

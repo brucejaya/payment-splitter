@@ -10,17 +10,18 @@ import '../../Interface/IIdentityRegistry.sol';
 
 contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
+    ////////////////
+    // STATES
+    ////////////////
+
     // @dev the token on which this compliance contract is applied
     ITokenRegistry public _tokenRegistry;
 
     // @dev the Identity registry contract linked to `token`
     IIdentityRegistry private _identityRegistry;
     
-    // @dev Mapping from token id to agents and their statuses
-    mapping(uint256 => mapping(address => bool)) private _tokenAgentsList;
-
-    // @dev Mapping of tokens linked to the compliance contract
-    mapping(address => bool) private _tokensBound;
+    // @dev Mapping from token id to issuer
+    mapping(uint256 => address) private _tokenIssuer;
     
     // @dev Mapping from token ID to the limit of holders for this token
     mapping(uint256 => uint256) private _holderLimit;
@@ -34,7 +35,10 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     // @dev Mapping from token ID to the addresses of all shareholders
     mapping(uint256 => address[]) private _shareholders;
 
-    // @dev the constructor initiates the smart contract with the initial state variables
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+
     constructor(
         address tokenRegistry
     ) {
@@ -44,17 +48,36 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
 
     event HolderLimitSet(uint256 _holderLimit, uint256 _id);
 
+    ////////////////
+    // MODIFIERS
+    ////////////////
+
+    modifier onlyIssuer(
+        uint256 id
+    ) {
+        require(_msgSender() == _tokenIssuer[id], 'Only token issuer can call this function');
+        _;
+    }
+    
+    ////////////////////////////////////////////////////////////////
+    //                       SETTER FUNCTIONS
+    ////////////////////////////////////////////////////////////////
+
     // @dev sets the holder limit as required for compliance purpose
     function setHolderLimit(
         uint256 holderLimit,
         uint256 id
     )
         external
-        onlyOwner
+        onlyIssuer(id) 
     {
         _holderLimit[id] = holderLimit;
         emit HolderLimitSet(holderLimit, id);
     }
+
+    ////////////////////////////////////////////////////////////////
+    //                       READ FUNCTIONS
+    ////////////////////////////////////////////////////////////////
 
     // @dev returns the holder limit as set for the token id 
     function getHolderLimit(

@@ -11,14 +11,15 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract OwnableDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC165Storage, Ownable, ERC165Checker {
-    //// States
+
+    // States
     mapping(string => address) public subdomains;
     mapping(string => bool) public subdomainsPresent;
     mapping(string => uint) public subdomainIndeces;
     string[] public subdomainList;
 
 
-    //// Constructor
+    // Constructor
 
     constructor() {
         _registerInterface(type(IDomain).interfaceId);
@@ -27,7 +28,7 @@ contract OwnableDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC1
     }
 
 
-    //// CRUD
+    // CRUD
 
     function hasDomain(string memory name) public view returns (bool) {
         return subdomainsPresent[name];
@@ -76,7 +77,7 @@ contract OwnableDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC1
     }
 
 
-    //// Parent Domain Access Control
+    // Parent Domain Access Control
 
     function canCreateDomain(address updater, string memory name, address subdomain) public view returns (bool) {
         // Existence Check
@@ -123,7 +124,7 @@ contract OwnableDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC1
         return isTheOwner || isDeletable;
     }
 
-    //// Subdomain Access Control
+    // Subdomain Access Control
 
     function canMoveSubdomain(address updater, string memory name, IDomain parent, address newSubdomain) public virtual view returns (bool) {
         return this.owner() == updater;

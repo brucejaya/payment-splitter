@@ -10,14 +10,14 @@ import "@openzeppelin/contracts/utils/introspection/ERC165Storage.sol";
 import "@openzeppelin/contracts/utils/introspection/ERC165Checker.sol";
 
 contract NaiveDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC165Storage, ERC165Checker {
-    //// States
+
+    // States
     mapping(string => address) public subdomains;
     mapping(string => bool) public subdomainsPresent;
     mapping(string => uint) public subdomainIndeces;
     string[] public subdomainList;
 
-    //// Constructor
-
+    // Constructor
     constructor() {
         _registerInterface(type(IDomain).interfaceId);
         _registerInterface(type(IDomainAccessControl).interfaceId);
@@ -25,8 +25,7 @@ contract NaiveDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC165
     }
 
 
-    //// CRUD
-
+    // CRUD
     function hasDomain(string memory name) public view returns (bool) {
         return subdomainsPresent[name];
     }
@@ -72,7 +71,7 @@ contract NaiveDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC165
     }
 
 
-    //// Parent Domain Access Control
+    // Parent Domain Access Control
 
     function canCreateDomain(address updater, string memory name, address subdomain) public view returns (bool) {
         // Existence Check
@@ -111,7 +110,7 @@ contract NaiveDomain is IDomain, IDomainAccessControl, IDomainEnumerable, ERC165
     }
 
 
-    //// Subdomain Access Control
+    // Subdomain Access Control
     
     function canMoveSubdomain(address updater, string memory name, IDomain parent, address newSubdomain) public virtual view returns (bool) {
         return true;

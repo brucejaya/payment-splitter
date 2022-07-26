@@ -21,6 +21,10 @@ import '../../Interface/IComplianceLimitHolder.sol';
 contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, Ownable {
 
     using Address for address;
+
+    ////////////////
+    // STATES
+    ////////////////
     
     // @dev Mapping from toke id to account of token isser
     mapping(uint256 => address) internal _tokenIssuer;
@@ -31,17 +35,17 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     // @dev Mapping from token ID to account balances
     mapping(uint256 => mapping(address => uint256)) internal _balances;
 
-    // @dev Mapping from token ID to Wrapper contract address
-    mapping(uint256 => address) internal _tokenWrapper;
-
     // @dev Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
     string internal _uri;
 
     // @dev Mapping from token ID to account balances
     mapping(uint256 => uint256) internal _totalSupply;
 
+    // @dev Mapping of tokens to if it is non-fractional or not 
+    mapping(address => bool) private _nonFractional;
+
     // @dev Mapping from token ID to frozen accounts
-    mapping(uint256 => mapping(address => bool)) internal _frozen; // internal or internal?
+    mapping(uint256 => mapping(address => bool)) internal _frozen;
 
     // @dev Mapping from token ID to freeze and pause functions
 	mapping(uint256 => mapping(address => uint256)) internal _frozenTokens;
@@ -64,7 +68,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     ////////////////
     // CONSTRUCTOR
     ////////////////
-
+    
     constructor(
         string memory uri_,
         address complianceClaimsRequired_,
@@ -116,7 +120,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                            READ FUNCTIONS
+    //                        READ FUNCTIONS
     ////////////////////////////////////////////////////////////////
 
     function totalSupply(
@@ -208,7 +212,55 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                 APPROVALS
+    //                        OWNER CONTROLS
+    ////////////////////////////////////////////////////////////////
+
+    function setIdentity(
+        uint256 id,
+        address Identity
+    )
+        external
+        // TODO, make this safe...
+    {
+        _tokenIssuer[id] = Identity;
+        // emit UpdatedTokenInformation(_tokenIssuer);
+    }
+
+    function togglePause(
+        uint256 id
+    )
+        external
+        onlyIssuer(id) 
+    {
+        if (!_tokenPaused[id]) {
+            _tokenPaused[id] = true;
+            emit Paused(_msgSender(), id);
+        }
+        else if (!_tokenPaused[id]) {
+            _tokenPaused[id] = false;
+            emit Unpaused(_msgSender(), id);
+        }
+    }
+    
+    function toggleNonFractional(
+        uint256 id
+    )
+        external
+        onlyIssuer(id) 
+    {
+        if (!_nonFractional[id]) {
+            _nonFractional[id] = true;
+            emit Paused(_msgSender(), id);
+        }
+        else if (_nonFractional[id]) {
+            _nonFractional[id] = false;
+            emit Unpaused(_msgSender(), id);
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////
+    //                         APPROVALS
     ////////////////////////////////////////////////////////////////
 
     function setApprovalForAll(
@@ -245,45 +297,8 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         _operatorApprovals[account][operator] = approved;
         emit ApprovalForAll(account, operator, approved);
     }
-
     ////////////////////////////////////////////////////////////////
-                             OWNER CONTROLS
-    ////////////////////////////////////////////////////////////////
-
-    function setIdentity(
-        uint256 id,
-        address Identity
-    )
-        external
-    {
-        _tokenIssuer[id] = Identity;
-        // emit UpdatedTokenInformation(_tokenIssuer);
-    }
-
-    function pause(
-        uint256 id
-    )
-        external
-        onlyIssuer(id) 
-        whenNotPaused(id)
-    {
-        _tokenPaused[id] = true;
-        emit Paused(_msgSender(), id);
-    }
-
-    function unpause(
-        uint256 id
-    )
-        external
-        onlyIssuer(id) 
-        whenPaused(id)
-    {
-        _tokenPaused[id] = false;
-        emit Unpaused(_msgSender(), id);
-    }
-
-    ////////////////////////////////////////////////////////////////
-                                 BALANCE
+    //                             BALANCE
     ////////////////////////////////////////////////////////////////
 
     function balanceOf(
@@ -320,7 +335,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                SAFE TRANSFER
+    //                          SAFE TRANSFER
     ////////////////////////////////////////////////////////////////
 
     function safeBatchTransferFrom(
@@ -348,8 +363,6 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
             if (_complianceClaimsRequired.isVerified(to, id) && _complianceLimitHolder.canTransfer(to, id)) {
                 _complianceLimitHolder.transferred(from, to, id);
                 safeTransferFrom(from, to, id, amount, data);
-                // TODO allowances?
-                // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount));
             }
         }
 
@@ -373,6 +386,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     {
         require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
 
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
         require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
         if (_complianceClaimsRequired.isVerified(to, id) && _complianceLimitHolder.canTransfer(to, id)) {
@@ -417,7 +431,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                              FORCE TRANSFER
+    //                        FORCE TRANSFER
     ////////////////////////////////////////////////////////////////
 
     function forcedTransfer(
@@ -431,6 +445,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         onlyIssuer(id) 
         returns (bool)
     {
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         uint256 freeBalance = balanceOf(from, id) - (_frozenTokens[id][from]);
         if (amount > freeBalance) {
             uint256 tokensToUnfreeze = amount - (freeBalance);
@@ -464,7 +479,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                 MINT
+    //                            MINT
     ////////////////////////////////////////////////////////////////
 
     function mintBatch(
@@ -489,6 +504,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
 		public
 		onlyIssuer(id) 
 	{
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         require(_complianceClaimsRequired.isVerified(to, id), 'Identity is not verified.');
         require(_complianceLimitHolder.canTransfer(to, id), 'Compliance not followed');
         
@@ -522,7 +538,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                 BURN
+    //                           BURN
     ////////////////////////////////////////////////////////////////
 
     function burnBatch(
@@ -537,7 +553,6 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         }
     }
 
-
     function burn(
         address from,
         uint256 id,
@@ -546,6 +561,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         public
         onlyIssuer(id) 
     {
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         uint256 freeBalance = balanceOf(from, id) - _frozenTokens[id][from];
         if (amount > freeBalance) {
             uint256 tokensToUnfreeze = amount - (freeBalance);
@@ -584,7 +600,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                 FREEZE
+    //                           FREEZE
     ////////////////////////////////////////////////////////////////
 
     function batchSetAddressFrozen(
@@ -607,6 +623,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         public
         onlyIssuer(id) 
     {
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         _frozen[id][account] = freeze;
         emit AddressFrozen(account, freeze, _msgSender());
     }
@@ -618,9 +635,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     )
         external
     {
-
-        require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");
-        
+        require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");   
         for (uint256 i = 0; i < accounts.length; i++) {
             freezePartialTokens(accounts[i], ids[i], amounts[i]);
         }
@@ -634,6 +649,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         public
         onlyIssuer(id) 
     {
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         uint256 balance = balanceOf(account, id);
         require(balance >= _frozenTokens[id][account] + amount, 'Amount exceeds available balance');
         _frozenTokens[id][account] = _frozenTokens[id][account] + (amount);
@@ -647,9 +663,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     )
         external
     {
-
         require((accounts.length == ids.length) && (ids.length == amounts.length), "ERC1155: accounts, ids and amounts length mismatch");
-
         for (uint256 i = 0; i < accounts.length; i++) {
             unfreezePartialTokens(accounts[i], ids[i], amounts[i]);
         }
@@ -662,16 +676,15 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     )
         public
         onlyIssuer(id) 
-    {
-        
+    {        
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         require(_frozenTokens[id][account] >= amount, 'Amount should be less than or equal to frozen tokens');
-
         _frozenTokens[id][account] = _frozenTokens[id][account] - (amount);
         // emit TokensUnfrozen(account, id, amount); TODO update event
     }
 
     ////////////////////////////////////////////////////////////////
-                                RECOVERY
+    //                          RECOVERY
     ////////////////////////////////////////////////////////////////
 
     function recoveryAddress(
@@ -701,7 +714,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                                MISC
+    //                            MISC
     ////////////////////////////////////////////////////////////////
 
     function supportsInterface(
@@ -801,7 +814,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     }
 
     ////////////////////////////////////////////////////////////////
-                              HYPERSURFACE
+    //                          HYPERSURFACE
     ////////////////////////////////////////////////////////////////
 
     function setURI(
