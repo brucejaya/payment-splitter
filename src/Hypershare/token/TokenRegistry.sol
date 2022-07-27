@@ -258,6 +258,22 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         }
     }
 
+    function preValidateTransfer(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount
+    )
+        public
+        returns (bool)
+    {
+        require(isNonFractional(id, amount), "Share transfers must be non-fractional");
+        require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
+        require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
+        require(_complianceClaimsRequired.isVerified(to, id), "Identity has not been verified");
+        require(_complianceLimitHolder.canTransfer(to, id), "Exceeds token limits");
+        return true;
+    }
 
     ////////////////////////////////////////////////////////////////
     //                         APPROVALS
@@ -348,28 +364,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         public
         virtual
     {
-        require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
-
         address operator = _msgSender();
-        
         require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
-
         for (uint256 i = 0; i < ids.length; ++i) {
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-            
-            require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
-            require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
-            if (_complianceClaimsRequired.isVerified(to, id) && _complianceLimitHolder.canTransfer(to, id)) {
-                _complianceLimitHolder.transferred(from, to, id);
-                safeTransferFrom(from, to, id, amount, data);
-            }
+            safeTransferFrom(from, to, ids[i], amounts[i], data);
         }
-
         emit TransferBatch(operator, from, to, ids, amounts);
-
         afterTokenTransfer(operator, from, to, ids, amounts, data);
-
         doSafeBatchTransferAcceptanceCheck(operator, from, to, ids, amounts, data);    
     }
 
@@ -385,16 +386,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         virtual
     {
         require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
-
         require(isNonFractional(id, amount), "Share transfers must be non-fractional");
         require(!_frozen[id][to] && !_frozen[id][from], 'wallet is frozen');
         require(amount <= balanceOf(from, id) - (_frozenTokens[id][from]), 'Insufficient Balance');
         if (_complianceClaimsRequired.isVerified(to, id) && _complianceLimitHolder.canTransfer(to, id)) {
             _complianceLimitHolder.transferred(from, to, id);
             _safeTransferFrom(from, to, id, amount, data);
-            // approve(from, _msgSender(), allowances[id][from][_msgSender()] - (amount)); // TODO allowances?
         }
-
         revert('Transfer not possible');
     }
 
@@ -409,30 +407,45 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         virtual
     {
         require(to != address(0), "ERC1155: transfer to the zero address");
-
         address operator = _msgSender();
         uint256[] memory ids = asSingletonArray(id);
         uint256[] memory amounts = asSingletonArray(amount);
-
         beforeTokenTransfer(operator, from, to, ids, amounts, data);
-
         uint256 fromBalance = _balances[id][from];
         require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
         unchecked {
             _balances[id][from] = fromBalance - amount;
         }
         _balances[id][to] += amount;
-
         emit TransferSingle(operator, from, to, id, amount);
-
         afterTokenTransfer(operator, from, to, ids, amounts, data);
-
         doSafeTransferAcceptanceCheck(operator, from, to, id, amount, data);
     }
 
     ////////////////////////////////////////////////////////////////
     //                        FORCE TRANSFER
     ////////////////////////////////////////////////////////////////
+
+    function batchForcedTransfer(
+        address[] memory fromList,
+        address[] memory toList,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes[] memory dataList
+    )
+        external
+    {
+        require(
+            fromList.length == toList.length &&
+            toList.length == ids.length &&
+            ids.length == amounts.length &&
+            amounts.length == dataList.length,
+            "ERC1155: ids and amounts length mismatch"
+        );
+        for (uint256 i = 0; i < fromList.length; i++) {
+            forcedTransfer(fromList[i], toList[i], ids[i], amounts[i], dataList[i]);
+        }
+    }
 
     function forcedTransfer(
         address from,
@@ -456,26 +469,6 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         _complianceLimitHolder.transferred(from, to, id);
         safeTransferFrom(from, to, id, amount, data);
         return true;
-    }
-
-    function batchForcedTransfer(
-        address[] memory fromList,
-        address[] memory toList,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes[] memory dataList
-    )
-        external
-    {
-        for (uint256 i = 0; i < fromList.length; i++) {
-            address from = fromList[i];
-            address to = toList[i];
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-            bytes memory data = dataList[i];
-            
-            forcedTransfer(from, to, id, amount, data);
-        }
     }
 
     ////////////////////////////////////////////////////////////////

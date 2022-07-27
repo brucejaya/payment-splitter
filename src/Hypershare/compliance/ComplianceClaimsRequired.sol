@@ -10,13 +10,16 @@ import '../../Interface/IIdentity.sol';
 
 contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     
-    // @dev Mapping from token id to required Claim Topics
+    ////////////////
+    // STATE
+    ////////////////
+    
+    // @notice Mapping from token id to required Claim Topics
     mapping(uint256 => uint256[]) private claimTopics;
 
-    // @dev Claim verifiers contract
+    // @notice Claim verifiers contract
     IClaimVerifiersRegistry public _claimVerifiersRegistry;
 
-    // @dev the constructor initiates the Identity Registry smart contract
     constructor(
         address claimVerifiersRegistry_
     ) {
@@ -32,7 +35,6 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         return _claimVerifiersRegistry;
     }
 
-    
     function setClaimVerifiersRegistry(
         address claimVerifiersRegistry_
     )
@@ -43,7 +45,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
     }
 
-    // @dev Gets claim topics by token id
+    // @notice Gets claim topics by token id
     function getClaimTopics(
         uint256 id
     )
@@ -54,7 +56,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         return claimTopics[id];
     }
     
-    // @dev Add a claim topic to be required of holders
+    // @notice Add a claim topic to be required of holders
     function addClaimTopic(
         uint256 claimTopic,
         uint256 id
@@ -70,7 +72,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         emit ClaimTopicAdded(claimTopic, id);
     }
 
-    // @dev Remove claim topic required of holders
+    // @notice Remove claim topic required of holders
     function removeClaimTopic(
         uint256 claimTopic,
         uint256 id
@@ -89,7 +91,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         }
     }
 
-    // @dev Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
+    // @notice Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
     function isVerified(
         address account,
         uint256 id
@@ -153,14 +155,4 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         return true;
     }
 
-
-
-    function transferOwnershipOnComplianceClaimsRequiredContract(
-        address _newOwner
-    )
-        external
-        onlyOwner
-    {
-        transferOwnership(_newOwner);
-    }
 }

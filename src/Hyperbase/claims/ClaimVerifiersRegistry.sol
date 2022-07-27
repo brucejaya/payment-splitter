@@ -15,12 +15,17 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) private claimVerifierTopics;
     
+
+    // 
     function getTrustedVerifiers()
         external
         view
         override
         returns (IClaimValidator[] memory)
     {
+        // TODO
+        // What the heckin' hell?
+        // Something ain't right...
         return verifiers;
     }
 
@@ -121,13 +126,4 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         emit ClaimTopicsUpdated(_verifier, _claimsRequired);
     }
 
-    function transferOwnershipOnVerifiersRegistryContract(
-        address _newOwner
-    )
-        external
-        override
-        onlyOwner
-    {
-        transferOwnership(_newOwner);
-    }
 }

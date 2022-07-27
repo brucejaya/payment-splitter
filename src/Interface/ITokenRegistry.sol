@@ -49,6 +49,8 @@ interface ITokenRegistry is IERC1155 {
 
     function unpause(uint256 id) external;
 
+    function preValidateTransfer(address from, address to, uint256 id, uint256 amount) external;
+
     function forcedTransfer(address from, address to, uint256 id, uint256 amount, bytes memory data) external returns (bool);
 
     function safeTransferFrom( address from, address to, uint256 id, uint256 amount, bytes memory data) external;

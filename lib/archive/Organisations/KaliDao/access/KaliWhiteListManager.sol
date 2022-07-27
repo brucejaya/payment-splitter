@@ -8,6 +8,7 @@ import '../utils/Multicall.sol';
 // @author Modified from SushiSwap 
 /// (https://github.com/sushiswap/trident/blob/master/contracts/pool/franchised/WhiteListManager.sol)
 contract KaliWhitelistManager {
+    
     /*//////////////////////////////////////////////////////////////
                             EVENTS
     //////////////////////////////////////////////////////////////*/

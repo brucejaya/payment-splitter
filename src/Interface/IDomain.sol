@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/interfaces/IERC165.sol";
+import 'openzeppelin-contracts/contracts/utils/introspection/IERC165.sol';
 
 /// @title          ERC-4835 Heirarchal Domains Standard
 /// @author         Pandapip1

@@ -45,7 +45,12 @@ contract KaliDAOfactory is Multicall {
         uint256[] calldata shares_,
         uint32 votingPeriod_,
         uint8[13] memory govSettings_
-    ) public payable virtual returns (KaliDAO kaliDAO) {
+    )
+        public
+        payable
+        virtual
+        returns (KaliDAO kaliDAO)
+    {
         kaliDAO = KaliDAO(_cloneAsMinimalProxy(kaliMaster, name_));
         
         kaliDAO.init{value: msg.value}(
@@ -71,12 +76,17 @@ contract KaliDAOfactory is Multicall {
     }
 
     // @dev modified from Aelin (https://github.com/AelinXYZ/aelin/blob/main/contracts/MinimalProxyFactory.sol)
-    function _cloneAsMinimalProxy(address payable base, string memory name_) internal virtual returns (address payable clone) {
+    function _cloneAsMinimalProxy(
+        address payable base, 
+        string memory name_
+    )
+        internal
+        virtual
+        returns (address payable clone)
+    {
         bytes memory createData = abi.encodePacked(
-            // constructor
-            bytes10(0x3d602d80600a3d3981f3),
-            // proxy code
-            bytes10(0x363d3d373d3d3d363d73),
+            bytes10(0x3d602d80600a3d3981f3), // constructor
+            bytes10(0x363d3d373d3d3d363d73), // proxy code
             base,
             bytes15(0x5af43d82803e903d91602b57fd5bf3)
         );

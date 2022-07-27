@@ -74,7 +74,7 @@ contract IdentityRegistry is Context, IIdentityRegistry {
     }
 
     ////////////////////////////////////////////////////////////////
-                            IDENTITY CONTROLS
+    //                       IDENTITY CONTROLS
     ////////////////////////////////////////////////////////////////
 
     function registerIdentity(
@@ -151,7 +151,7 @@ contract IdentityRegistry is Context, IIdentityRegistry {
     }
 
     ////////////////////////////////////////////////////////////////
-                                FACTORY 
+    //                          FACTORY 
     ////////////////////////////////////////////////////////////////
 
 

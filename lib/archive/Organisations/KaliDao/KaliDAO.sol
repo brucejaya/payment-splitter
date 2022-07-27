@@ -435,8 +435,7 @@ contract KaliDAO is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
                         if (prop.amounts[i] != 0) 
                             extensions[prop.accounts[i]] = !extensions[prop.accounts[i]];
                     
-                        if (prop.payloads[i].length != 0) IKaliDAOextension(prop.accounts[i])
-                            .setExtension(prop.payloads[i]);
+                        if (prop.payloads[i].length != 0) IKaliDAOextension(prop.accounts[i]).setExtension(prop.payloads[i]);
                     }
                 
                 if (prop.proposalType == ProposalType.ESCAPE)
@@ -509,7 +508,8 @@ contract KaliDAO is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
             account = extension;
             amountOut = amount;
             mint = abi.decode(extensionData, (bool));
-        } else {
+        }
+        else {
             account = msg.sender;
             (mint, amountOut) = IKaliDAOextension(extension).callExtension{value: msg.value}
                 (msg.sender, amount, extensionData);
@@ -517,7 +517,8 @@ contract KaliDAO is KaliDAOtoken, Multicall, NFThelper, ReentrancyGuard {
         
         if (mint) {
             if (amountOut != 0) _mint(account, amountOut); 
-        } else {
+        }
+        else {
             if (amountOut != 0) _burn(account, amount);
         }
     }

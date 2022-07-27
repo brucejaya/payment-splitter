@@ -9,10 +9,10 @@ abstract contract ClaimValidator is IClaimValidator {
     mapping (bytes => bool) public revokedClaims;
 
     ////////////////////////////////////////////////////////////////
-                            READ FUNCTIONS
+    //                        READ FUNCTIONS
     ////////////////////////////////////////////////////////////////
 
-    // @dev Checks if a claim is valid.
+    // @notice Checks if a claim is valid.
     function isClaimValid(
         IIdentity identity,
         uint256 claimTopic,
@@ -44,7 +44,7 @@ abstract contract ClaimValidator is IClaimValidator {
     }
 
 
-    // @dev Returns revocation status of a claim.
+    // @notice Returns revocation status of a claim.
     function isClaimRevoked(
         bytes memory _sig
     )
@@ -61,10 +61,10 @@ abstract contract ClaimValidator is IClaimValidator {
     }
 
     ////////////////////////////////////////////////////////////////
-                            CLAIM MANAGEMENT
+    //                        CLAIM MANAGEMENT
     ////////////////////////////////////////////////////////////////
 
-    // @dev Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
+    // @notice Revoke a claim previously issued, the claim is no longer considered as valid after revocation.
     function revokeClaim(
         bytes32 claimId,
         address identity
@@ -89,6 +89,7 @@ abstract contract ClaimValidator is IClaimValidator {
         return true;
     }
     
+    // @notice Get address from signature
     function getRecoveredAddress(
         bytes memory sig,
         bytes32 dataHash
