@@ -19,7 +19,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     event Deposit(address indexed sender, uint value);
     event OwnerAddition(address indexed owner);
     event OwnerRemoval(address indexed owner);
-    event RequirementChange(uint required);
+    event RequirementChange(uint256 operationType, uint256 required);
     event ExecutedGasRelayed(bytes32 signHash, bool success);
 	
     ////////////////
@@ -44,7 +44,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     // MULTI-SIG
     ////////////////
 
-    // @notice Mapping from OP type to number of approval required
+    // @notice Mapping from op type to number of approval required
     mapping(uint256 => uint256) internal _approvalThreshold;
         
     ////////////////
@@ -55,12 +55,15 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     uint256 internal _transactionNonce;
     
     struct Transaction {
+        bool exists;
         address to;
         uint256 value;
         bytes data;
         bytes32[] approved;
         bool executed;
     }
+
+    bytes4 public constant CALL_PREFIX = bytes4(keccak256("callGasRelay(address,uint256,bytes32,uint256,uint256,address)"));
 
     ////////////////
     // CLAIMS
@@ -79,45 +82,16 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     }
 
     ////////////////
-    // EXTENSIONS
-    ////////////////
-
-    mapping(address => bool) public hypercores;
-
-    ////////////////
-    // CONSTRUCTOR
-    ////////////////
-
-    function init(
-        address[] memory hypercores_,
-        bytes[] memory hypercoresData_
-    )
-        public
-        payable
-        nonReentrant
-        virtual
-    {
-        require(hypercores_.length == hypercoresData_.length, "Lengths do not match");
-        if (hypercores_.length != 0) {
-            unchecked { // cannot realistically overflow on human timescales
-                for (uint256 i; i < hypercores_.length; i++) {
-                    hypercores[hypercores_[i]] = true;
-
-                    if (hypercoresData_[i].length != 0) {
-                        (bool success, ) = hypercores_[i].call(hypercoresData_[i]);
-                        require (success, "Error adding extensions");
-                    }
-                }
-            }
-        }
-    }
-
-    ////////////////
     // MODIFIERS
     ////////////////
 
     modifier onlySelf() {
         require(msg.sender == address(this), "Only this account can call these functions");
+        _;
+    }
+    
+    modifier keyExists() {
+        require(_keys[addressToKey(_msgSender())].purposes.length > 0, "Key does not exist");
         _;
     }
 
@@ -254,20 +228,20 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 	
     // @notice Allows to swap/replace an owner from the Safe with another key.
     function swapKey(
-        byte32 oldKey,
-        byte32 newKey,
-		uint256 purpose
+        bytes32 oldKey,
+        bytes32 newKey,
+        uint256 purpose,
+        uint256 keyType
     )
-		public
-		onlySelf
+        public
+        onlySelf
 	{
         require(newKey != addressToKey(address(0)), "Can't add zero address");
         require(newKey != oldKey, "New and old key can't be the same");
-        require(newKey != address(this), "Can't add this address as a key");
+        require(newKey != addressToKey(address(this)), "Can't add this address as a key");
         require(_keys[newKey].key == 0, "Key already exists");
-		// purpose checks needed...
 		removeKey(oldKey, purpose);
-		addKey(newKey, purpose);
+		addKey(newKey, purpose, keyType);
     }
 
     ////////////////////////////////////////////////////////////////
@@ -282,10 +256,10 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 		returns (uint256 requiredKeyType)
 	{
         if (_transactions[transactionId].to == address(this)) {
-            requiredKeyType = MANAGEMENT;
+            return MANAGEMENT;
         }
 		else {
-            uint256 requiredKeyType = ACTION;
+            return ACTION;
         }
 	}
 
@@ -309,7 +283,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 		onlySelf
     {
         require(required != 0, "Can't set the number of keys required to zero!");
-		require(required < _keys.length, "Number of keys required cannot exceed or match key count");
+		require(required < _keysByPurpose[operationType].length, "Number of keys required cannot exceed or match key count");
 		_approvalThreshold[operationType] = required;
         RequirementChange(operationType, required);
     }
@@ -327,13 +301,31 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 		view
         returns (bool)
     {
-		if (getApprovalCount(transactionId) == _sigThreshold[operationType]) {
+		if (getApprovalCount(transactionId) == _approvalThreshold[operationType]) {
 			return true;
 		}
 		else {
 			return false;
 		}
     }
+    
+    // @notice Returns the status of if the key is an approver
+    function isApprover(
+		uint256 transactionId,
+        bytes32 key
+    )
+        public
+        returns (bool hasApproved)
+    {
+        bytes32[] memory approvers = _transactions[transactionId].approved;
+        for (uint i = 0; i < approvers.length; i++) {
+            if (approvers[i] == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     // @notice Returns the execution status of a transaction.
 	function isExecuted(
@@ -360,7 +352,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 		view
         returns (uint256 count)
     {
-        for (uint256 i=0; _transactions.length; i++) {
+        for (uint256 i=0; _transactionNonce; i++) {
             if (_transactions[i].executed) count++;
 		}
     }
@@ -382,7 +374,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 	)
         public
 		view
-        returns (address[] confirmations)
+        returns (address[] memory confirmations)
     {
 		return _transactions[transactionId].approved;
     }
@@ -395,7 +387,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     function submitTransaction(
 		address to,
 		uint256 value,
-		bytes data
+		bytes memory data
 	)
         public
         returns (uint256 transactionId)
@@ -408,13 +400,14 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     function _submitTransaction(
 		address to,
 		uint256 value,
-		bytes data
+		bytes memory data
 	)
         internal
         returns (uint256 transactionId)
     {
         transactionId = _transactionNonce;
         _transactions[transactionId] = Transaction({
+            exists: true,
             to: to,
             value: value,
             data: data,
@@ -426,26 +419,18 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         emit Submission(transactionId);
     }
 
+    // @notice Public approve function
     function approve(
 		uint256 transactionId
 	)
         public
         keyExists
-        transactionExists(transactionId)
-        notApproved(transactionId, _msgSender())
     {
-        _approve(addressToKey(_msgSender()), transactionId)
+        require(_transactions[transactionId].exists, "Transaction does not exist");
+        require(!isApprover(transactionId, addressToKey(_msgSender())), "Key has already confirmed");
+        _approve(addressToKey(_msgSender()), transactionId);
         emit Approval(_msgSender(), transactionId);
         execute(transactionId);
-    }
-
-    function _approve(
-        bytes32 key,
-        uint256 transactionId
-    )
-        internal
-    {
-		_transactions[transactionId].approved.append(key);
     }
 
     // @notice Allows an key to revoke a approval for a transaction.
@@ -454,11 +439,21 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 	)
         public
         keyExists
-        approved(transactionId)
-        notExecuted(transactionId)
     {
-		delete _transactions[transactionId].approved[_msgSender()];
+        require(isApprover(transactionId, addressToKey(_msgSender())), "Must have approved to revoke approval");
+        require(!_transactions[transactionId].executed, "Transaction has already bee executed");
+		delete _transactions[transactionId].approved[addressToKey(_msgSender())];
         emit Revocation(_msgSender(), transactionId);
+    }
+
+    // @notice Internal approve function.
+    function _approve(
+        bytes32 key,
+        uint256 transactionId
+    )
+        internal
+    {
+		_transactions[transactionId].approved.push(key);
     }
 
     // @notice Executes the transaction if fields are valid for an approved transaction.
@@ -468,25 +463,38 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 		public
     {
 		require(isApproved(transactionId, getOperationType(transactionId)), "Transaction hasn't reach approval threshold");
-		required(!isExecuted(transactionId), "Transaction has already been executed");
+		require(!isExecuted(transactionId), "Transaction has already been executed");
         _execute(transactionId);
     }
 
+    // @notice Internal execute function
     function _execute(
 		uint256 transactionId
     )
         internal
+        returns (bool success)
     {
-		(success,) = _transactions[transactionId].to.call{value:(_transactions[transactionId].value)}(abi.encode(_transactions[transactionId].data, 0));
-		if (success) {
-			_transactions[transactionId].executed = true;
-			emit Executed(transactionId, _transactions[transactionId].to, _transactions[transactionId].value, _transactions[transactionId].data);
-			return true;
-		}
-        else {
-			emit TransactionFailed(transactionId, _transactions[transactionId].to, _transactions[transactionId].value, _transactions[transactionId].data);
-			return false;
-		}
+        (success,) = _transactions[transactionId].to.call{
+            value:(_transactions[transactionId].value)
+        }(abi.encode(_transactions[transactionId].data, 0));
+        if (success) {
+            _transactions[transactionId].executed = true;
+            emit Executed(
+                transactionId,
+                _transactions[transactionId].to,
+                _transactions[transactionId].value,
+                _transactions[transactionId].data
+            );
+            return true;
+        } else {
+            emit ExecutionFailed(
+                transactionId,
+                _transactions[transactionId].to,
+                _transactions[transactionId].value,
+                _transactions[transactionId].data
+            );
+            return false;
+        }
     }
 
     ////////////////////////////////////////////////////////////////
@@ -496,17 +504,18 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     // @notice Allows users to sign messages of intent offline and submit them, messages are passed to one via url or QR.
     // Only takes one bytes field that contains all messages, this is split and each signature is verified. This process
     // assumes that all signatures required for a single tx will be compiled into a single bytes field before submission. 
-    function executeSigned(
+    function submitSigned(
         address _to,
         uint256 _value,
-        bytes _data,
+        bytes memory _data,
         uint _nonce,
         uint _gasPrice,
         uint _gasLimit,
         address _gasToken, 
-        bytes _messageSignatures
+        bytes memory _messageSignatures
     ) 
         external 
+        returns (bool success)
     {
         uint startGas = gasleft();
 
@@ -527,27 +536,21 @@ contract Identity is Context, IIdentity, ERC1155Holder {
             )
         );
         
-        // verify if signatures are valid and came from correct actors;
-        verifySignatures(
-            _to == address(this) ? MANAGEMENT : ACTION,
-            signHash, 
-            _messageSignatures
-        );
-        
         //executes transaction
         uint256 transactionId = _submitTransaction(
             _to,
             _value,
             _data
-        )
+        );
 
-        
-        
-        bool success = _to.call.value(_value)(_data);
-        
-        
-        
-        emit ExecutedGasRelayed(signHash, success);
+        // verify if signatures are valid and came from correct actors;
+        approveSigned(
+            _to == address(this) ? MANAGEMENT : ACTION,
+            signHash, 
+            _messageSignatures
+        );
+
+        execute(transactionId);
 
         emit ExecutedGasRelayed(signHash, success);
 
@@ -557,13 +560,36 @@ contract Identity is Context, IIdentity, ERC1155Holder {
                 
             if (_gasToken == address(0)) {
                 require(address(this).balance > _value);
-                msg.sender.transfer(_value);
+                msg.sender.send(_value);
             }
             else {
-                require(ERC20Interface(_gasToken).balanceOf(address(this)) > _value);
-                require(ERC20Interface(_gasToken).transfer(msg.sender, _value));
+                require(IERC20(_gasToken).balanceOf(address(this)) > _value);
+                require(IERC20(_gasToken).transfer(msg.sender, _value));
             }
         }        
+    }
+
+    // @notice Splits and verifies signatures, 
+    function approveSigned(
+        uint256 _requirePurpose,
+        bytes32 _signHash,
+        bytes _messageSignatures
+    ) 
+        public
+        view
+        returns(bool)
+    {
+        uint _amountSignatures = _messageSignatures.length / 72;
+
+        bytes32 _prevKey = 0;
+        for (uint256 i = 0; i < _amountSignatures; i++) {
+            bytes32 _key = recoverKey(_signHash, _messageSignatures, i);
+            require(_key > _prevKey); // assert keys are different
+            require(keyHasPurpose(_key, _requirePurpose));
+            _approve(_key, transactionId);
+            _prevKey = _key;
+        }
+        return true;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -599,9 +625,9 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 
     // @notice reverts if signatures are not valid for the signed hash and required key type. 
     function verifySignatures(
-        uint256 _requiredKey,
+        uint256 _requirePurpose,
         bytes32 _signHash,
-        bytes _messageSignatures
+        bytes memory _messageSignatures
     ) 
         public
         view
@@ -610,47 +636,18 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         uint _amountSignatures = _messageSignatures.length / 72;
 
         // TODO This is threshold verifyer?..
-        require(_amountSignatures == _approvalThreshold[_requiredKey], "Does not have enough signatures");
+        require(_amountSignatures == _approvalThreshold[_requirePurpose], "Does not have enough signatures");
 
         bytes32 _lastKey = 0;
         for (uint256 i = 0; i < _amountSignatures; i++) {
             bytes32 _currentKey = recoverKey(_signHash, _messageSignatures, i);
             require(_currentKey > _lastKey); // assert keys are different
-            require(isKeyPurpose(_currentKey, _requiredKey));
+            require(keyHasPurpose(_currentKey, _requirePurpose));
             _lastKey = _currentKey;
         }
         return true;
     }
 
-    // @notice. 
-    // @dev new verify signatures, brought inline with the transaction structure model? make it more robust and less isolated,
-    // ideally executedSigned would just be a wrapper, rather than an isolated flow...
-    /*
-    function verifySignatures(
-        uint256 _requiredKey,
-        bytes32 _signHash,
-        bytes _messageSignatures
-    ) 
-        public
-        view
-        returns(bool)
-    {
-        uint _amountSignatures = _messageSignatures.length / 72;
-
-        // TODO This is threshold verifyer?..
-        require(_amountSignatures == _approvalThreshold[_requiredKey], "Does not have enough signatures");
-
-        bytes32 _prevKey = 0;
-        for (uint256 i = 0; i < _amountSignatures; i++) {
-            bytes32 _key = recoverKey(_signHash, _messageSignatures, i);
-            require(_key > _prevKey); // assert keys are different
-            require(isKeyPurpose(_key, _requiredKey));
-            _approve(_key, transactionId);
-            _prevKey = _key;
-        }
-        return true;
-    }
-    */
 
     // @notice Hash a hash with `"\x19Ethereum Signed Message:\n32"`
     function getSignHash(
@@ -666,7 +663,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     // @notice recovers address who signed the message 
     function recoverKey (
         bytes32 _signHash, 
-        bytes _messageSignature,
+        bytes memory _messageSignature,
         uint256 _pos
     )
         pure
@@ -689,7 +686,7 @@ contract Identity is Context, IIdentity, ERC1155Holder {
 
     // @notice divides bytes signature into `uint8 v, bytes32 r, bytes32 s`
     function signatureSplit(
-        bytes _signatures,
+        bytes memory _signatures,
         uint256 _pos
     )
         pure
@@ -849,48 +846,6 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         returns(bytes32[] memory claimIds)
     {
         return _claimsByTopic[topic];
-    }
-
-    ////////////////////////////////////////////////////////////////
-    //                         HYPERCORES 
-    ////////////////////////////////////////////////////////////////
-    
-    function callExtension(
-        address extension, 
-        uint256 amount,     
-        bytes calldata data
-    )
-        public
-        payable
-        nonReentrant
-        virtual
-        returns (bool mint, uint256 amountOut)
-    {
-
-        require(hypercores[extension] && hypercores[msg.sender], "Extension does not exist");
-        
-        address account;
-
-        if (hypercores[msg.sender]) {
-            account = extension;
-            amountOut = amount;
-            mint = abi.decode(data, (bool));
-        }
-        else {
-            account = msg.sender;
-            (mint, amountOut) = IHypercore(extension).callExtension{value: msg.value}(msg.sender, amount, data);
-        }
-        
-        if (mint) {
-            if (amountOut != 0) {
-                _mint(account, amountOut); 
-            }
-        }
-        else {
-            if (amountOut != 0) {
-                _burn(account, amount);
-            }
-        }
     }
 
 }

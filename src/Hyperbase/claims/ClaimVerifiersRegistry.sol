@@ -16,7 +16,6 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     mapping(address => uint256[]) private claimVerifierTopics;
     
 
-    // 
     function getTrustedVerifiers()
         external
         view

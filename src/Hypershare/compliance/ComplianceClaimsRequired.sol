@@ -106,6 +106,8 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         if (claimTopics[id].length == 0) {
             return true;
         }
+        // TODO if (has claim from issuer is whitelisted return true)
+        // else >>
         uint256 foundClaimTopic;
         uint256 scheme;
         address issuer;

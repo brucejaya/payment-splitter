@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 
 import '../../Interface/IClaimValidator.sol';
 import '../../Interface/IIdentity.sol';
+
 abstract contract ClaimValidator is IClaimValidator {
     
     mapping (bytes => bool) public revokedClaims;
