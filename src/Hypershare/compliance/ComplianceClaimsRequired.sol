@@ -4,6 +4,7 @@ pragma solidity ^0.8.6;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
+import '../../Interface/IClaimRegistry.sol';
 import '../../Interface/IComplianceClaimsRequired.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentity.sol';
@@ -17,14 +18,28 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     // @notice Mapping from token id to required Claim Topics
     mapping(uint256 => uint256[]) private claimTopics;
 
+    // @notice Claim reg
+    IClaimRegistry public _claimRegistry;
+
     // @notice Claim verifiers contract
     IClaimVerifiersRegistry public _claimVerifiersRegistry;
 
     constructor(
+        address claimRegistry_,
         address claimVerifiersRegistry_
     ) {
+        _claimRegistry = IClaimRegistry(claimRegistry_);
+        emit ClaimRegistrySet(claimRegistry_);
         _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
         emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
+    }
+
+    function claimRegistry()
+        external
+        view
+        returns (IClaimRegistry)
+    {
+        return _claimRegistry;
     }
 
     function claimVerifiersRegistry()
@@ -33,6 +48,16 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         returns (IClaimVerifiersRegistry)
     {
         return _claimVerifiersRegistry;
+    }
+
+    function setClaimRegistry(
+        address claimRegistry_
+    )
+        external
+        onlyOwner
+    {
+        _claimRegistry = IClaimRegistry(claimRegistry_);
+        emit ClaimRegistrySet(claimRegistry_);
     }
 
     function setClaimVerifiersRegistry(
@@ -66,7 +91,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     {
         uint256 length = claimTopics[id].length;
         for (uint256 i = 0; i < length; i++) {
-            require(claimTopics[id][i] != claimTopic, 'claimTopic already exists');
+            require(claimTopics[id][i] != claimTopic, "Claim topic already exists");
         }
         claimTopics[id].push(claimTopic);
         emit ClaimTopicAdded(claimTopic, id);
@@ -100,7 +125,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         view
         returns (bool)
     {
-        if (address(IIdentity(account)) == address(0)) {
+        if (address(account) == address(0)) {
             return false;
         }
         if (claimTopics[id].length == 0) {
@@ -115,15 +140,15 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         bytes memory data;
         uint256 claimTopic;
         for (claimTopic = 0; claimTopic < claimTopics[id].length; claimTopic++) {
-            bytes32[] memory claimIds = IIdentity(account).getClaimIdsByTopic(claimTopics[id][claimTopic]);
+            bytes32[] memory claimIds = _claimRegistry.getClaimIdsByTopic(claimTopics[id][claimTopic], account);
             if (claimIds.length == 0) {
                 return false;
             }
             for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(account).getClaim(claimIds[j]);
+                (foundClaimTopic, scheme, issuer, sig, data, ) = _claimRegistry.getClaim(claimIds[j], account);
 
-                try IClaimValidator(issuer).isClaimValid(
-                    IIdentity(account),
+                try _claimRegistry.isClaimValid(
+                    account,
                     claimTopics[id][claimTopic],
                     sig,
                     data

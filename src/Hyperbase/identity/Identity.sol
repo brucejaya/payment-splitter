@@ -10,17 +10,6 @@ import '../../Interface/IHypercore.sol';
 import '../../Interface/IIdentity.sol';
 
 contract Identity is Context, IIdentity, ERC1155Holder {
-    
-    event Approval(address indexed sender, uint indexed transactionId);
-    event Revocation(address indexed sender, uint indexed transactionId);
-    event Submission(uint indexed transactionId);
-    event Execution(uint indexed transactionId);
-    event ExecutionFailure(uint indexed transactionId);
-    event Deposit(address indexed sender, uint value);
-    event OwnerAddition(address indexed owner);
-    event OwnerRemoval(address indexed owner);
-    event RequirementChange(uint256 operationType, uint256 required);
-    event ExecutedGasRelayed(bytes32 signHash, bool success);
 	
     ////////////////
     // KEYS
@@ -64,22 +53,6 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     }
 
     bytes4 public constant CALL_PREFIX = bytes4(keccak256("callGasRelay(address,uint256,bytes32,uint256,uint256,address)"));
-
-    ////////////////
-    // CLAIMS
-    ////////////////
-    
-    mapping(bytes32 => Claim) internal _claims;
-    mapping(uint256 => bytes32[]) internal _claimsByTopic; 
-
-    struct Claim {
-        uint256 topic;
-        uint256 scheme;
-        address issuer;
-        bytes signature;
-        bytes data;
-        string uri;
-    }
 
     ////////////////
     // MODIFIERS
@@ -711,141 +684,4 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         require(v == 27 || v == 28);
     }
  
-
-    ////////////////////////////////////////////////////////////////
-    //                           CLAIMS
-    ////////////////////////////////////////////////////////////////
-
-    function addClaim(
-        uint256 topic,
-        uint256 scheme,
-        address issuer,
-        bytes memory signature,
-        bytes memory data,
-        string memory uri
-    )
-        public
-        override
-        returns (bytes32 claimRequestId)
-    {
-        bytes32 claimId = keccak256(abi.encode(issuer, topic));
-
-        if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have claim signer key");
-        }
-
-        if (_claims[claimId].issuer != issuer) {
-            _claimsByTopic[topic].push(claimId);
-            _claims[claimId].topic = topic;
-            _claims[claimId].scheme = scheme;
-            _claims[claimId].issuer = issuer;
-            _claims[claimId].signature = signature;
-            _claims[claimId].data = data;
-            _claims[claimId].uri = uri;
-
-            emit ClaimAdded(
-                claimId,
-                topic,
-                scheme,
-                issuer,
-                signature,
-                data,
-                uri
-            );
-        } else {
-            _claims[claimId].topic = topic;
-            _claims[claimId].scheme = scheme;
-            _claims[claimId].issuer = issuer;
-            _claims[claimId].signature = signature;
-            _claims[claimId].data = data;
-            _claims[claimId].uri = uri;
-
-            emit ClaimChanged(
-                claimId,
-                topic,
-                scheme,
-                issuer,
-                signature,
-                data,
-                uri
-            );
-        }
-
-        return claimId;
-    }
-
-    function removeClaim(
-        bytes32 claimId
-    )
-        public
-        override
-        returns (bool success)
-    {
-        if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have CLAIM key");
-        }
-
-        if (_claims[claimId].topic == 0) {
-            revert("NonExisting: There is no claim with this ID");
-        }
-
-        uint claimIndex = 0;
-        while (_claimsByTopic[_claims[claimId].topic][claimIndex] != claimId) {
-            claimIndex++;
-        }
-
-        _claimsByTopic[_claims[claimId].topic][claimIndex] = _claimsByTopic[_claims[claimId].topic][_claimsByTopic[_claims[claimId].topic].length - 1];
-        _claimsByTopic[_claims[claimId].topic].pop();
-
-        emit ClaimRemoved(
-            claimId,
-            _claims[claimId].topic,
-            _claims[claimId].scheme,
-            _claims[claimId].issuer,
-            _claims[claimId].signature,
-            _claims[claimId].data,
-            _claims[claimId].uri
-        );
-
-        delete _claims[claimId];
-
-        return true;
-    }
-
-    function getClaim(
-        bytes32 claimId
-    )
-        public
-        override
-        view
-        returns (
-            uint256 topic,
-            uint256 scheme,
-            address issuer,
-            bytes memory signature,
-            bytes memory data,
-            string memory uri
-        )
-    {
-        return (
-            _claims[claimId].topic,
-            _claims[claimId].scheme,
-            _claims[claimId].issuer,
-            _claims[claimId].signature,
-            _claims[claimId].data,
-            _claims[claimId].uri
-        );
-    }
-
-    function getClaimIdsByTopic(
-        uint256 topic
-    )
-        public
-        override
-        view
-        returns(bytes32[] memory claimIds)
-    {
-        return _claimsByTopic[topic];
-    }
-
 }
