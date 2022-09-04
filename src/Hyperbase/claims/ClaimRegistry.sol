@@ -12,8 +12,7 @@ contract ClaimRegistry is IClaimRegistry {
     
     mapping(address => mapping(bytes32 => Claim)) internal _claims;
     mapping(address => mapping(uint256 => bytes32[])) internal _claimsByTopic; 
-    mapping (bytes => bool) public revokedClaims;
-
+    mapping (bytes => bool) public _revokedClaims;
 
     struct Claim {
         uint256 topic;
@@ -43,10 +42,6 @@ contract ClaimRegistry is IClaimRegistry {
         returns (bytes32 claimRequestId)
     {
         bytes32 claimId = keccak256(abi.encode(issuer, topic));
-
-        if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have claim signer key");
-        }
 
         if (_claims[subject][claimId].issuer != issuer) {
             _claimsByTopic[topic].push(claimId);
@@ -100,10 +95,6 @@ contract ClaimRegistry is IClaimRegistry {
         override
         returns (bool success)
     {
-        if (_msgSender() != address(this)) {
-            require(keyHasPurpose(addressToKey(_msgSender()), CLAIM), "Permissions: Sender does not have CLAIM key");
-        }
-
         if (_claims[subject][claimId].topic == 0) {
             revert("NonExisting: There is no claim with this ID");
         }
@@ -140,13 +131,13 @@ contract ClaimRegistry is IClaimRegistry {
         override
         view
         returns (
-            uint256 topic,
-            uint256 scheme,
-            address issuer,
-			address subject,
-            bytes memory signature,
-            bytes memory data,
-            string memory uri
+            uint256 topic_,
+            uint256 scheme_,
+            address issuer_,
+			address subject_,
+            bytes memory signature_,
+            bytes memory data_,
+            string memory uri_
         )
     {
         return (
@@ -188,13 +179,9 @@ contract ClaimRegistry is IClaimRegistry {
         bytes memory  sig;
         bytes  memory data;
 
-        if (msg.sender != address(this)) {
-            require(IIdentity(account).keyHasPurpose(keccak256(abi.encode(msg.sender)), 1), "Permissions: Sender does not have management key");
-        }
+        ( foundClaimTopic, scheme, issuer, sig, data, ) = getClaim(claimId, subject);
 
-        ( foundClaimTopic, scheme, issuer, sig, data, ) = IIdentity(account).getClaim(claimId);
-
-        revokedClaims[sig] = true;
+        _revokedClaims[sig] = true;
         return true;
     }
     
@@ -214,7 +201,7 @@ contract ClaimRegistry is IClaimRegistry {
         view
         returns (bool claimValid)
     {
-        bytes32 dataHash = keccak256(abi.encode(account, claimTopic, data));
+        bytes32 dataHash = keccak256(abi.encode(subject, claimTopic, data));
         
         // Use abi.encodePacked to concatenate the message prefix and the message to sign.
         bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));
@@ -226,7 +213,7 @@ contract ClaimRegistry is IClaimRegistry {
         bytes32 hashedAddr = keccak256(abi.encode(recovered));
 
         // Does the trusted identifier have they key which signed the user's claim?
-        if (IIdentity(account).keyHasPurpose(hashedAddr, 3) && (isClaimRevoked(sig) == false)) {
+        if (isClaimRevoked(sig) == false) {
             return true;
         }
 
@@ -242,7 +229,7 @@ contract ClaimRegistry is IClaimRegistry {
         view
         returns (bool)
     {
-        if (revokedClaims[_sig]) {
+        if (_revokedClaims[_sig]) {
             return true;
         }
 
@@ -285,5 +272,4 @@ contract ClaimRegistry is IClaimRegistry {
         return (recoveredAddress);
     }
 
-	
 }

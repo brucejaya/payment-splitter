@@ -81,7 +81,6 @@ contract DVDTransferManager is Ownable {
         txNonce = 0;
     }
 
-
     /**
      *  @dev calculates the parity byte signature
      *  @param _token1 the address of the base token

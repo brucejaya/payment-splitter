@@ -1,8 +1,8 @@
 # Hypersurface Protocol
 
-**Welcome to Hypersurface: a digital equity infrastructure for the internet age.**
+**Welcome to Hypersurface.**
 
-Hypersurface reconfigures many of the control structures that businesses operate on using non-legal, code-based mechanisms. The protocol enables lightweight, accessible and open digital equity on the blockchain. The aim of which is to provide a complete suite of tools, allowing issuers and holders to engage with tokenised equity assets easily, effectively, and securely. 
+A digital equity infrastructure and tokenisation platform for startups. The Hypersurface protocol enables issuers to create and manage sophisticated, robust and composable digital equity on the blockchain. 
 
 ## Protocol Architecture
 

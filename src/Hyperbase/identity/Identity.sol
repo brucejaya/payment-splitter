@@ -520,7 +520,8 @@ contract Identity is Context, IIdentity, ERC1155Holder {
         approveSigned(
             _to == address(this) ? MANAGEMENT : ACTION,
             signHash, 
-            _messageSignatures
+            _messageSignatures,
+            transactionId
         );
 
         execute(transactionId);
@@ -546,7 +547,8 @@ contract Identity is Context, IIdentity, ERC1155Holder {
     function approveSigned(
         uint256 _requirePurpose,
         bytes32 _signHash,
-        bytes _messageSignatures
+        bytes _messageSignatures,
+        uint256 transactionId
     ) 
         public
         view

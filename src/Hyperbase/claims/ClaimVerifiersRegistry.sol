@@ -4,27 +4,23 @@ pragma solidity ^0.8.6;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IClaimValidator.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
-
+import '../../Interface/IIdentity.sol';
 contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     
     // @dev Array containing all verifiers identity contract address.
-    IClaimValidator[] private verifiers;
+    IIdentity[] private verifiers;
 
     // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) private claimVerifierTopics;
-    
 
     function getTrustedVerifiers()
         external
         view
         override
-        returns (IClaimValidator[] memory)
+        returns (IIdentity[] memory)
     {
         // TODO
-        // What the heckin' hell?
-        // Something ain't right...
         return verifiers;
     }
 
@@ -46,7 +42,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function getTrustedVerifierClaimTopics(
-        IClaimValidator _verifier
+        IIdentity _verifier
     )
         external
         view
@@ -77,7 +73,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function addTrustedVerifier(
-        IClaimValidator _verifier,
+        IIdentity _verifier,
         uint256[] calldata _claimsRequired
     )
         external
@@ -92,7 +88,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function removeTrustedVerifier(
-        IClaimValidator _verifier
+        IIdentity _verifier
     )
         external
         override
@@ -112,7 +108,7 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function updateVerifierClaimTopics(
-        IClaimValidator _verifier,
+        IIdentity _verifier,
         uint256[] calldata _claimsRequired
     )
         external
