@@ -21,7 +21,6 @@ import '../../Interface/IComplianceLimitHolder.sol';
 // TODO
 // Move extended controls into the Compliance Limit Holder i.e. Freezing, nonFraciontal etc
 // See if with extended controls this can all be hooked into a standard ERC-1155
-
 contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, Ownable {
 
     using Address for address;
