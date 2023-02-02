@@ -8,6 +8,7 @@ import '../../interfaces/IKaliWhitelistManager.sol';
 import '../../utils/ReentrancyGuard.sol';
 
 // @notice Crowdsale contract that receives ETH or tokens to mint registered DAO tokens, including merkle whitelisting.
+
 contract KaliDAOcrowdsale is ReentrancyGuard {
     using SafeTransferLib for address;
 

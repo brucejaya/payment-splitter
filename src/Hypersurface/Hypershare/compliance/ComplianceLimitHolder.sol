@@ -450,7 +450,6 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         view
         returns (bool)
     {
-
         require(isNonFractional(amount, id), "Share transfers must be non-fractional");
         require(isNotFrozen(amount, id, from, to), "wallet is frozen");
         require(hasSufficientBalance(amount, id, from), "Insufficient Balance");

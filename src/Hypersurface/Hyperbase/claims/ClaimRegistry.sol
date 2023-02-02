@@ -10,8 +10,8 @@ contract ClaimRegistry is IClaimRegistry {
     // STATE
     ////////////////
     
-    mapping(address => mapping(bytes32 => Claim)) internal _claims;
-    mapping(address => mapping(uint256 => bytes32[])) internal _claimsByTopic; 
+    mapping (address => mapping(bytes32 => Claim)) internal _claims;
+    mapping (address => mapping(uint256 => bytes32[])) internal _claimsByTopic; 
     mapping (bytes => bool) public _revokedClaims;
 
     struct Claim {

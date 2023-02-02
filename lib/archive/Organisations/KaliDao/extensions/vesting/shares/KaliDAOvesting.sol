@@ -6,6 +6,7 @@ import '../../../utils/ReentrancyGuard.sol';
 
 // @notice Vesting contract for KaliDAO tokens.
 contract KaliDAOvesting is ReentrancyGuard {
+    
     event ExtensionSet(address indexed dao, address[] accounts, uint256[] amounts, uint256[] startTimes, uint256[] endTimes);
 
     event ExtensionCalled(address indexed dao, uint256 vestingId, address indexed member, uint256 indexed amountOut);

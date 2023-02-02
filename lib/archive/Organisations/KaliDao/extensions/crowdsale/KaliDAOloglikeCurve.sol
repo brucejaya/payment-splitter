@@ -9,6 +9,7 @@ import '../../utils/ReentrancyGuard.sol';
 
 // @notice Crowdsale contract that receives ETH or tokens to mint registered DAO tokens, including merkle whitelisting.
 // @dev This is meant to simulate a logarithmic curve with significantly less computation.
+
 contract KaliDAOloglikeCurve is ReentrancyGuard {
     
     using SafeTransferLib for address;
