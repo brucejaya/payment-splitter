@@ -14,12 +14,12 @@ contract Accounts is IAccounts {
 
    // @dev struct containing the identity contract and the country of the user
     struct Account {
-        // bytes32 name; #TODO
+        // address name; #TODO
         uint16 country;
     }
 
     // @dev mapping between a hased user address and the corresponding identity account
-    mapping(bytes32 => Account) public accounts;
+    mapping(address => Account) public accounts;
 
     ////////////////////////////////////////////////////////////////
     //                       IDENTITY CONTROLS
@@ -98,12 +98,6 @@ contract Accounts is IAccounts {
         emit AccountsRemoved(_account, identity(_account));
     }
 
-    ////////////////////////////////////////////////////////////////
-    //                          FACTORY 
-    ////////////////////////////////////////////////////////////////
-
-
-    // TODO, factory
-
+    
 
 }

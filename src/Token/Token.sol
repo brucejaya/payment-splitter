@@ -11,9 +11,9 @@ import "openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 contract Token is ERC1155 {
 	
 	// Contracts
-    IAccounts internal _accounts;
-    ICompliance internal _compliance;
-    IClaimsRequired internal _claimsRequired;
+    IAccounts public _accounts;
+    ICompliance public _compliance;
+    IClaimsRequired public _claimsRequired;
 
     // Constructor
     constructor(
@@ -30,6 +30,98 @@ contract Token is ERC1155 {
 		_claimsRequired = claimsRequired;
     }
         
+	// Pre validate token transfer
+	function preValidateTransfer(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount
+    )
+        public
+        returns (bool)
+    {
+		address operator = _msgSender();
+        uint256[] memory ids = _asSingletonArray(id);
+        uint256[] memory amounts = _asSingletonArray(amount);
+        _beforeTokenTransfer(operator, from, to, ids, amounts, "");
+		return true;
+	}
+	
+	// Forced transferfrom
+	function forcedTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+	)
+		public
+		virtual
+		override 
+		onlyOwner
+	{
+		_safeTransferFrom(from, to, id, amount, data);
+	}
+
+	// Forced batch transfer from
+    function forcedBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    )
+		public
+		virtual
+		override 
+		onlyOwner
+	{
+        _safeBatchTransferFrom(from, to, ids, amounts, data);
+    }
+
+	// Recover tokens 
+	function recover(
+        address lostWallet,
+        address newWallet,
+        uint256 id,
+        address account,
+        bytes memory data
+    )
+        external
+        onlyOwner 
+        returns (bool)
+    {
+        require(balanceOf(lostWallet, id) != 0, "No tokens to recover");
+
+        _accounts.registerAccount(newWallet, IAccounts(account), _accounts.accounts(lostWallet).country);
+        _accounts.deleteAccount(lostWallet);
+
+        forcedTransfer(lostWallet, newWallet, id, balanceOf(lostWallet, id), data);
+		
+        if (_compliance._frozenTokens[id][lostWallet] > 0) {
+            _compliance.freezePartialTokens(newWallet, id, _compliance._frozenTokens[id][lostWallet]);
+        }
+        if (_compliance._frozen[id][lostWallet] == true) {
+            _compliance.setAddressFrozen(newWallet, id, true);
+        }
+        emit RecoverySuccess(lostWallet, newWallet, account);
+
+        return true;
+    }
+
+	// Setters
+	function setAccounts(address accounts) public onlyOwner {
+        _accounts = accounts;
+    }
+
+    function setCompliance(address compliance) public onlyOwner {
+        _compliance = compliance;
+    }
+
+    function setClaimsRequired(address claimsRequired) public onlyOwner {
+        _claimsRequired = claimsRequired;
+    }
+
 	// Before transfer hook
     function _beforeTokenTransfer(
         address operator,
@@ -42,11 +134,9 @@ contract Token is ERC1155 {
 		internal
 		override
 	{
-        require(from == _msgSender() || from == operator || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner, operator or approved");
-        require(_claimsRequired.isVerified(to, id), "Identity is not verified.");
+        require(_claimsRequired.isVerified(to, id), "Accounts is not verified.");
         require(_compliance.canTransfer(to, from, id, amount), "Violates transfer limitations");
         require(_compliance.isNonFractional(amount, id), "Share transfers must be non-fractional");
-		
 	}
 
 	// After transfer hook
