@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.6;
 
-interface IClaimRegistry {
+interface IClaims {
 
     event ClaimRequested(uint256 indexed claimRequestId, uint256 indexed topic, uint256 scheme, address indexed issuer, address indexed subject, bytes signature, bytes data, string uri);
     event ClaimAdded(bytes32 indexed claimId, uint256 indexed topic, uint256 scheme, address indexed issuer, address indexed subject, bytes signature, bytes data, string uri);

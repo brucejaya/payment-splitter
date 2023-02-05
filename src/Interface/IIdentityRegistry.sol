@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.6;
 
-import './IIdentity.sol';
-interface IIdentityRegistry {
+import './IAccounts.sol';
+interface IAccounts {
 
     event IdentityRegistered(address indexed holderAddress, IIdentity indexed identity);
 

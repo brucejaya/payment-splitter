@@ -4,12 +4,12 @@ pragma solidity ^0.8.6;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IClaimRegistry.sol';
-import '../../Interface/IComplianceClaimsRequired.sol';
+import '../../Interface/IClaims.sol';
+import '../../Interface/IClaimsRequired.sol';
 import '../../Interface/IClaimVerifiersRegistry.sol';
 import '../../Interface/IIdentity.sol';
 
-contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
+contract ClaimsRequired is IClaimsRequired, Ownable {
     
     ////////////////
     // STATE
@@ -19,7 +19,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     mapping(uint256 => uint256[]) private claimTopics;
 
     // @notice Claim reg
-    IClaimRegistry public _claimRegistry;
+    IClaims public _claimRegistry;
 
     // @notice Claim verifiers contract
     IClaimVerifiersRegistry public _claimVerifiersRegistry;
@@ -28,7 +28,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         address claimRegistry_,
         address claimVerifiersRegistry_
     ) {
-        _claimRegistry = IClaimRegistry(claimRegistry_);
+        _claimRegistry = IClaims(claimRegistry_);
         emit ClaimRegistrySet(claimRegistry_);
         _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
         emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
@@ -37,7 +37,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
     function claimRegistry()
         external
         view
-        returns (IClaimRegistry)
+        returns (IClaims)
     {
         return _claimRegistry;
     }
@@ -56,7 +56,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         external
         onlyOwner
     {
-        _claimRegistry = IClaimRegistry(claimRegistry_);
+        _claimRegistry = IClaims(claimRegistry_);
         emit ClaimRegistrySet(claimRegistry_);
     }
 
@@ -131,7 +131,7 @@ contract ComplianceClaimsRequired is IComplianceClaimsRequired, Ownable {
         if (claimTopics[id].length == 0) {
             return true;
         }
-        // TODO if (has claim from issuer is whitelisted return true)
+        // TODO if (has claim from issuer is whitelisted therefore exempt return true)
         // else >>
         uint256 foundClaimTopic;
         uint256 scheme;

@@ -3,7 +3,7 @@
 pragma solidity ^0.8.6;
 
 import './IIdentity.sol';
-interface IClaimVerifiersRegistry {
+interface IClaimVerifiers {
 
     event TrustedVerifierAdded(IIdentity indexed trustedVerifier, uint256[] claimTopics);
     event TrustedVerifierRemoved(IIdentity indexed trustedVerifier);

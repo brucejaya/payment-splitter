@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-interface IComplianceClaimsRequired {
+interface IClaimsRequired {
 
     event ClaimVerifiersRegistrySet(address indexed trustedVerifiersRegistry);
     event ClaimTopicAdded(uint256 indexed claimTopic, uint256 indexed id);

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.6;
 
-interface IComplianceLimitHolder {
+interface ICompliance {
 
     event RecoverySuccess(address lostWallet, address newWallet, address holderIdentity);
     event AddressFrozen(address indexed account, bool indexed isFrozen, address indexed owner);

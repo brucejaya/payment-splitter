@@ -2,23 +2,22 @@
 
 pragma solidity ^0.8.6;
 
-import 'openzeppelin-contracts/contracts/access/Ownable.sol';
+import '../../Interface/IClaimVerifiers.sol';
+import '../../Interface/IAccounts.sol';
 
-import '../../Interface/IClaimVerifiersRegistry.sol';
-import '../../Interface/IIdentity.sol';
-contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
+contract ClaimVerifiers is IClaimVerifiers {
     
     // @dev Array containing all verifiers identity contract address.
-    IIdentity[] private verifiers;
+    IAccounts[] public verifiers;
 
     // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
-    mapping(address => uint256[]) private claimVerifierTopics;
+    mapping(address => uint256[]) public verifierTrustedTopics;
 
     function getTrustedVerifiers()
         external
         view
         override
-        returns (IIdentity[] memory)
+        returns (IAccounts[] memory)
     {
         // TODO
         return verifiers;
@@ -42,15 +41,15 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function getTrustedVerifierClaimTopics(
-        IIdentity _verifier
+        IAccounts _verifier
     )
         external
         view
         override
         returns (uint256[] memory)
     {
-        require(claimVerifierTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
-        return claimVerifierTopics[address(_verifier)];
+        require(verifierTrustedTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
+        return verifierTrustedTopics[address(_verifier)];
     }
 
     function hasClaimTopic(
@@ -62,8 +61,8 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
         override
         returns (bool)
     {
-        uint256 length = claimVerifierTopics[_Verifier].length;
-        uint256[] memory claimsRequired = claimVerifierTopics[_Verifier];
+        uint256 length = verifierTrustedTopics[_Verifier].length;
+        uint256[] memory claimsRequired = verifierTrustedTopics[_Verifier];
         for (uint256 i = 0; i < length; i++) {
             if (claimsRequired[i] == _claimTopic) {
                 return true;
@@ -73,28 +72,28 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
     }
 
     function addTrustedVerifier(
-        IIdentity _verifier,
+        IAccounts _verifier,
         uint256[] calldata _claimsRequired
     )
         external
         override
         onlyOwner
     {
-        require(claimVerifierTopics[address(_verifier)].length == 0, 'trusted Verifier already exists');
+        require(verifierTrustedTopics[address(_verifier)].length == 0, 'trusted Verifier already exists');
         require(_claimsRequired.length > 0, 'trusted claim topics cannot be empty');
         verifiers.push(_verifier);
-        claimVerifierTopics[address(_verifier)] = _claimsRequired;
+        verifierTrustedTopics[address(_verifier)] = _claimsRequired;
         emit TrustedVerifierAdded(_verifier, _claimsRequired);
     }
 
     function removeTrustedVerifier(
-        IIdentity _verifier
+        IAccounts _verifier
     )
         external
         override
         onlyOwner
     {
-        require(claimVerifierTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
+        require(verifierTrustedTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
         uint256 length = verifiers.length;
         for (uint256 i = 0; i < length; i++) {
             if (verifiers[i] == _verifier) {
@@ -103,21 +102,21 @@ contract ClaimVerifiersRegistry is IClaimVerifiersRegistry, Ownable {
                 break;
             }
         }
-        delete claimVerifierTopics[address(_verifier)];
+        delete verifierTrustedTopics[address(_verifier)];
         emit TrustedVerifierRemoved(_verifier);
     }
 
     function updateVerifierClaimTopics(
-        IIdentity _verifier,
+        IAccounts _verifier,
         uint256[] calldata _claimsRequired
     )
         external
         override
         onlyOwner
     {
-        require(claimVerifierTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
+        require(verifierTrustedTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
         require(_claimsRequired.length > 0, 'claim topics cannot be empty');
-        claimVerifierTopics[address(_verifier)] = _claimsRequired;
+        verifierTrustedTopics[address(_verifier)] = _claimsRequired;
         emit ClaimTopicsUpdated(_verifier, _claimsRequired);
     }
 

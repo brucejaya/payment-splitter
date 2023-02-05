@@ -9,19 +9,23 @@ import 'openzeppelin-contracts/contracts/utils/introspection/ERC165.sol';
 
 import 'openzeppelin-contracts/contracts/utils/Address.sol';
 import 'openzeppelin-contracts/contracts/utils/Context.sol';
-
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/ITokenRegistry.sol';
+import '../../Interface/IEquity.sol';
 import '../../Interface/IIdentity.sol';
-import '../../Interface/IIdentityRegistry.sol';
-import '../../Interface/IComplianceClaimsRequired.sol';
-import '../../Interface/IComplianceLimitHolder.sol';
+import '../../Interface/IAccounts.sol';
+import '../../Interface/IClaimsRequired.sol';
+import '../../Interface/ICompliance.sol';
 
 // TODO
 // Move extended controls into the Compliance Limit Holder i.e. Freezing, nonFraciontal etc
 // See if with extended controls this can all be hooked into a standard ERC-1155
-contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, Ownable {
+
+
+// So far this has been modelled as though all tokens would be recorded in here. 
+// What will actually happen is a new contract will be deployed for each entity.
+
+contract Equity is IEquity, Context, ERC165, IERC1155MetadataURI, Ownable {
 
     using Address for address;
 
@@ -30,13 +34,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     ////////////////
 
     // @dev Compliance token limit validator contract
-    IComplianceLimitHolder internal _complianceLimitHolder;
+    ICompliance internal _;
 
     // @dev Compliance claims checker contract
-    IComplianceClaimsRequired internal _complianceClaimsRequired;
+    IClaimsRequired internal _complianceClaimsRequired;
     
     // @dev Identity registry contract
-    IIdentityRegistry internal _identityRegistry;
+    IAccounts internal _identityRegistry;
 
     ////////////////
     // STATES
@@ -69,13 +73,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     ) {
         _uri = uri_;
 
-        _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired_);
+        _complianceClaimsRequired = IClaimsRequired(complianceClaimsRequired_);
         emit ComplianceClaimsRequiredAdded(complianceClaimsRequired_);
         
-        _complianceLimitHolder = IComplianceLimitHolder(complianceLimitHolder_);
+        _ = ICompliance(complianceLimitHolder_);
         emit ComplianceLimitHolderAdded(complianceLimitHolder_);
 
-        _identityRegistry = IIdentityRegistry(identityRegistry_);
+        _identityRegistry = IAccounts(identityRegistry_);
         emit IdentityRegistryAdded(identityRegistry_);
     }
 
@@ -85,17 +89,6 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         _tokenIssuer = tokenIssuer;
     } 
     */
-
-    ////////////////
-    // MODIFIERS
-    ////////////////
-
-    modifier onlyIssuer(
-        uint256 id
-    ) {
-        require(_msgSender() == _tokenIssuer[id], 'Only token issuer can call this function');
-        _;
-    }
 
     ////////////////////////////////////////////////////////////////
     //                        READ FUNCTIONS
@@ -116,7 +109,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     )
         public 
         view 
-        override(ITokenRegistry, IERC1155MetadataURI)
+        override(IToken, IERC1155MetadataURI)
         returns (string memory)
     {
         return _uri;
@@ -125,7 +118,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     function complianceClaimsRequired()
         public
         view
-        returns (IComplianceClaimsRequired)
+        returns (IClaimsRequired)
     {
         return _complianceClaimsRequired;
     }
@@ -133,15 +126,15 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
     function complianceLimitHolder()
         public
         view
-        returns (IComplianceLimitHolder)
+        returns (ICompliance)
     {
-        return _complianceLimitHolder;
+        return _;
     }
 
     function identityRegistry()
         public
         view
-        returns (IIdentityRegistry)
+        returns (IAccounts)
     {
         return _identityRegistry;
     }
@@ -160,7 +153,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         returns (bool)
     {
         require(_complianceClaimsRequired.isVerified(to, id), "Identity is not verified.");
-        require(_complianceLimitHolder.canTransfer(to, from, id, amount), "Violates transfer limitations");
+        require(_compliance.canTransfer(to, from, id, amount), "Violates transfer limitations");
         return true;
     }
 
@@ -272,14 +265,14 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         bytes memory data
     )
         public
-        override(ITokenRegistry, IERC1155)
+        override(IToken, IERC1155)
         virtual
     {
         require(from == _msgSender() || isApprovedForAll(from, _msgSender()), "ERC1155: transfer caller is not owner nor approved");
         require(_complianceClaimsRequired.isVerified(to, id), "Identity is not verified.");
-        require(_complianceLimitHolder.canTransfer(to, from, id, amount), "Violates transfer limitations");
+        require(_compliance.canTransfer(to, from, id, amount), "Violates transfer limitations");
         _safeTransferFrom(from, to, id, amount, data);
-        _complianceLimitHolder.transferred(from, to, id);
+        _compliance.transferred(from, to, id);
         revert('Transfer not possible');
     }
 
@@ -342,13 +335,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         bytes memory data
     )
         public
-        onlyIssuer(id) 
+        onlyOwner 
         returns (bool)
     {
-        require(_complianceLimitHolder.isNonFractional(amount, id), "Share transfers must be non-fractional");
+        require(_compliance.isNonFractional(amount, id), "Share transfers must be non-fractional");
         require(_complianceClaimsRequired.isVerified(to, id), "Transfer not possible");
         safeTransferFrom(from, to, id, amount, data);
-        _complianceLimitHolder.transferred(from, to, id);
+        _compliance.transferred(from, to, id);
         return true;
     }
 
@@ -376,13 +369,13 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         bytes memory data
 	)
 		public
-		onlyIssuer(id) 
+		onlyOwner 
 	{
         require(_complianceClaimsRequired.isVerified(to, id), "Identity is not verified.");
-        require(_complianceLimitHolder.canTransfer(to, from, id, amount), "Violates transfer limitations");
+        require(_compliance.canTransfer(to, from, id, amount), "Violates transfer limitations");
         
         _mint(to, id, amount, data);
-        _complianceLimitHolder.created(to, id, amount);
+        _compliance.created(to, id, amount);
     }
 
     function _mint(
@@ -432,12 +425,12 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         uint256 amount
     )
         public
-        onlyIssuer(id) 
+        onlyOwner 
     {
-        require(_complianceLimitHolder.isNonFractional(amount, id), "Share transfers must be non-fractional");
+        require(_compliance.isNonFractional(amount, id), "Share transfers must be non-fractional");
 
         _burn(from, id, amount);
-        _complianceLimitHolder.destroyed(from, id);		
+        _compliance.destroyed(from, id);		
     }
 
     function _burn(
@@ -479,7 +472,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         bytes memory data
     )
         external
-        onlyIssuer(id) 
+        onlyOwner 
         returns (bool)
     {
         require(balanceOf(lostWallet, id) != 0, "No tokens to recover");
@@ -487,11 +480,11 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         _identityRegistry.registerIdentity(newWallet, IIdentity(account), _identityRegistry.identityCountry(lostWallet));
         _identityRegistry.deleteIdentity(lostWallet);
         forcedTransfer(lostWallet, newWallet, id, balanceOf(lostWallet, id), data);
-        if (_complianceLimitHolder._frozenTokens[id][lostWallet] > 0) {
-            _complianceLimitHolder.freezePartialTokens(newWallet, id, _complianceLimitHolder._frozenTokens[id][lostWallet]);
+        if (_compliance._frozenTokens[id][lostWallet] > 0) {
+            _compliance.freezePartialTokens(newWallet, id, _compliance._frozenTokens[id][lostWallet]);
         }
-        if (_complianceLimitHolder._frozen[id][lostWallet] == true) {
-            _complianceLimitHolder.setAddressFrozen(newWallet, id, true);
+        if (_compliance._frozen[id][lostWallet] == true) {
+            _compliance.setAddressFrozen(newWallet, id, true);
         }
         emit RecoverySuccess(lostWallet, newWallet, account);
         return true;
@@ -616,7 +609,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         external
         onlyOwner
     {
-        _identityRegistry = IIdentityRegistry(identityRegistry_);
+        _identityRegistry = IAccounts(identityRegistry_);
         emit IdentityRegistryAdded(identityRegistry_);
     }
 
@@ -626,7 +619,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         external
         onlyOwner
     {
-        _complianceClaimsRequired = IComplianceClaimsRequired(complianceClaimsRequired_);
+        _complianceClaimsRequired = IClaimsRequired(complianceClaimsRequired_);
         emit ComplianceClaimsRequiredAdded(complianceClaimsRequired_);
     }
 
@@ -636,7 +629,7 @@ contract TokenRegistry is ITokenRegistry, Context, ERC165, IERC1155MetadataURI, 
         external
         onlyOwner
     {
-        _complianceLimitHolder = IComplianceLimitHolder(complianceLimitHolder_);
+        _ = ICompliance(complianceLimitHolder_);
         emit ComplianceLimitHolderAdded(complianceLimitHolder_);
     }
     

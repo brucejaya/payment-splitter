@@ -2,17 +2,13 @@
 
 pragma solidity ^0.8.6;
 
-import '../../Interface/IClaimRegistry.sol';
+import '../../Interface/IClaims.sol';
 
-contract ClaimRegistry is IClaimRegistry {
+contract Claims is IClaims {
 
   	////////////////
     // STATE
     ////////////////
-    
-    mapping (address => mapping(bytes32 => Claim)) internal _claims;
-    mapping (address => mapping(uint256 => bytes32[])) internal _claimsByTopic; 
-    mapping (bytes => bool) public _revokedClaims;
 
     struct Claim {
         uint256 topic;
@@ -23,6 +19,10 @@ contract ClaimRegistry is IClaimRegistry {
         bytes data;
         string uri;
     }
+    
+    mapping (address => mapping(bytes32 => Claim)) internal _claims;
+    mapping (address => mapping(uint256 => bytes32[])) internal _claimsByTopic; 
+    mapping (bytes => bool) public _revokedClaims;
 
     ////////////////////////////////////////////////////////////////
     //                           CLAIMS

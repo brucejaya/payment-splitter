@@ -4,23 +4,23 @@ pragma solidity ^0.8.6;
 
 import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
-import '../../Interface/IComplianceLimitHolder.sol';
-import '../../Interface/ITokenRegistry.sol';
-import '../../Interface/IIdentityRegistry.sol';
+import '../../Interface/ICompliance.sol';
+import '../../Interface/IToken.sol';
+import '../../Interface/IAccounts.sol';
 
-// TODO require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
+// TODO require(msg.sender == address(_token), "Only token contract can call this function");
 
-contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
+contract ComplianceLimitHolder is ICompliance, Ownable  {
 
     ////////////////
     // CONTRACTS
     ////////////////
 
     // @dev the token on which this compliance contract is applied
-    ITokenRegistry public _tokenRegistry;
+    IToken public _token;
 
     // @dev the Identity registry contract linked to `token`
-    IIdentityRegistry private _identityRegistry;
+    IAccounts private _accounts;
 
     ////////////////
     // STATES
@@ -64,10 +64,10 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     ////////////////
 
     constructor(
-        address tokenRegistry
+        address token
     ) {
-        _tokenRegistry = ITokenRegistry(tokenRegistry);
-        _identityRegistry = _tokenRegistry.identityRegistry();
+        _token = IToken(token);
+        _accounts = _token.identityRegistry();
     }
 
     event HolderLimitSet(uint256 _holderLimit, uint256 _id);
@@ -79,7 +79,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     modifier onlyTokenOrIssuer(
         uint256 id
     ) {
-        require(msg.sender == address(_tokenRegistry) || _msgSender() == _tokenIssuer[id], "Only token contract can call this function");
+        require(msg.sender == address(_token) || _msgSender() == _tokenIssuer[id], "Only token contract can call this function");
         _;
     }
 
@@ -93,7 +93,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     modifier onlyToken(
         uint256 id
     ) {
-        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
+        require(msg.sender == address(_token), "Only token contract can call this function");
         _;
     }
     
@@ -114,6 +114,8 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     ////////////////////////////////////////////////////////////////
     //                       READ FUNCTIONS
     ////////////////////////////////////////////////////////////////
+
+    // #TODO replace these
 
     // @dev returns the holder limit as set for the token id 
     function getHolderLimit(
@@ -215,7 +217,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         returns (bool)
 
     {
-        if (amount <= _tokenRegistry.balanceOf(from, id) - (_frozenTokens[id][from])) return true;  
+        if (amount <= _token.balanceOf(from, id) - (_frozenTokens[id][from])) return true;  
         else return false;  
     }
     
@@ -314,7 +316,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         if (_holderIndices[id][account] == 0) {
             _shareholders[id].push(account);
             _holderIndices[id][account] = _shareholders[id].length;
-            uint16 country = _identityRegistry.identityCountry(account);
+            uint16 country = _accounts.identityCountry(account);
             _countryShareHolders[id][country]++;
         }
     }
@@ -326,7 +328,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         internal
     {
         require(_holderIndices[id][account] != 0, "Shareholder does not exist");
-        uint256 balance = _tokenRegistry.balanceOf(account, id);
+        uint256 balance = _token.balanceOf(account, id);
         if (balance > 0) {
             return;
         }
@@ -337,7 +339,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         _holderIndices[id][lastHolder] = _holderIndices[id][account];
         _shareholders[id].pop();
         _holderIndices[id][account] = 0;
-        uint16 country = _identityRegistry.identityCountry(account);
+        uint16 country = _accounts.identityCountry(account);
         _countryShareHolders[id][country]--;
     }
 
@@ -403,7 +405,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
         onlyTokenOrIssuer
     {
         require(isNonFractional(amount, id), "Share transfers must be non-fractional");
-        uint256 balance = _tokenRegistry.balanceOf(account, id);
+        uint256 balance = _token.balanceOf(account, id);
         require(balance >= _frozenTokens[id][account] + amount, "Amount exceeds available balance");
         _frozenTokens[id][account] = _frozenTokens[id][account] + (amount);
         emit TokensFrozen(account, amount);
@@ -465,7 +467,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     )
         public
     {
-        uint256 freeBalance = _tokenRegistry.balanceOf(from, id) - (_frozenTokens[id][from]);
+        uint256 freeBalance = _token.balanceOf(from, id) - (_frozenTokens[id][from]);
         if (amount > freeBalance) {
             uint256 tokensToUnfreeze = amount - (freeBalance);
             _frozenTokens[id][from] = _frozenTokens[id][from] - (tokensToUnfreeze);
@@ -480,7 +482,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     )
         external
     {
-        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
+        require(msg.sender == address(_token), "Only token contract can call this function");
         updateFreeBalance(from, id);
         updateShareholders(to, id);
         pruneShareholders(from, id);
@@ -493,7 +495,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     )
         external
     {
-        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
+        require(msg.sender == address(_token), "Only token contract can call this function");
         require(amount > 0, "No token created");
         updateShareholders(to, id);
     }
@@ -504,7 +506,7 @@ contract ComplianceLimitHolder is IComplianceLimitHolder, Ownable  {
     )
         external
     {
-        require(msg.sender == address(_tokenRegistry), "Only token contract can call this function");
+        require(msg.sender == address(_token), "Only token contract can call this function");
         updateFreeBalance(from, id);
         pruneShareholders(from, id);
     }

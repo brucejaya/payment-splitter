@@ -7,7 +7,7 @@ import './IIdentityRegistry.sol';
 import './IComplianceLimitHolder.sol';
 import './IComplianceClaimsRequired.sol';
 
-interface ITokenRegistry is IERC1155 {
+interface IToken is IERC1155 {
     
     event ComplianceLimitHolderAdded(address indexed complianceHolderLimit);
     event ComplianceClaimsRequiredAdded(address indexed complianceClaimsRequired);
