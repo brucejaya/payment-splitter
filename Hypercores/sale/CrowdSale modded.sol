@@ -7,8 +7,8 @@ pragma solidity ^0.8.6;
 import '../../Interface/ITokenRegistry.sol';
 import '../../Interface/IHypercore.sol';
 
-// @notice Equitysale contract that receives ETH or tokens to mint equity tokens.
-contract Equitysale { // is ReentrancyGuard {
+// @notice Equityale contract that receives ETH or tokens to mint equity tokens.
+contract Equityale { // is ReentrancyGuard {
     
     event ExtensionSet(address issuer, uyyint256 listId, address purchaseToken, uint8 purchaseMultiplier, uint96 purchaseLimit, uint32 saleEnds);
     event ExtensionCalled(address indexed issuer, address indexed member, uint256 indexed amountOut);
@@ -19,9 +19,9 @@ contract Equitysale { // is ReentrancyGuard {
     
     ITokenRegistry public immutable tokenRegistry;
 
-    mapping(address => Equitysale) public crowdsales;
+    mapping(address => Equityale) public crowdsales;
 
-    struct Equitysale {
+    struct Equityale {
         uint256 listId;
         address tokenRegistry;
         uint256 tokenId;
@@ -47,7 +47,7 @@ contract Equitysale { // is ReentrancyGuard {
         
         require(purchaseMultiplier != 0, "");
 
-        crowdsales[msg.sender] = Equitysale({
+        crowdsales[msg.sender] = Equityale({
             listId: listId,
             purchaseToken: purchaseToken,
             purchaseMultiplier: purchaseMultiplier,
@@ -69,7 +69,7 @@ contract Equitysale { // is ReentrancyGuard {
         virtual
         returns (uint256 amountOut)
     {
-        Equitysale storage sale = crowdsales[issuer];
+        Equityale storage sale = crowdsales[issuer];
         bytes memory extensionData = abi.encode(true);
         require(block.timestamp < sale.saleEnds, "Sale has already ended");
         if (sale.listId != 0) {

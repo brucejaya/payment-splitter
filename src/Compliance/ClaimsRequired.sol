@@ -6,80 +6,49 @@ import 'openzeppelin-contracts/contracts/access/Ownable.sol';
 
 import '../../Interface/IClaims.sol';
 import '../../Interface/IClaimsRequired.sol';
-import '../../Interface/IClaimVerifiersRegistry.sol';
-import '../../Interface/IIdentity.sol';
+import '../../Interface/IClaimVerifiers.sol';
+import '../../Interface/IAccounts.sol';
 
 contract ClaimsRequired is IClaimsRequired, Ownable {
     
-    ////////////////
+  	////////////////
     // STATE
     ////////////////
     
-    // @notice Mapping from token id to required Claim Topics
-    mapping(uint256 => uint256[]) private claimTopics;
+    // @dev Claims contract
+    IClaims public _claims;
+    
+    // @dev Claim verifiers 
+    IClaimVerifiers public _claimVerifiers;
+    
+  	////////////////
+    // STATE
+    ////////////////
 
-    // @notice Claim reg
-    IClaims public _claimRegistry;
+    // @dev Claims topics that will be required to hold shares
+    mapping(uint256 => uint256[]) public _claimTopicsRequired;
+    
+    // @Dev Adresses that will be exempt
+    mapping(address => bool) public _whitelisted;
 
-    // @notice Claim verifiers contract
-    IClaimVerifiersRegistry public _claimVerifiersRegistry;
+  	////////////////
+    // CONSTRUCTOR
+    ////////////////
 
     constructor(
-        address claimRegistry_,
-        address claimVerifiersRegistry_
+        address claims,
+        address claimVerifiers
     ) {
-        _claimRegistry = IClaims(claimRegistry_);
-        emit ClaimRegistrySet(claimRegistry_);
-        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
-        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
+        _claims = IClaims(claims);
+        _claimVerifiers = IClaimVerifiers(claimVerifiers);
+
+        emit claimsSet(claims);
+        emit claimVerifiersSet(claimVerifiers);
     }
 
-    function claimRegistry()
-        external
-        view
-        returns (IClaims)
-    {
-        return _claimRegistry;
-    }
-
-    function claimVerifiersRegistry()
-        external
-        view
-        returns (IClaimVerifiersRegistry)
-    {
-        return _claimVerifiersRegistry;
-    }
-
-    function setClaimRegistry(
-        address claimRegistry_
-    )
-        external
-        onlyOwner
-    {
-        _claimRegistry = IClaims(claimRegistry_);
-        emit ClaimRegistrySet(claimRegistry_);
-    }
-
-    function setClaimVerifiersRegistry(
-        address claimVerifiersRegistry_
-    )
-        external
-        onlyOwner
-    {
-        _claimVerifiersRegistry = IClaimVerifiersRegistry(claimVerifiersRegistry_);
-        emit ClaimVerifiersRegistrySet(claimVerifiersRegistry_);
-    }
-
-    // @notice Gets claim topics by token id
-    function getClaimTopics(
-        uint256 id
-    )
-        external
-        view
-        returns (uint256[] memory)
-    {
-        return claimTopics[id];
-    }
+    //////////////////////////////////////////////
+    // FUNCTIONS
+    //////////////////////////////////////////////    
     
     // @notice Add a claim topic to be required of holders
     function addClaimTopic(
@@ -89,11 +58,11 @@ contract ClaimsRequired is IClaimsRequired, Ownable {
         external
         onlyOwner
     {
-        uint256 length = claimTopics[id].length;
+        uint256 length = _claimTopicsRequired[id].length;
         for (uint256 i = 0; i < length; i++) {
-            require(claimTopics[id][i] != claimTopic, "Claim topic already exists");
+            require(_claimTopicsRequired[id][i] != claimTopic, "Claim topic already exists");
         }
-        claimTopics[id].push(claimTopic);
+        _claimTopicsRequired[id].push(claimTopic);
         emit ClaimTopicAdded(claimTopic, id);
     }
 
@@ -105,18 +74,18 @@ contract ClaimsRequired is IClaimsRequired, Ownable {
         external
         onlyOwner
     {
-        uint256 length = claimTopics[id].length;
+        uint256 length = _claimTopicsRequired[id].length;
         for (uint256 i = 0; i < length; i++) {
-            if (claimTopics[id][i] == claimTopic) {
-                claimTopics[id][i] = claimTopics[id][length - 1];
-                claimTopics[id].pop();
+            if (_claimTopicsRequired[id][i] == claimTopic) {
+                _claimTopicsRequired[id][i] = _claimTopicsRequired[id][length - 1];
+                _claimTopicsRequired[id].pop();
                 emit ClaimTopicRemoved(claimTopic, id);
                 break;
             }
         }
     }
 
-    // @notice Iterates through the claims comparing them to the identity to ensure the reciever has all of the appropriate claims
+    // @notice Iterates through the claims comparing them to the Accounts to ensure the reciever has all of the appropriate claims
     function isVerified(
         address account,
         uint256 id
@@ -128,58 +97,102 @@ contract ClaimsRequired is IClaimsRequired, Ownable {
         if (address(account) == address(0)) {
             return false;
         }
-        if (claimTopics[id].length == 0) {
+        if (_claimTopicsRequired[id].length == 0) {
             return true;
         }
-        // TODO if (has claim from issuer is whitelisted therefore exempt return true)
-        // else >>
-        uint256 foundClaimTopic;
-        uint256 scheme;
-        address issuer;
-        bytes memory sig;
-        bytes memory data;
-        uint256 claimTopic;
-        for (claimTopic = 0; claimTopic < claimTopics[id].length; claimTopic++) {
-            bytes32[] memory claimIds = _claimRegistry.getClaimIdsByTopic(claimTopics[id][claimTopic], account);
-            if (claimIds.length == 0) {
-                return false;
-            }
-            for (uint256 j = 0; j < claimIds.length; j++) {
-                (foundClaimTopic, scheme, issuer, sig, data, ) = _claimRegistry.getClaim(claimIds[j], account);
-
-                try _claimRegistry.isClaimValid(
-                    account,
-                    claimTopics[id][claimTopic],
-                    sig,
-                    data
-                )
-                    returns(bool _validity)
-                {
-                    if (
-                        _validity
-                        && _claimVerifiersRegistry.hasClaimTopic(issuer, claimTopics[id][claimTopic])
-                        && _claimVerifiersRegistry.isVerifier(issuer)
-                    ) {
-                        j = claimIds.length;
-                    }
-                    if (!_claimVerifiersRegistry.isVerifier(issuer) && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                    if (!_claimVerifiersRegistry.hasClaimTopic(issuer, claimTopics[id][claimTopic]) && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                    if (!_validity && j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                }
-                catch {
-                    if (j == (claimIds.length - 1)) {
-                        return false;
-                    }
-                }
-            }
+        if (_whitelisted[address] == true) {
+            return true;
         }
-        return true;
+        else {
+            uint256 foundClaimTopic;
+            uint256 scheme;
+            address issuer;
+            bytes memory sig;
+            bytes memory data;
+            uint256 claimTopic;
+            for (claimTopic = 0; claimTopic < _claimTopicsRequired[id].length; claimTopic++) {
+                bytes32[] memory claimIds = _claims.getClaimIdsByTopic(_claimTopicsRequired[id][claimTopic], account);
+                if (claimIds.length == 0) {
+                    return false;
+                }
+                for (uint256 j = 0; j < claimIds.length; j++) {
+                    (foundClaimTopic, scheme, issuer, sig, data, ) = _claims.getClaim(claimIds[j], account);
+
+                    try _claims.isClaimValid(
+                        account,
+                        _claimTopicsRequired[id][claimTopic],
+                        sig,
+                        data
+                    )
+                        returns(bool _validity)
+                    {
+                        if (
+                            _validity
+                            && _claimVerifiers.hasClaimTopic(issuer, _claimTopicsRequired[id][claimTopic])
+                            && _claimVerifiers.isVerifier(issuer)
+                        ) {
+                            j = claimIds.length;
+                        }
+                        if (!_claimVerifiers.isVerifier(issuer) && j == (claimIds.length - 1)) {
+                            return false;
+                        }
+                        if (!_claimVerifiers.hasClaimTopic(issuer, _claimTopicsRequired[id][claimTopic]) && j == (claimIds.length - 1)) {
+                            return false;
+                        }
+                        if (!_validity && j == (claimIds.length - 1)) {
+                            return false;
+                        }
+                    }
+                    catch {
+                        if (j == (claimIds.length - 1)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
     }
 
+    // @notice Add to whitelist
+    function addToWhitelist(
+        address account
+    )
+        external
+        onlyOwner
+    {
+        _whitelisted[account] = true;
+    }
+
+    // @notice Remove from whitelist
+    function removeFromWhitelist(
+        address account
+    )
+        external
+        onlyOwner
+    {
+        _whitelisted[account] = false;
+    }
+
+    // @notice Setters
+    function setclaims(
+        address claims
+    )
+        external
+        onlyOwner
+    {
+        _claims = IClaims(claims);
+        emit claimsSet(claims);
+    }
+
+    // @notice 
+    function setClaimVerifiers(
+        address claimVerifiers
+    )
+        external
+        onlyOwner
+    {
+        _claimVerifiers = IClaimVerifiers(claimVerifiers);
+        emit claimVerifiersSet(claimVerifiers);
+    }
 }

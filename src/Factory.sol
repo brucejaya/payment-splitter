@@ -2,27 +2,36 @@
 
 pragma solidity ^0.8.6;
 
+import "./Equity.sol";
 
-// This deploys the tokens and records their location
+contract Factory {
 
-import "./Token.sol";
+    ////////////////
+    // CONTRACT
+    ////////////////
 
-contract TokenFactory {
-
-    // Contracts
-
+    // @notice
     Token private token;
 
-    // States
+    ////////////////
+    // STATES
+    ////////////////
 
+    // @notice
     address[] public tokens;
 
-    // Events
+    ////////////////
+    // EVENT
+    ////////////////
 
+    // @notice
     event Created(address indexed token, address indexed _creator);
 
-    // Functions
+    //////////////////////////////////////////////
+    // FUNCTIONS
+    //////////////////////////////////////////////
     
+    // @notice 
     function createToken(
         // Args
     )
@@ -33,6 +42,7 @@ contract TokenFactory {
         emit Created(address(token), _creator);
     }
 
+    // @notice 
     function getTokenCount()
         public
         view

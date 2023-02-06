@@ -14,5 +14,7 @@ interface IClaimsRequired {
     function getClaimTopics(uint256 id) external view returns (uint256[] memory);
     function transferOwnershipOnComplianceClaimsRequiredContract(address newOwner) external;
     function isVerified(address account, uint256 id) external view returns (bool);
+
+    
     
 }

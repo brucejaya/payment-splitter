@@ -2,65 +2,29 @@
 
 **Welcome to Hypersurface.**
 
-A digital equity infrastructure and tokenisation platform for startups. The Hypersurface protocol enables issuers to create and manage sophisticated, robust and composable digital equity on the blockchain. 
+Hypersurface is a decentralised financial infrastructure for venture investment. The protocol allows entrepreneurs to create and manage tokenised equity, automate compliance and raise venture funding. For investors, Hypersurface provides a platform not just to invest in venture deals and hold crypto equity but to realise unprecedented liquidity on assets that would have previously been immobile, allowing venture shares to be traded like any other crypto asset.
 
-## Protocol Architecture
+DeFi is finance for the age of the internet, an open global financial system running atop the blockchain. DeFi offers the first radical alternative to the disconnected, opaque, decades-old practices and infrastructure of traditional finance. Having grown from a relative backwater into a thriving $140 billion industry almost overnight, the community today is at the centre of a technical revolution that will subsume the entire financial sector. But what about the other $27 trillion in capital markets? DeFi has survived up until now by avoiding regulated assets but for the space to evolve a new type of protocol must emerge.
 
-The Hypersurface Protocol primarily consists of two core components, each with several sub-components split into folders. The following section will provide a brief overview of each of the core technical components within the protocol explaining the different functions of its constituent smart contracts. 
+The collision between regulated assets and permissionless protocols presents a unique set of challenges, both technical, ethical, and regulatory. Current solutions to building compliant services on blockchain reintroduce middlemen who extract value from the users and prevent the space from evolving. Intermediaries compete and scale like traditional businesses, constraining the growth potential of the space based on their internal procedures (e.g., marketing, hiring, due diligence, etc). If the growth of regulated assets in decentralised finance is dependent on intermediaries, it seems doubtful they will ever see wider adoption.
+What is Hypersurface
 
-Basic folder structure is as follows:
+Hypersurface is a digital equity infrastructure for venture investment. Our mission is to broaden access to the blockchain and allow venture founders and investors to harness its radical potential. We believe that decentralised finance is an opportunity to completely transform the analogue, disconnected and opaque infrastructure of venture investment today. Yet, despite their vast potential the blockchain and DeFi remain arcane and inaccessible to outsiders.
 
-	Hypersurface (src)
-	├── Hyperbase
-	│   ├── claims
-	│   │   ├── ClaimValidator.sol
-	│   │   └── ClaimVerifiersRegistry.sol
-	│   ├── identity
-	│   │   ├── IdentityRegistry.sol
-	│   │   └── Identity.sol
-	│   └── domain
-	│       └── DomainRegistry.sol
-	├── Hypershare
-	│   ├── compliance
-	│   │   ├── ComplianceClaimsRequired.sol
-	│   │   └── ComplianceLimitHolder.sol
-	│   └── token
-	│       └── TokenRegistry.sol
-	├── Hypercores
-	│   ├── ...
-	│   └── ...
-	│       
-	└── Interface
-		└── ...
+To support registered assets in a way that is flexible, noninvasive, and scalable Hypersurface has created a novel identity system. This model, called Hyperbase, is a portable self-sovereign digital identity that is backwards compatible with EOA wallets, smart contracts and offline signatures. Digital identity model is instrumental in making the compliance process painless, invisible and automatic. By enforcing compliance as a part of the architecture of the market we can shift the burden of law onto code and away from users, creating a truly frictionless experience that allows value to flow freely.
 
-### 1.0.0 Hyperbase is the home of all things **identity** related.
+# For founders
 
-#### 1.1.0 [`identity`](https://github.com/brucejaya/hypersurface-forge/src/Hyperbase/identity) the core identity account and identity registries.
+For founders, Hypersurface provides a suite of enterprise-grade smart contracts for the issue and transfer of tokenised equity. These contracts will support an organisation throughout its life and serve as a shared public utility for ventures and investors alike. An organisation's profile will act much like an email address or social media profile—a reliable reference point built for a specific utility.
 
-1.1.1 `IdentityRegistry.sol` stores the address of all the identity accounts within the protocol. The identity registry also stores and serves the corresponding country code for each identity allowing for easy reference access. 
+Tokenisation makes it drastically faster, simpler and cheaper for companies to manage shares and raise capital than through traditional means. Instead of needing dedicated support, founders can deploy a set of smart contracts at the price of gas. These hybrid legal contracts enforce rights both on-chain and off-chain bridging the gap between traditional and decentralised finance.
 
-1.1.2 `Identity.sol` is an ERC-734 standard key-value pair store and ERC-735 claims, holder. The ERC-734 enables key management, allowing an arbitrary number of keys and permission levels to be added to an account as well as managing the signature requirements for each type of operation. The ERC-734 claims holder stores “claims”-signed digital attestations that the identity has a given attribute. Claims, in combination with an identity account, create something equivalent to a digital ID card or passport. The identity contract also features a number of execution functions that allow it to interact with other contracts on the blockchain. When calling the executeSigned function via a relay the Identity will refund a portion of tokens allowing for gasless single-token transactions.
+As a platform for programmable value the blockchain opens up a multitude of exciting new use cases, one example of which is on-chain voting. By conducting shareholder votes on-chain it is possible to break the discrepancy between recorded and beneficial shareholders, allowing investors to engage directly in the governance no matter how small their shareholding. This is just one example from a multitude of use cases that would have previously been impractical or impossible. 
+		
+# For investors
 
-1.2.0 [`claims`](https://github.com/brucejaya/hypersurface-forge/src/Hyperbase/claims) are signed digital attestations that an identity has some property that is attached to an identity account. This directory is related to verifying claims in credential-based interactions.
+Hypersurface allows investors to engage broadly in on-chain venture investment, trading and governance directly from their smart wallets. We hope to be for tokenised equity what Uniswap and Opensea were for their retrospective ecosystems, pioneers of thriving ecosystems that created value for millions of users. 
 
-1.2.1 `ClaimVerifiersRegistry.sol` stores the identity addresses of trusted claim verifiers. When establishing an identity has the requisite claims for a particular action the protocol will also check that claims have come from a reputable source, recorded here in the ClaimVerifiersRegistry. 
+Fundamentally, Hypersurface is a control structure. It harnesses trustlessness and governs interactions between users, allowing people to collaborate in ways that would have never been possible. By creating a shared language for describing equity investments we can standardise interactions and massively increase transferability, creating unprecedented liquidity for venture investors.
 
-1.2.2 `ClaimsValidator.sol` evaluates and verifies the veracity of claims attached to an identity account. If a token transfer requires a claim signed by a trusted verifier the ClaimsValidator references ClaimVerifiersRegistry.
-
-1.3.0 [`sudomain`](https://github.com/brucejaya/hypersurface-forge/src/Hyperbase/sudomain) is currently empty but will be responsible for registering new subdomains to an account so that accounts can be identified in normal terms. Currently assessing the relative merits of ENS vs the newer ERC-4834 standard.
-
-### 2.0.0 Hypershare is the home of all things **equity** related. 
-
-2.1.0 [`token`](https://github.com/brucejaya/hypersurface-forge/src/Hypershare/token) is responsible for tracking and handling transfers of tokenised equity.
-
-2.1.1. TokenRegistry.sol: is a permissioned multi-token asset registry based on the ERC-1155 standard. This important distinction strips away all unnecessary logic to create a lean, efficient, and flexible equity token implementation whereby, unlike an ERC-20 standard token, TokenRegistry can contain an infinite number of tokens within the same contract. This provides users with a single point of access to all assets within the Hypersurface ecosystem. TokenRegistry implements the transfer function in a conditional way, such that should the compliance checks fail, or the receiver not be eligible, the token transfer will revert. TokenRegistry also includes a number of fine-grain issuer control designed for permissioned assets, such as freezing and recovery. By virtue of its ERC-1155 compliance TokenRegistry embeds agreements and structured agreement metadata in its URI tag.
-
-2.2.0 [`compliance`](https://github.com/brucejaya/hypersurface-forge/src/Hypershare/compliance) enforces on-chain transfer control thereby automating the process of compliance for users.
-
-2.2.1 `ComplianceLimitHolder.sol` enforces limit-based transfer controls such as ensuring the maximum number of holders has not been exceeded or that specific jurisdictional limits have not been exceeded. 
-
-2.2.2 `ComplianceClaimsRequired.sol` stores claim topics that are required for holders, directly referencing the Identity claims of the receiver to verify that they have the appropriate credentials. 
-
-## Next steps
-
-Primarily, the Hypersurface protocol provides an open standard that enables equity to be represented in a way that is uniform. The ideal is a minimalist control structure that enables a simple, effective base for subsequent development. This enables it to be worked with quickly and safely, whether by Hypersurface, users, or other marketplace actors. As such Hypersurface in it's final form will most likely consist of a minimum of three core libraries: the protocol (this), the application, and the legal modules. If any areas of the core protocol will see significant change in the long-term it will most likely be the on-chain compliance controls. By adding further sophistication to the compliance contract we will be able to reduce the general tedium of compliance and further increase transferability in a meaningful way for users.
+Illiquidity is the single greatest problem in the venture investment industry. It compounds risk, increases the difficulty of every other process and constrains the market based on the type of opportunity investors can realise an exit on. This liquidity will not only benefit investors but have direct knock-on effects for founders who seek to raise funding and ultimately, broaden the scope of venture investment allowing it to support a more diverse range of opportunities.

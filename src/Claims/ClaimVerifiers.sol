@@ -7,24 +7,23 @@ import '../../Interface/IAccounts.sol';
 
 contract ClaimVerifiers is IClaimVerifiers {
     
-    // @dev Array containing all verifiers identity contract address.
+  	////////////////
+    // STATE
+    ////////////////
+    
+    // @notice Array containing all verifiers identity contract address.
     IAccounts[] public verifiers;
 
-    // @dev Mapping between a trusted Verifier index and its corresponding claimsRequired.
+    // @notice Mapping between a trusted Verifier index and its corresponding claimsRequired.
     mapping(address => uint256[]) public verifierTrustedTopics;
 
-    function getTrustedVerifiers()
-        external
-        view
-        override
-        returns (IAccounts[] memory)
-    {
-        // TODO
-        return verifiers;
-    }
-
+    //////////////////////////////////////////////
+    // FUNCTIONS
+    //////////////////////////////////////////////
+    
+    // @notice Checks if address is verifier
     function isVerifier(
-        address _Verifier
+        address _verifier
     )
         external
         view
@@ -33,27 +32,16 @@ contract ClaimVerifiers is IClaimVerifiers {
     {
         uint256 length = verifiers.length;
         for (uint256 i = 0; i < length; i++) {
-            if (address(verifiers[i]) == _Verifier) {
+            if (address(verifiers[i]) == _verifier) {
                 return true;
             }
         }
         return false;
     }
 
-    function getTrustedVerifierClaimTopics(
-        IAccounts _verifier
-    )
-        external
-        view
-        override
-        returns (uint256[] memory)
-    {
-        require(verifierTrustedTopics[address(_verifier)].length != 0, 'trusted Verifier doesn\'t exist');
-        return verifierTrustedTopics[address(_verifier)];
-    }
-
+    // @notice Account has claim topic
     function hasClaimTopic(
-        address _Verifier,
+        address _verifier,
         uint256 _claimTopic
     )
         external
@@ -61,8 +49,8 @@ contract ClaimVerifiers is IClaimVerifiers {
         override
         returns (bool)
     {
-        uint256 length = verifierTrustedTopics[_Verifier].length;
-        uint256[] memory claimsRequired = verifierTrustedTopics[_Verifier];
+        uint256 length = verifierTrustedTopics[_verifier].length;
+        uint256[] memory claimsRequired = verifierTrustedTopics[_verifier];
         for (uint256 i = 0; i < length; i++) {
             if (claimsRequired[i] == _claimTopic) {
                 return true;
@@ -71,6 +59,7 @@ contract ClaimVerifiers is IClaimVerifiers {
         return false;
     }
 
+    // @notice Owenr can add a trusted verifier
     function addTrustedVerifier(
         IAccounts _verifier,
         uint256[] calldata _claimsRequired
@@ -86,6 +75,7 @@ contract ClaimVerifiers is IClaimVerifiers {
         emit TrustedVerifierAdded(_verifier, _claimsRequired);
     }
 
+    // @notice Owner can remove a trusted verifier 
     function removeTrustedVerifier(
         IAccounts _verifier
     )
@@ -106,6 +96,7 @@ contract ClaimVerifiers is IClaimVerifiers {
         emit TrustedVerifierRemoved(_verifier);
     }
 
+    // @notice Update the topics a verifier can verify on
     function updateVerifierClaimTopics(
         IAccounts _verifier,
         uint256[] calldata _claimsRequired

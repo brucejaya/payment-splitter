@@ -8,23 +8,23 @@ import '../../Interface/IAccounts.sol';
 
 contract Accounts is IAccounts {
 
-    ////////////////
-    // STATES
+  	////////////////
+    // STATE
     ////////////////
 
-   // @dev struct containing the identity contract and the country of the user
     struct Account {
         // address name; #TODO
         uint16 country;
     }
 
-    // @dev mapping between a hased user address and the corresponding identity account
+    // @notice Accounts
     mapping(address => Account) public accounts;
 
-    ////////////////////////////////////////////////////////////////
-    //                       IDENTITY CONTROLS
-    ////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////
+    // FUNCTIONS
+    //////////////////////////////////////////////
 
+    // @notice
     function registerAccount(
         address _account,
         IAccounts _identity,
@@ -40,6 +40,7 @@ contract Accounts is IAccounts {
         emit AccountsRegistered(_account, _identity);
     }
 
+    // @notice
     function batchRegisterAccount(
         address[] calldata _accounts,
         IAccounts[] calldata _accounts,
@@ -53,7 +54,7 @@ contract Accounts is IAccounts {
         }
     }
 
-    // @dev updates the country associated with an identity account
+    // @notice updates the country associated with an identity account
     function updateAccount(
         address _account,
         IAccounts _identity
@@ -70,7 +71,7 @@ contract Accounts is IAccounts {
         emit AccountsUpdated(oldAccounts, _identity);
     }
 
-    // @dev updates the country associated with an identity account
+    // @notice updates the country associated with an identity account
     function updateCountry(
         address _account, 
         uint16 _country
@@ -85,7 +86,7 @@ contract Accounts is IAccounts {
         emit CountryUpdated(_account, _country);
     }
     
-    // @dev removes an identity from the registry
+    // @notice removes an identity from the registry
     function deleteAccount(
         address _account
     )
@@ -97,7 +98,5 @@ contract Accounts is IAccounts {
         delete accounts[_account];
         emit AccountsRemoved(_account, identity(_account));
     }
-
-    
 
 }

@@ -10,15 +10,28 @@ import 'openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol';
 import '../../Interface/IEquity.sol';
 
 contract Scrip is ERC20, ERC20, ERC1155Holder {
+
+    ////////////////
+    // CONTRACT
+    ////////////////
     
-    // Contracts
+    // @notice
     IEquity public _equity;
 
-    // States
+    ////////////////
+    // STATE
+    ////////////////
+
+    // @notice
     uint256 public _id;
+
+    // @notice
 	string public _uri;
 
-    // Constructor
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+
     constructor(
         IEquity equity,
         uint256 id,
@@ -33,7 +46,11 @@ contract Scrip is ERC20, ERC20, ERC1155Holder {
         _uri = uri;
     }
 
-    // Functions
+    //////////////////////////////////////////////
+    // FUNCTIONS
+    //////////////////////////////////////////////
+    
+    // @notice
     function wrapTokens(
         address account,
         uint256 amount
@@ -45,6 +62,7 @@ contract Scrip is ERC20, ERC20, ERC1155Holder {
         _mint(account, amount);
     }
 
+    // @notice
     function unWrapTokens(
         address account, 
         uint256 amount
@@ -68,6 +86,7 @@ contract Scrip is ERC20, ERC20, ERC1155Holder {
         _equity.safeTransferFrom(address(this), account, _id, amount, "" );
     }
 
+    // @notice
     function uri()
         public
         view
