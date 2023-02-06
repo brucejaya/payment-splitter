@@ -1,6 +1,6 @@
 # Hypersurface Protocol
 
-**Welcome to Hypersurface.**
+**Welcome to Hypersurface. A digital equity primitive for web3.**
 
 Hypersurface is a decentralised financial infrastructure for venture investment. The protocol allows entrepreneurs to create and manage tokenised equity, automate compliance and raise venture funding. For investors, Hypersurface provides a platform not just to invest in venture deals and hold crypto equity but to realise unprecedented liquidity on assets that would have previously been immobile, allowing venture shares to be traded like any other crypto asset.
 
