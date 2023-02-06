@@ -107,11 +107,15 @@ contract Equity is ERC1155, ERC1155Pausable {
         onlyOwner 
         returns (bool)
     {
+        // Sanity checks
         require(balanceOf(lostWallet, id) != 0, "No tokens to recover");
 
-        _accounts.registerAccount(newWallet, IAccounts(account), _accounts.accounts(lostWallet).country);
-        _accounts.deleteAccount(lostWallet);
+        // Create new account, delete old account
+        _accounts.registerAccount(account, _accounts.accounts(lostWallet).country);
 
+        // Delete account
+        _accounts.deleteAccount(lostWallet);
+        
         forcedTransfer(lostWallet, newWallet, id, balanceOf(lostWallet, id), data);
 		
         if (_compliance._frozenTokens[id][lostWallet] > 0) {
@@ -126,15 +130,32 @@ contract Equity is ERC1155, ERC1155Pausable {
     }
 
 	// @notice Setters
-	function setAccounts(address accounts) public onlyOwner {
+	function setAccounts(
+        address accounts
+    )
+        public
+        onlyOwner
+    {
         _accounts = accounts;
     }
 
-    function setCompliance(address compliance) public onlyOwner {
+    // @notice
+    function setCompliance(
+        address compliance
+    )
+        public
+        onlyOwner 
+    {
         _compliance = compliance;
     }
 
-    function setClaimsRequired(address claimsRequired) public onlyOwner {
+    // @notice
+    function setClaimsRequired(
+        address claimsRequired
+    ) 
+        public 
+        onlyOwner
+    {
         _claimsRequired = claimsRequired;
     }
 
