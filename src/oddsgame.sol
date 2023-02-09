@@ -8,7 +8,15 @@ pragma solidity 0.8.1;
 
 contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
     
+    ////////////////
+    // CONTRACTS
+    ////////////////
+
     using SafeERC20 for IERC20;
+
+    ////////////////
+    // STATES
+    ////////////////
     
     bool public paused = false;
     
@@ -59,61 +67,46 @@ contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
 
     mapping(bytes32 => uint) public betMap;
 
+    ////////////////
+    // EVENTS
+    ////////////////
+
     event BetPlaced(uint indexed betId, address indexed gambler);
     event BetSettled(uint indexed betId, address indexed gambler, uint amount, uint8 indexed modulo, uint8 rollUnder, uint40 mask, uint outcome, uint winAmount);
     event BetRefunded(uint indexed betId, address indexed gambler);
 
+    ////////////////
+    // CONSTRUCTOR
+    ////////////////
+
     constructor() VRFConsumerBase(VRF_COORDINATOR, LINK_TOKEN) public {}
+   
+    //////////////////////////////////////////////
+    // BET RESOLUTION
+    //////////////////////////////////////////////
 
-    /*
-    * @Dev configuration for betting
-    */
-
-    function setHouseEdge(uint _houseEdgePercent) external onlyOwner {
-        houseEdgePercent = _houseEdgePercent;
-    }
-
-    function setChainlinkFee(uint _chainlinkFee) external onlyOwner {
-        chainlinkFee = _chainlinkFee;
-    }
-
-    function setMinBetAmount(uint _minBetAmount) external onlyOwner {
-        minBetAmount = _minBetAmount;
-    }
-
-    function setMaxBetAmount(uint _maxBetAmount) external onlyOwner {
-        require(_maxBetAmount < 5000000 ether, "maxBetAmount must be a sane number");
-        maxBetAmount = _maxBetAmount;
-    }
-
-    function setMaxProfit(uint _maxProfit) external onlyOwner {
-        require(_maxProfit < 50000000 ether, "maxProfit must be a sane number");
-        maxProfit = _maxProfit;
-    }
-
-    function setWealthTaxIncrementPercent(uint _wealthTaxIncrementPercent) external onlyOwner {
-        wealthTaxIncrementPercent = _wealthTaxIncrementPercent;
-    }
-
-    function setWealthTaxIncrementThreshold(uint _wealthTaxIncrementThreshold) external onlyOwner {
-        wealthTaxIncrementThreshold = _wealthTaxIncrementThreshold;
-    }
-
-    function getWealthTax(uint amount) private view returns (uint wealthTax) {
-        wealthTax = amount / wealthTaxIncrementThreshold * wealthTaxIncrementPercent;
-    }
-    
-    /*
-    * @Dev main flow for placing and resolving bets
-    */
-
-    function getDiceWinAmount(uint amount, uint modulo, uint rollUnder) private view returns (uint winAmount) {
+    function getDiceWinAmount(
+        uint amount,
+        uint modulo,
+        uint rollUnder
+    )
+        private
+        view
+        returns (uint winAmount)
+    {
         require(0 < rollUnder && rollUnder <= modulo, "Win probability out of range.");
         uint houseEdge = amount * (houseEdgePercent + getWealthTax(amount)) / 100;
         winAmount = (amount - houseEdge) * modulo / rollUnder;
     }
 
-    function placeBet(uint betMask, uint modulo) external payable nonReentrant {
+    function placeBet(
+        uint betMask,
+        uint modulo
+    )
+        external
+        payable
+        nonReentrant
+    {
         uint amount = msg.value;
 
         require(LINK.balanceOf(address(this)) >= chainlinkFee, "Not enough LINK in contract.");
@@ -159,11 +152,23 @@ contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
         betsLength++;
     }
 
-    function fulfillRandomness(bytes32 requestId, uint randomness) internal override {
+    function fulfillRandomness(
+        bytes32 requestId,
+        uint randomness
+    )
+        internal
+        override
+    {
         settleBet(requestId, randomness);
     }
 
-    function settleBet(bytes32 requestId, uint randomNumber) internal nonReentrant {
+    function settleBet(
+        bytes32 requestId,
+        uint randomNumber
+    )
+        internal
+        nonReentrant
+    {
         uint betId = betMap[requestId];
         Bet storage bet = bets[betId];
         uint amount = bet.amount;
@@ -200,7 +205,13 @@ contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
         }
     }
 
-    function refundBet(uint betId) external nonReentrant payable {
+    function refundBet(
+        uint betId
+    )
+        external
+        nonReentrant
+        payable
+    {
         Bet storage bet = bets[betId];
 
         require(bet.amount > 0, "Bet does not exist."); // Check that bet exists
@@ -215,12 +226,94 @@ contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
 
         emit BetRefunded(betId, bet.gambler);
     }
+ 
+    //////////////////////////////////////////////
+    // SETTERS
+    //////////////////////////////////////////////
 
-    /*
-    * @Dev control functions for the owner and contract ETH/token balance
-    */
+    function setHouseEdge(
+        uint _houseEdgePercent
+    )
+        external
+        onlyOwner
+    {
+        houseEdgePercent = _houseEdgePercent;
+    }
 
-    function pauseContract() external onlyOwner {
+    function setChainlinkFee(
+        uint _chainlinkFee
+    )
+        external
+        onlyOwner
+    {
+        chainlinkFee = _chainlinkFee;
+    }
+
+    function setMinBetAmount(
+        uint _minBetAmount
+    )
+        external
+        onlyOwner
+    {
+        minBetAmount = _minBetAmount;
+    }
+
+    function setMaxBetAmount(
+        uint _maxBetAmount
+    )
+        external
+        onlyOwner
+    {
+        require(_maxBetAmount < 5000000 ether, "maxBetAmount must be a sane number");
+        maxBetAmount = _maxBetAmount;
+    }
+
+    function setMaxProfit(
+        uint _maxProfit
+    )
+        external
+        onlyOwner
+    {
+        require(_maxProfit < 50000000 ether, "maxProfit must be a sane number");
+        maxProfit = _maxProfit;
+    }
+
+    function setWealthTaxIncrementPercent(
+        uint _wealthTaxIncrementPercent
+    )
+        external
+        onlyOwner
+    {
+        wealthTaxIncrementPercent = _wealthTaxIncrementPercent;
+    }
+
+    function setWealthTaxIncrementThreshold(
+        uint _wealthTaxIncrementThreshold
+    )
+        external
+        onlyOwner
+    {
+        wealthTaxIncrementThreshold = _wealthTaxIncrementThreshold;
+    }
+
+    function getWealthTax(
+        uint amount
+    )
+        private
+        view
+        returns (uint wealthTax)
+    {
+        wealthTax = amount / wealthTaxIncrementThreshold * wealthTaxIncrementPercent;
+    }
+ 
+    //////////////////////////////////////////////
+    // OWNER FUNCTIONS
+    //////////////////////////////////////////////
+
+    function pauseContract()
+        external
+        onlyOwner
+    {
         if (paused) {
             paused = false;
         }
@@ -229,36 +322,64 @@ contract Oddsgame is VRFConsumerBase, Ownable, ReentrancyGuard {
         }
     }
 
-    function balanceETH() external view returns (uint) {
+    function balanceETH()
+        external
+        view
+        returns (uint)
+    {
         return address(this).balance;
     }
 
-    function balanceLINK() external view returns (uint) {
+    function balanceLINK()
+        external
+        view
+        returns (uint)
+    {
         return LINK.balanceOf(address(this));
     }
 
-    function withdrawFunds(address payable beneficiary, uint withdrawAmount) external onlyOwner {
+    function withdrawFunds(
+        address payable beneficiary,
+        uint withdrawAmount
+    )
+        external
+        onlyOwner
+    {
         require(withdrawAmount <= address(this).balance, "Withdrawal amount larger than balance.");
         require(withdrawAmount <= address(this).balance - lockedInBets, "Withdrawal amount larger than balance minus lockedInBets");
         beneficiary.transfer(withdrawAmount);
         cumulativeWithdrawal += withdrawAmount;
     }
 
-    function withdrawTokens(address token_address) external onlyOwner {
+    function withdrawTokens(
+        address token_address
+    )
+        external
+        onlyOwner
+    {
         IERC20(token_address).safeTransfer(owner(), IERC20(token_address).balanceOf(address(this)));
     }
     
-    function withdrawAll() external onlyOwner {
+    function withdrawAll()
+        external
+        onlyOwner
+    {
         uint withdrawAmount = address(this).balance - lockedInBets;
         cumulativeWithdrawal += withdrawAmount;
         msg.sender.transfer(withdrawAmount);
         IERC20(LINK_TOKEN).safeTransfer(owner(), IERC20(LINK_TOKEN).balanceOf(address(this)));
     }
     
-    fallback() external payable {
+    fallback()
+        external
+        payable
+    {
         cumulativeDeposit += msg.value;
     }
-    receive() external payable {
+    receive()
+        external
+        payable
+    {
         cumulativeDeposit += msg.value;
     }
 }
