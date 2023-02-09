@@ -1,0 +1,331 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "extensionData",
+          "type": "bytes"
+        }
+      ],
+      "name": "callExtension",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "mint",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountOut",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "extensionData",
+          "type": "bytes"
+        }
+      ],
+      "name": "setExtension",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "callExtension(address,uint256,bytes)": "36ceb11a",
+    "setExtension(bytes)": "fb0c4441"
+  },
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IHypercore.sol",
+    "id": 27617,
+    "exportedSymbols": {
+      "IHypercore": [
+        27616
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "46:335:31",
+    "nodes": [
+      {
+        "id": 27597,
+        "nodeType": "PragmaDirective",
+        "src": "46:23:31",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".6"
+        ]
+      },
+      {
+        "id": 27616,
+        "nodeType": "ContractDefinition",
+        "src": "110:270:31",
+        "nodes": [
+          {
+            "id": 27602,
+            "nodeType": "FunctionDefinition",
+            "src": "137:61:31",
+            "functionSelector": "fb0c4441",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setExtension",
+            "nameLocation": "146:12:31",
+            "parameters": {
+              "id": 27600,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27599,
+                  "mutability": "mutable",
+                  "name": "extensionData",
+                  "nameLocation": "174:13:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27602,
+                  "src": "159:28:31",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 27598,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "159:5:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "158:30:31"
+            },
+            "returnParameters": {
+              "id": 27601,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "197:0:31"
+            },
+            "scope": 27616,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27615,
+            "nodeType": "FunctionDefinition",
+            "src": "204:174:31",
+            "functionSelector": "36ceb11a",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "callExtension",
+            "nameLocation": "213:13:31",
+            "parameters": {
+              "id": 27609,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27604,
+                  "mutability": "mutable",
+                  "name": "account",
+                  "nameLocation": "244:7:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27615,
+                  "src": "236:15:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 27603,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "236:7:31",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27606,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "270:6:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27615,
+                  "src": "262:14:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27605,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "262:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27608,
+                  "mutability": "mutable",
+                  "name": "extensionData",
+                  "nameLocation": "302:13:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27615,
+                  "src": "287:28:31",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 27607,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "287:5:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "226:95:31"
+            },
+            "returnParameters": {
+              "id": 27614,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27611,
+                  "mutability": "mutable",
+                  "name": "mint",
+                  "nameLocation": "353:4:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27615,
+                  "src": "348:9:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 27610,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "348:4:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27613,
+                  "mutability": "mutable",
+                  "name": "amountOut",
+                  "nameLocation": "367:9:31",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27615,
+                  "src": "359:17:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27612,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "359:7:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "347:30:31"
+            },
+            "scope": 27616,
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IHypercore",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          27616
+        ],
+        "name": "IHypercore",
+        "nameLocation": "120:10:31",
+        "scope": 27617,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0-or-later"
+  },
+  "id": 31
+}

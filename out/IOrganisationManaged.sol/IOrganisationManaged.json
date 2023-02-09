@@ -1,0 +1,284 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "keypurposekeyType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OperatorAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "keypurposekeyType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OperatorRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "purpose",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "number",
+          "type": "uint256"
+        }
+      ],
+      "name": "OperatorsRequiredChanged",
+      "type": "event"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IOrganisationManaged.sol",
+    "id": 27743,
+    "exportedSymbols": {
+      "IOrganisationManaged": [
+        27742
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "36:795:34",
+    "nodes": [
+      {
+        "id": 27724,
+        "nodeType": "PragmaDirective",
+        "src": "36:23:34",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".6"
+        ]
+      },
+      {
+        "id": 27742,
+        "nodeType": "ContractDefinition",
+        "src": "61:769:34",
+        "nodes": [
+          {
+            "id": 27729,
+            "nodeType": "EventDefinition",
+            "src": "266:55:34",
+            "anonymous": false,
+            "documentation": {
+              "id": 27725,
+              "nodeType": "StructuredDocumentation",
+              "src": "103:158:34",
+              "text": " @dev Emitted when a key was added to the Identity.\n Specification: MUST be triggered when addOperator was successfully called."
+            },
+            "eventSelector": "564472207cf6697287aa046e48d6a90a31d9be632c632a96785adf57c79e6fa4",
+            "name": "OperatorAdded",
+            "nameLocation": "272:13:34",
+            "parameters": {
+              "id": 27728,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27727,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "keypurposekeyType",
+                  "nameLocation": "302:17:34",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27729,
+                  "src": "286:33:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 27726,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "286:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "285:35:34"
+            }
+          },
+          {
+            "id": 27734,
+            "nodeType": "EventDefinition",
+            "src": "497:57:34",
+            "anonymous": false,
+            "documentation": {
+              "id": 27730,
+              "nodeType": "StructuredDocumentation",
+              "src": "327:165:34",
+              "text": " @dev Emitted when a key was removed from the Identity.\n Specification: MUST be triggered when removeOperator was successfully called."
+            },
+            "eventSelector": "87ed60f85ca9455ddc75377b551f6e9345e1191987f08d339604ebbd4d274c3c",
+            "name": "OperatorRemoved",
+            "nameLocation": "503:15:34",
+            "parameters": {
+              "id": 27733,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27732,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "keypurposekeyType",
+                  "nameLocation": "535:17:34",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27734,
+                  "src": "519:33:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 27731,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "519:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "518:35:34"
+            }
+          },
+          {
+            "id": 27741,
+            "nodeType": "EventDefinition",
+            "src": "762:64:34",
+            "anonymous": false,
+            "documentation": {
+              "id": 27735,
+              "nodeType": "StructuredDocumentation",
+              "src": "560:197:34",
+              "text": " @dev Emitted when the list of required keys to perform an action was updated.\n Specification: MUST be triggered when changeOperatorsRequired was successfully called."
+            },
+            "eventSelector": "dcae8c6519a15f99488473d04be54ad01f29e2d48e5f6769ca44d56bd1b76b2c",
+            "name": "OperatorsRequiredChanged",
+            "nameLocation": "768:24:34",
+            "parameters": {
+              "id": 27740,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27737,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "purpose",
+                  "nameLocation": "801:7:34",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27741,
+                  "src": "793:15:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27736,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "793:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27739,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "number",
+                  "nameLocation": "818:6:34",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27741,
+                  "src": "810:14:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27738,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "810:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "792:33:34"
+            }
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IOrganisationManaged",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          27742
+        ],
+        "name": "IOrganisationManaged",
+        "nameLocation": "71:20:34",
+        "scope": 27743,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 34
+}

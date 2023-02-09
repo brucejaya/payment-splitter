@@ -1,0 +1,1188 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimValidator",
+          "name": "trustedVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "ClaimTopicsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimValidator",
+          "name": "trustedVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "TrustedVerifierAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimValidator",
+          "name": "trustedVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "TrustedVerifierRemoved",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimValidator",
+          "name": "_trustedVerifier",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "addTrustedVerifier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimValidator",
+          "name": "_trustedVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "getTrustedVerifierClaimTopics",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTrustedVerifiers",
+      "outputs": [
+        {
+          "internalType": "contract IClaimValidator[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_issuer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "hasClaimTopic",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_issuer",
+          "type": "address"
+        }
+      ],
+      "name": "isVerifier",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimValidator",
+          "name": "_trustedVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "removeTrustedVerifier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnershipOnVerifiersRegistryContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimValidator",
+          "name": "_trustedVerifier",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "updateVerifierClaimTopics",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "addTrustedVerifier(address,uint256[])": "81e45bd2",
+    "getTrustedVerifierClaimTopics(address)": "b8baeb91",
+    "getTrustedVerifiers()": "61940734",
+    "hasClaimTopic(address,uint256)": "34a89987",
+    "isVerifier(address)": "33105218",
+    "removeTrustedVerifier(address)": "801d2cf1",
+    "transferOwnershipOnVerifiersRegistryContract(address)": "53579a87",
+    "updateVerifierClaimTopics(address,uint256[])": "ecccf27b"
+  },
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IClaimVerifiersRegistry.sol",
+    "id": 27087,
+    "exportedSymbols": {
+      "IClaimValidator": [
+        27000
+      ],
+      "IClaimVerifiersRegistry": [
+        27086
+      ],
+      "IERC734": [
+        27470
+      ],
+      "IERC735": [
+        27595
+      ],
+      "IIdentity": [
+        27625
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "37:1138:25",
+    "nodes": [
+      {
+        "id": 27002,
+        "nodeType": "PragmaDirective",
+        "src": "37:23:25",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".6"
+        ]
+      },
+      {
+        "id": 27003,
+        "nodeType": "ImportDirective",
+        "src": "62:31:25",
+        "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IClaimValidator.sol",
+        "file": "./IClaimValidator.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 27087,
+        "sourceUnit": 27001,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 27086,
+        "nodeType": "ContractDefinition",
+        "src": "95:1079:25",
+        "nodes": [
+          {
+            "id": 27011,
+            "nodeType": "EventDefinition",
+            "src": "136:91:25",
+            "anonymous": false,
+            "eventSelector": "8cfa048f319519100018c070f5b70ebdb10f75f14622c98ec59725c0de0f12f1",
+            "name": "TrustedVerifierAdded",
+            "nameLocation": "142:20:25",
+            "parameters": {
+              "id": 27010,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27006,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "trustedVerifier",
+                  "nameLocation": "187:15:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27011,
+                  "src": "163:39:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27005,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27004,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "163:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "163:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27009,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "claimTopics",
+                  "nameLocation": "214:11:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27011,
+                  "src": "204:21:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27007,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "204:7:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 27008,
+                    "nodeType": "ArrayTypeName",
+                    "src": "204:9:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "162:64:25"
+            }
+          },
+          {
+            "id": 27016,
+            "nodeType": "EventDefinition",
+            "src": "233:70:25",
+            "anonymous": false,
+            "eventSelector": "950a8e112b31e97be460baabc0d4707401514b9c8de4a4bc01b7b1554e4dbb16",
+            "name": "TrustedVerifierRemoved",
+            "nameLocation": "239:22:25",
+            "parameters": {
+              "id": 27015,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27014,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "trustedVerifier",
+                  "nameLocation": "286:15:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27016,
+                  "src": "262:39:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27013,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27012,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "262:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "262:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "261:41:25"
+            }
+          },
+          {
+            "id": 27024,
+            "nodeType": "EventDefinition",
+            "src": "309:89:25",
+            "anonymous": false,
+            "eventSelector": "ec753cfc52044f61676f18a11e500093a9f2b1cd5e4942bc476f2b0438159bcf",
+            "name": "ClaimTopicsUpdated",
+            "nameLocation": "315:18:25",
+            "parameters": {
+              "id": 27023,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27019,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "trustedVerifier",
+                  "nameLocation": "358:15:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27024,
+                  "src": "334:39:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27018,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27017,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "334:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "334:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27022,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "claimTopics",
+                  "nameLocation": "385:11:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27024,
+                  "src": "375:21:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27020,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "375:7:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 27021,
+                    "nodeType": "ArrayTypeName",
+                    "src": "375:9:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "333:64:25"
+            }
+          },
+          {
+            "id": 27033,
+            "nodeType": "FunctionDefinition",
+            "src": "404:104:25",
+            "functionSelector": "81e45bd2",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "addTrustedVerifier",
+            "nameLocation": "413:18:25",
+            "parameters": {
+              "id": 27031,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27027,
+                  "mutability": "mutable",
+                  "name": "_trustedVerifier",
+                  "nameLocation": "448:16:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27033,
+                  "src": "432:32:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27026,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27025,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "432:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "432:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27030,
+                  "mutability": "mutable",
+                  "name": "_claimTopics",
+                  "nameLocation": "485:12:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27033,
+                  "src": "466:31:25",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_calldata_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27028,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "466:7:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 27029,
+                    "nodeType": "ArrayTypeName",
+                    "src": "466:9:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "431:67:25"
+            },
+            "returnParameters": {
+              "id": 27032,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "507:0:25"
+            },
+            "scope": 27086,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27039,
+            "nodeType": "FunctionDefinition",
+            "src": "514:74:25",
+            "functionSelector": "801d2cf1",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "removeTrustedVerifier",
+            "nameLocation": "523:21:25",
+            "parameters": {
+              "id": 27037,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27036,
+                  "mutability": "mutable",
+                  "name": "_trustedVerifier",
+                  "nameLocation": "561:16:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27039,
+                  "src": "545:32:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27035,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27034,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "545:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "545:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "544:34:25"
+            },
+            "returnParameters": {
+              "id": 27038,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "587:0:25"
+            },
+            "scope": 27086,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27048,
+            "nodeType": "FunctionDefinition",
+            "src": "594:111:25",
+            "functionSelector": "ecccf27b",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "updateVerifierClaimTopics",
+            "nameLocation": "603:25:25",
+            "parameters": {
+              "id": 27046,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27042,
+                  "mutability": "mutable",
+                  "name": "_trustedVerifier",
+                  "nameLocation": "645:16:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27048,
+                  "src": "629:32:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27041,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27040,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "629:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "629:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27045,
+                  "mutability": "mutable",
+                  "name": "_claimTopics",
+                  "nameLocation": "682:12:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27048,
+                  "src": "663:31:25",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_calldata_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27043,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "663:7:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 27044,
+                    "nodeType": "ArrayTypeName",
+                    "src": "663:9:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "628:67:25"
+            },
+            "returnParameters": {
+              "id": 27047,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "704:0:25"
+            },
+            "scope": 27086,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27055,
+            "nodeType": "FunctionDefinition",
+            "src": "711:80:25",
+            "functionSelector": "61940734",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTrustedVerifiers",
+            "nameLocation": "720:19:25",
+            "parameters": {
+              "id": 27049,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "739:2:25"
+            },
+            "returnParameters": {
+              "id": 27054,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27053,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27055,
+                  "src": "765:24:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_contract$_IClaimValidator_$27000_$dyn_memory_ptr",
+                    "typeString": "contract IClaimValidator[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27051,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 27050,
+                        "name": "IClaimValidator",
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 27000,
+                        "src": "765:15:25"
+                      },
+                      "referencedDeclaration": 27000,
+                      "src": "765:15:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                        "typeString": "contract IClaimValidator"
+                      }
+                    },
+                    "id": 27052,
+                    "nodeType": "ArrayTypeName",
+                    "src": "765:17:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_contract$_IClaimValidator_$27000_$dyn_storage_ptr",
+                      "typeString": "contract IClaimValidator[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "764:26:25"
+            },
+            "scope": 27086,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27062,
+            "nodeType": "FunctionDefinition",
+            "src": "797:66:25",
+            "functionSelector": "33105218",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isVerifier",
+            "nameLocation": "806:10:25",
+            "parameters": {
+              "id": 27058,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27057,
+                  "mutability": "mutable",
+                  "name": "_issuer",
+                  "nameLocation": "825:7:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27062,
+                  "src": "817:15:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 27056,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "817:7:25",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "816:17:25"
+            },
+            "returnParameters": {
+              "id": 27061,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27060,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27062,
+                  "src": "857:4:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 27059,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "857:4:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "856:6:25"
+            },
+            "scope": 27086,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27071,
+            "nodeType": "FunctionDefinition",
+            "src": "869:114:25",
+            "functionSelector": "b8baeb91",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTrustedVerifierClaimTopics",
+            "nameLocation": "878:29:25",
+            "parameters": {
+              "id": 27066,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27065,
+                  "mutability": "mutable",
+                  "name": "_trustedVerifier",
+                  "nameLocation": "924:16:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27071,
+                  "src": "908:32:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                    "typeString": "contract IClaimValidator"
+                  },
+                  "typeName": {
+                    "id": 27064,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 27063,
+                      "name": "IClaimValidator",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 27000,
+                      "src": "908:15:25"
+                    },
+                    "referencedDeclaration": 27000,
+                    "src": "908:15:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IClaimValidator_$27000",
+                      "typeString": "contract IClaimValidator"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "907:34:25"
+            },
+            "returnParameters": {
+              "id": 27070,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27069,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27071,
+                  "src": "965:16:25",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 27067,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "965:7:25",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 27068,
+                    "nodeType": "ArrayTypeName",
+                    "src": "965:9:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "964:18:25"
+            },
+            "scope": 27086,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27080,
+            "nodeType": "FunctionDefinition",
+            "src": "989:90:25",
+            "functionSelector": "34a89987",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "hasClaimTopic",
+            "nameLocation": "998:13:25",
+            "parameters": {
+              "id": 27076,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27073,
+                  "mutability": "mutable",
+                  "name": "_issuer",
+                  "nameLocation": "1020:7:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27080,
+                  "src": "1012:15:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 27072,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1012:7:25",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 27075,
+                  "mutability": "mutable",
+                  "name": "_claimTopic",
+                  "nameLocation": "1037:11:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27080,
+                  "src": "1029:19:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 27074,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1029:7:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1011:38:25"
+            },
+            "returnParameters": {
+              "id": 27079,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27078,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27080,
+                  "src": "1073:4:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 27077,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1073:4:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1072:6:25"
+            },
+            "scope": 27086,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27085,
+            "nodeType": "FunctionDefinition",
+            "src": "1085:82:25",
+            "functionSelector": "53579a87",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferOwnershipOnVerifiersRegistryContract",
+            "nameLocation": "1094:44:25",
+            "parameters": {
+              "id": 27083,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 27082,
+                  "mutability": "mutable",
+                  "name": "_newOwner",
+                  "nameLocation": "1147:9:25",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27085,
+                  "src": "1139:17:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 27081,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1139:7:25",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1138:19:25"
+            },
+            "returnParameters": {
+              "id": 27084,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1166:0:25"
+            },
+            "scope": 27086,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IClaimVerifiersRegistry",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          27086
+        ],
+        "name": "IClaimVerifiersRegistry",
+        "nameLocation": "105:23:25",
+        "scope": 27087,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 25
+}

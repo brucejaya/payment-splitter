@@ -1,0 +1,1559 @@
+{
+  "_format": "ethers-rs-sol-cache-3",
+  "paths": {
+    "artifacts": "out",
+    "sources": "src",
+    "tests": "test",
+    "libraries": [
+      "lib"
+    ]
+  },
+  "files": {
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/lib/ds-test/src/test.sol": {
+      "lastModificationDate": 1657113206535,
+      "contentHash": "962996f0e05d5218857a538a62d7c47e",
+      "sourceName": "lib/forge-std/lib/ds-test/src/test.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.5.0",
+      "artifacts": {
+        "DSTest": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "test.sol/DSTest.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/src/Script.sol": {
+      "lastModificationDate": 1658083916970,
+      "contentHash": "da9346c55be157617d528a1ce499f800",
+      "sourceName": "lib/forge-std/src/Script.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "Script": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Script.sol/Script.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/src/Test.sol": {
+      "lastModificationDate": 1658083916970,
+      "contentHash": "decbd5346de602fbc1dc6749fd64996b",
+      "sourceName": "lib/forge-std/src/Test.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": ">=0.6.0, <0.9.0",
+      "artifacts": {
+        "Test": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Test.sol/Test.json"
+        },
+        "stdError": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Test.sol/stdError.json"
+        },
+        "stdMath": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Test.sol/stdMath.json"
+        },
+        "stdStorage": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Test.sol/stdStorage.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/src/Vm.sol": {
+      "lastModificationDate": 1657627546857,
+      "contentHash": "4859392eba8e412dd3eb572038849434",
+      "sourceName": "lib/forge-std/src/Vm.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.6.0",
+      "artifacts": {
+        "Vm": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Vm.sol/Vm.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/src/console.sol": {
+      "lastModificationDate": 1658083916970,
+      "contentHash": "61d705a9e2432eda2e9916be83b7dd82",
+      "sourceName": "lib/forge-std/src/console.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.4.22, <0.9.0",
+      "artifacts": {
+        "console": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "console.sol/console.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/forge-std/src/console2.sol": {
+      "lastModificationDate": 1657113196482,
+      "contentHash": "5df91f8e93efbfcccf68973dc1b74a70",
+      "sourceName": "lib/forge-std/src/console2.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.4.22, <0.9.0",
+      "artifacts": {
+        "console2": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "console2.sol/console2.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1658080340623,
+      "contentHash": "b567e6e20b4556cf4977e8598b86b553",
+      "sourceName": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "Ownable": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Ownable.sol/Ownable.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "e6516c3faaaaf1b2c79142261581f7e7",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC1155": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC1155.sol/IERC1155.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "7d3ef4cabf3834e2dda487961d4e1d7d",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC1155Receiver": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC1155Receiver.sol/IERC1155Receiver.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "83ca89f5c2d3d8674c03bb454bd47622",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC1155MetadataURI": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC1155MetadataURI.sol/IERC1155MetadataURI.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol": {
+      "lastModificationDate": 1658080340619,
+      "contentHash": "ae3ebec5440603712a44c704c488fc34",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ERC1155Holder": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ERC1155Holder.sol/ERC1155Holder.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol": {
+      "lastModificationDate": 1658080340620,
+      "contentHash": "7c00dff2c0ff7fa3a44e329fba322a67",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ERC1155Receiver": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ERC1155Receiver.sol/ERC1155Receiver.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "ff2d056d07a52051d0ed4d14a4a8b536",
+      "sourceName": "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC20": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC20.sol/IERC20.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/utils/Address.sol": {
+      "lastModificationDate": 1657113546479,
+      "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
+      "sourceName": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.1",
+      "artifacts": {
+        "Address": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Address.sol/Address.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+      "lastModificationDate": 1658080340616,
+      "contentHash": "6c9b3c7f814c551569fbf491e7164e68",
+      "sourceName": "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "Context": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Context.sol/Context.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "d3d0145a2f08568ee0eeee331f7ac94b",
+      "sourceName": "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ERC165": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ERC165.sol/ERC165.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1658080340617,
+      "contentHash": "5355d876f6d523d59084b87f08394cab",
+      "sourceName": "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC165": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC165.sol/IERC165.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/claims/ClaimValidator.sol": {
+      "lastModificationDate": 1658161139833,
+      "contentHash": "01ced1d2f179781fa71e87c1f3bdedfa",
+      "sourceName": "src/Hyperbase/claims/ClaimValidator.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "src/Interface/IClaimValidator.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ClaimValidator": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ClaimValidator.sol/ClaimValidator.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/claims/ClaimVerifiersRegistry.sol": {
+      "lastModificationDate": 1658160416795,
+      "contentHash": "dcd9f866339a664d487d158bdb8e37c7",
+      "sourceName": "src/Hyperbase/claims/ClaimVerifiersRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "src/Interface/IClaimValidator.sol",
+        "src/Interface/IClaimVerifiersRegistry.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ClaimVerifiersRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ClaimVerifiersRegistry.sol/ClaimVerifiersRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/identity/Identity.sol": {
+      "lastModificationDate": 1658163506587,
+      "contentHash": "53327cecfdc63b81e15e4a5e1d163900",
+      "sourceName": "src/Hyperbase/identity/Identity.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/utils/ERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "Identity": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Identity.sol/Identity.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/identity/IdentityRegistry.sol": {
+      "lastModificationDate": 1658101296354,
+      "contentHash": "a3d49092990692b7b6f36cc9dd2b199f",
+      "sourceName": "src/Hyperbase/identity/IdentityRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol",
+        "src/Interface/IIdentityRegistry.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IdentityRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IdentityRegistry.sol/IdentityRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hypershare/compliance/ComplianceClaimsRequired.sol": {
+      "lastModificationDate": 1658160216973,
+      "contentHash": "58fa70f4cba7f052d298664aa7398860",
+      "sourceName": "src/Hypershare/compliance/ComplianceClaimsRequired.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "src/Interface/IClaimValidator.sol",
+        "src/Interface/IClaimVerifiersRegistry.sol",
+        "src/Interface/IComplianceClaimsRequired.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ComplianceClaimsRequired": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ComplianceClaimsRequired.sol/ComplianceClaimsRequired.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hypershare/compliance/ComplianceLimitHolder.sol": {
+      "lastModificationDate": 1658161865159,
+      "contentHash": "7b6c59ead2edf9162ca0c9de619b5cb7",
+      "sourceName": "src/Hypershare/compliance/ComplianceLimitHolder.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "src/Interface/IComplianceClaimsRequired.sol",
+        "src/Interface/IComplianceLimitHolder.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol",
+        "src/Interface/IIdentityRegistry.sol",
+        "src/Interface/ITokenRegistry.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ComplianceLimitHolder": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ComplianceLimitHolder.sol/ComplianceLimitHolder.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hypershare/token/TokenRegistry.sol": {
+      "lastModificationDate": 1658163052897,
+      "contentHash": "0735e208a6bb9d5b00a96b2826ceb084",
+      "sourceName": "src/Hypershare/token/TokenRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "src/Interface/IComplianceClaimsRequired.sol",
+        "src/Interface/IComplianceLimitHolder.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol",
+        "src/Interface/IIdentityRegistry.sol",
+        "src/Interface/ITokenRegistry.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "TokenRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "TokenRegistry.sol/TokenRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IClaimValidator.sol": {
+      "lastModificationDate": 1658080340603,
+      "contentHash": "7e37b4a185449b2defa0a96e1d04dfff",
+      "sourceName": "src/Interface/IClaimValidator.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IClaimValidator": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IClaimValidator.sol/IClaimValidator.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IClaimVerifiersRegistry.sol": {
+      "lastModificationDate": 1658080340603,
+      "contentHash": "4588f7496561adb81c145b7ba163a53d",
+      "sourceName": "src/Interface/IClaimVerifiersRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "src/Interface/IClaimValidator.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IClaimVerifiersRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IClaimVerifiersRegistry.sol/IClaimVerifiersRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IComplianceClaimsRequired.sol": {
+      "lastModificationDate": 1658160178249,
+      "contentHash": "9b6ff87caf703f0a286363f73a9ee21d",
+      "sourceName": "src/Interface/IComplianceClaimsRequired.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IComplianceClaimsRequired": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IComplianceClaimsRequired.sol/IComplianceClaimsRequired.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IComplianceLimitHolder.sol": {
+      "lastModificationDate": 1658162541085,
+      "contentHash": "1ede3e32b06b7631054bd01248bafc4e",
+      "sourceName": "src/Interface/IComplianceLimitHolder.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IComplianceLimitHolder": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IComplianceLimitHolder.sol/IComplianceLimitHolder.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IERC1155.sol": {
+      "lastModificationDate": 1658080340603,
+      "contentHash": "b3c160adb671ceb4efc01925984012ea",
+      "sourceName": "src/Interface/IERC1155.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC1155": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC1155.sol/IERC1155.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IERC734.sol": {
+      "lastModificationDate": 1658080340603,
+      "contentHash": "b870ad21efa0c1eb07bfb81d4c2650a9",
+      "sourceName": "src/Interface/IERC734.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC734": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC734.sol/IERC734.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IERC735.sol": {
+      "lastModificationDate": 1658082614857,
+      "contentHash": "eeb7b4c3fb8c746bf66b68c2b02451e5",
+      "sourceName": "src/Interface/IERC735.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IERC735": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IERC735.sol/IERC735.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IHypercore.sol": {
+      "lastModificationDate": 1658083916778,
+      "contentHash": "298726052155398c62d99d7bb6312161",
+      "sourceName": "src/Interface/IHypercore.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IHypercore": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IHypercore.sol/IHypercore.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IIdentity.sol": {
+      "lastModificationDate": 1658082632382,
+      "contentHash": "b577c1c7bff24c664c484a298a1ef5fc",
+      "sourceName": "src/Interface/IIdentity.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IIdentity": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IIdentity.sol/IIdentity.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IIdentityRegistry.sol": {
+      "lastModificationDate": 1658160363816,
+      "contentHash": "9322b0f2ce8d74e481e42aab31d93a4f",
+      "sourceName": "src/Interface/IIdentityRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IIdentityRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IIdentityRegistry.sol/IIdentityRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IOrganisationManaged.sol": {
+      "lastModificationDate": 1658083284883,
+      "contentHash": "d4d3b64a80aa02a6d015f8e45fb96a75",
+      "sourceName": "src/Interface/IOrganisationManaged.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IOrganisationManaged": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IOrganisationManaged.sol/IOrganisationManaged.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/ITokenRegistry.sol": {
+      "lastModificationDate": 1658163060813,
+      "contentHash": "2127ebd6aef7e1f753d89f039dc3228d",
+      "sourceName": "src/Interface/ITokenRegistry.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC1155/IERC1155.sol",
+        "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "src/Interface/IComplianceClaimsRequired.sol",
+        "src/Interface/IComplianceLimitHolder.sol",
+        "src/Interface/IERC734.sol",
+        "src/Interface/IERC735.sol",
+        "src/Interface/IIdentity.sol",
+        "src/Interface/IIdentityRegistry.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "ITokenRegistry": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ITokenRegistry.sol/ITokenRegistry.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/ITribute.sol": {
+      "lastModificationDate": 1658083916812,
+      "contentHash": "cbe47bae700edf43c976869780f4d147",
+      "sourceName": "src/Interface/ITribute.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.8.4",
+      "artifacts": {
+        "IKaliDAOtribute": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "ITribute.sol/IKaliDAOtribute.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/test/Contract.t.sol": {
+      "lastModificationDate": 1657113190650,
+      "contentHash": "848ba83feec29a2e4d286c118102ae20",
+      "sourceName": "test/Contract.t.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/forge-std/lib/ds-test/src/test.sol",
+        "lib/forge-std/src/Script.sol",
+        "lib/forge-std/src/Test.sol",
+        "lib/forge-std/src/Vm.sol",
+        "lib/forge-std/src/console.sol",
+        "lib/forge-std/src/console2.sol"
+      ],
+      "versionRequirement": "^0.8.13",
+      "artifacts": {
+        "ContractTest": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "Contract.t.sol/ContractTest.json"
+        }
+      }
+    }
+  }
+}

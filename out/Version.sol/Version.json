@@ -1,0 +1,172 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "version",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b5060e38061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806354fd4d5014602d575b600080fd5b60408051808201825260058152640312e342e360dc1b6020820152905160529190605b565b60405180910390f35b600060208083528351808285015260005b81811015608657858101830151858201604001528201606c565b818111156097576000604083870101525b50601f01601f191692909201604001939250505056fea2646970667358221220f9a18bc3cd1a25ff4b7e25b123253cddcf9e25864f9751adc3f775b1f83fb07764736f6c634300080e0033",
+    "sourceMap": "159:207:11:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806354fd4d5014602d575b600080fd5b60408051808201825260058152640312e342e360dc1b6020820152905160529190605b565b60405180910390f35b600060208083528351808285015260005b81811015608657858101830151858201604001528201606c565b818111156097576000604083870101525b50601f01601f191692909201604001939250505056fea2646970667358221220f9a18bc3cd1a25ff4b7e25b123253cddcf9e25864f9751adc3f775b1f83fb07764736f6c634300080e0033",
+    "sourceMap": "159:207:11:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;253:111;343:14;;;;;;;;;;;-1:-1:-1;;;343:14:11;;;;253:111;;;;343:14;253:111;:::i;:::-;;;;;;;;14:597:36;126:4;155:2;184;173:9;166:21;216:6;210:13;259:6;254:2;243:9;239:18;232:34;284:1;294:140;308:6;305:1;302:13;294:140;;;403:14;;;399:23;;393:30;369:17;;;388:2;365:26;358:66;323:10;;294:140;;;452:6;449:1;446:13;443:91;;;522:1;517:2;508:6;497:9;493:22;489:31;482:42;443:91;-1:-1:-1;595:2:36;574:15;-1:-1:-1;;570:29:36;555:45;;;;602:2;551:54;;14:597;-1:-1:-1;;;14:597:36:o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "version()": "54fd4d50"
+  },
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/identity/version/Version.sol",
+    "id": 2249,
+    "exportedSymbols": {
+      "Version": [
+        2248
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "37:330:11",
+    "nodes": [
+      {
+        "id": 2237,
+        "nodeType": "PragmaDirective",
+        "src": "37:23:11",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 2248,
+        "nodeType": "ContractDefinition",
+        "src": "159:207:11",
+        "nodes": [
+          {
+            "id": 2247,
+            "nodeType": "FunctionDefinition",
+            "src": "253:111:11",
+            "body": {
+              "id": 2246,
+              "nodeType": "Block",
+              "src": "308:56:11",
+              "statements": [
+                {
+                  "expression": {
+                    "hexValue": "312e342e30",
+                    "id": 2244,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "string",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "350:7:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_stringliteral_649061b8d3f3b9c5692fcbef47cba88c670a745e17e5297d42ddc0aa82ab1129",
+                      "typeString": "literal_string \"1.4.0\""
+                    },
+                    "value": "1.4.0"
+                  },
+                  "functionReturnParameters": 2243,
+                  "id": 2245,
+                  "nodeType": "Return",
+                  "src": "343:14:11"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2239,
+              "nodeType": "StructuredDocumentation",
+              "src": "182:66:11",
+              "text": " @dev Returns the string of the current version."
+            },
+            "functionSelector": "54fd4d50",
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "version",
+            "nameLocation": "262:7:11",
+            "parameters": {
+              "id": 2240,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "269:2:11"
+            },
+            "returnParameters": {
+              "id": 2243,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2242,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2247,
+                  "src": "293:13:11",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 2241,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "293:6:11",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "292:15:11"
+            },
+            "scope": 2248,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Version",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 2238,
+          "nodeType": "StructuredDocumentation",
+          "src": "62:96:11",
+          "text": " @dev Version contract gives the versioning information of the implementation contract"
+        },
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          2248
+        ],
+        "name": "Version",
+        "nameLocation": "168:7:11",
+        "scope": 2249,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 11
+}

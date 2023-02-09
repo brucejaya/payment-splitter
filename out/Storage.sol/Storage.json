@@ -1,0 +1,385 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220c40b094ad976d78356df6d03aab17b0dc5dfafad241d8156ba4c7d72c831b16664736f6c634300080e0033",
+    "sourceMap": "87:329:9:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600080fdfea2646970667358221220c40b094ad976d78356df6d03aab17b0dc5dfafad241d8156ba4c7d72c831b16664736f6c634300080e0033",
+    "sourceMap": "87:329:9:-:0;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/identity/storage/Storage.sol",
+    "id": 2201,
+    "exportedSymbols": {
+      "Storage": [
+        2200
+      ],
+      "Structs": [
+        2235
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "37:379:9",
+    "nodes": [
+      {
+        "id": 2169,
+        "nodeType": "PragmaDirective",
+        "src": "37:23:9",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 2170,
+        "nodeType": "ImportDirective",
+        "src": "62:23:9",
+        "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Hyperbase/identity/storage/Structs.sol",
+        "file": "./Structs.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 2201,
+        "sourceUnit": 2236,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 2200,
+        "nodeType": "ContractDefinition",
+        "src": "87:329:9",
+        "nodes": [
+          {
+            "id": 2174,
+            "nodeType": "VariableDeclaration",
+            "src": "121:31:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "executionNonce",
+            "nameLocation": "138:14:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 2173,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "121:7:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 2179,
+            "nodeType": "VariableDeclaration",
+            "src": "158:37:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "keys",
+            "nameLocation": "191:4:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Key_$2210_storage_$",
+              "typeString": "mapping(bytes32 => struct Structs.Key)"
+            },
+            "typeName": {
+              "id": 2178,
+              "keyType": {
+                "id": 2175,
+                "name": "bytes32",
+                "nodeType": "ElementaryTypeName",
+                "src": "166:7:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "158:23:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Key_$2210_storage_$",
+                "typeString": "mapping(bytes32 => struct Structs.Key)"
+              },
+              "valueType": {
+                "id": 2177,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 2176,
+                  "name": "Key",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2210,
+                  "src": "177:3:9"
+                },
+                "referencedDeclaration": 2210,
+                "src": "177:3:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Key_$2210_storage_ptr",
+                  "typeString": "struct Structs.Key"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 2184,
+            "nodeType": "VariableDeclaration",
+            "src": "201:52:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "keysByPurpose",
+            "nameLocation": "240:13:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_bytes32_$dyn_storage_$",
+              "typeString": "mapping(uint256 => bytes32[])"
+            },
+            "typeName": {
+              "id": 2183,
+              "keyType": {
+                "id": 2180,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "209:7:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "201:29:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_bytes32_$dyn_storage_$",
+                "typeString": "mapping(uint256 => bytes32[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 2181,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "220:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "id": 2182,
+                "nodeType": "ArrayTypeName",
+                "src": "220:9:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
+                  "typeString": "bytes32[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 2189,
+            "nodeType": "VariableDeclaration",
+            "src": "259:49:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "executions",
+            "nameLocation": "298:10:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Execution_$2221_storage_$",
+              "typeString": "mapping(uint256 => struct Structs.Execution)"
+            },
+            "typeName": {
+              "id": 2188,
+              "keyType": {
+                "id": 2185,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "267:7:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "259:29:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Execution_$2221_storage_$",
+                "typeString": "mapping(uint256 => struct Structs.Execution)"
+              },
+              "valueType": {
+                "id": 2187,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 2186,
+                  "name": "Execution",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2221,
+                  "src": "278:9:9"
+                },
+                "referencedDeclaration": 2221,
+                "src": "278:9:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Execution_$2221_storage_ptr",
+                  "typeString": "struct Structs.Execution"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 2194,
+            "nodeType": "VariableDeclaration",
+            "src": "314:41:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "claims",
+            "nameLocation": "349:6:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Claim_$2234_storage_$",
+              "typeString": "mapping(bytes32 => struct Structs.Claim)"
+            },
+            "typeName": {
+              "id": 2193,
+              "keyType": {
+                "id": 2190,
+                "name": "bytes32",
+                "nodeType": "ElementaryTypeName",
+                "src": "322:7:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "314:25:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Claim_$2234_storage_$",
+                "typeString": "mapping(bytes32 => struct Structs.Claim)"
+              },
+              "valueType": {
+                "id": 2192,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 2191,
+                  "name": "Claim",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2234,
+                  "src": "333:5:9"
+                },
+                "referencedDeclaration": 2234,
+                "src": "333:5:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Claim_$2234_storage_ptr",
+                  "typeString": "struct Structs.Claim"
+                }
+              }
+            },
+            "visibility": "internal"
+          },
+          {
+            "id": 2199,
+            "nodeType": "VariableDeclaration",
+            "src": "361:52:9",
+            "constant": false,
+            "mutability": "mutable",
+            "name": "claimsByTopic",
+            "nameLocation": "400:13:9",
+            "scope": 2200,
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_bytes32_$dyn_storage_$",
+              "typeString": "mapping(uint256 => bytes32[])"
+            },
+            "typeName": {
+              "id": 2198,
+              "keyType": {
+                "id": 2195,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "369:7:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "361:29:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_bytes32_$dyn_storage_$",
+                "typeString": "mapping(uint256 => bytes32[])"
+              },
+              "valueType": {
+                "baseType": {
+                  "id": 2196,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "380:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "id": 2197,
+                "nodeType": "ArrayTypeName",
+                "src": "380:9:9",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
+                  "typeString": "bytes32[]"
+                }
+              }
+            },
+            "visibility": "internal"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 2171,
+              "name": "Structs",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 2235,
+              "src": "107:7:9"
+            },
+            "id": 2172,
+            "nodeType": "InheritanceSpecifier",
+            "src": "107:7:9"
+          }
+        ],
+        "canonicalName": "Storage",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          2200,
+          2235
+        ],
+        "name": "Storage",
+        "nameLocation": "96:7:9",
+        "scope": 2201,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 9
+}

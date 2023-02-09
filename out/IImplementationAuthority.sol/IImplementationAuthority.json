@@ -1,0 +1,132 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "getImplementation",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "getImplementation()": "aaf10f42"
+  },
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/hypersurface-protocol/src/Interface/IImplementationAuthority.sol",
+    "id": 31710,
+    "exportedSymbols": {
+      "IImplementationAuthority": [
+        31709
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "37:129:44",
+    "nodes": [
+      {
+        "id": 31703,
+        "nodeType": "PragmaDirective",
+        "src": "37:23:44",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 31709,
+        "nodeType": "ContractDefinition",
+        "src": "62:103:44",
+        "nodes": [
+          {
+            "id": 31708,
+            "nodeType": "FunctionDefinition",
+            "src": "103:60:44",
+            "functionSelector": "aaf10f42",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getImplementation",
+            "nameLocation": "112:17:44",
+            "parameters": {
+              "id": 31704,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "129:2:44"
+            },
+            "returnParameters": {
+              "id": 31707,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 31706,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 31708,
+                  "src": "154:7:44",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 31705,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "154:7:44",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "153:9:44"
+            },
+            "scope": 31709,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IImplementationAuthority",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          31709
+        ],
+        "name": "IImplementationAuthority",
+        "nameLocation": "72:24:44",
+        "scope": 31710,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 44
+}
