@@ -1,18 +1,23 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 
-pragma solidity >=0.8.0;
+pragma solidity ^0.8.6;
 
-import "openzeppelin-contracts/contracts/utils/Context.sol";
-import "openzeppelin-contracts/contracts/finance/PaymentSplitter.sol";
+import "./PaymentSplitter.sol";
 
-contract PaymentSplitterCloneable is PaymentSplitter, Context {
+contract PaymentSplitterCloneable is PaymentSplitter {
+
+    address[] nullPayees;
+    uint256[] nullShares;
     
-    constructor() parent(address[], uint256[]) {}
+    constructor() PaymentSplitter(nullPayees, nullShares) {}
 
     function initialize(
 		address[] memory payees,
 		uint256[] memory shares_
-	) payable {
+	)
+        public
+        payable
+    {
         require(payees.length == shares_.length, "PaymentSplitter: payees and shares length mismatch");
         require(payees.length > 0, "PaymentSplitter: no payees");
 
@@ -21,4 +26,22 @@ contract PaymentSplitterCloneable is PaymentSplitter, Context {
         }
     }
 
+    // @notice Return number of payees
+    function payeesCount() public view returns (uint256) {
+        return _payees.length;
+    }
+
+    // @notice Return releasable balance of payee
+    function balanceOf(
+        address payee
+    )
+        public
+        view
+        returns (uint256)
+    {
+        require(_shares[payee] > 0, "PaymentSplitter: account has no shares");
+        uint256 totalReceived = address(this).balance + totalReleased();
+        uint256 payment = _pendingPayment(payee, totalReceived, released(payee));
+        return payment;
+    }
 }
