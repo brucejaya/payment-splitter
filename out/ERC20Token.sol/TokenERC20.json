@@ -1,0 +1,82 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea264697066735822122055e5b22c34e3b46a88ded085c1a502897397fcb35d43be0506f61dd5b927e04264736f6c634300080e0033",
+    "sourceMap": "134:38:15:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600080fdfea264697066735822122055e5b22c34e3b46a88ded085c1a502897397fcb35d43be0506f61dd5b927e04264736f6c634300080e0033",
+    "sourceMap": "134:38:15:-:0;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/ERC20Token.sol",
+    "id": 22717,
+    "exportedSymbols": {
+      "Context": [
+        22712
+      ],
+      "ERC20": [
+        22068
+      ],
+      "IERC20": [
+        22146
+      ],
+      "IERC20Metadata": [
+        22171
+      ],
+      "TokenERC20": [
+        22716
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "39:133:15",
+    "nodes": [
+      {
+        "id": 22714,
+        "nodeType": "PragmaDirective",
+        "src": "39:23:15",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".6"
+        ]
+      },
+      {
+        "id": 22715,
+        "nodeType": "ImportDirective",
+        "src": "66:64:15",
+        "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+        "file": "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 22717,
+        "sourceUnit": 22069,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 22716,
+        "nodeType": "ContractDefinition",
+        "src": "134:38:15",
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "TokenERC20",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          22716
+        ],
+        "name": "TokenERC20",
+        "nameLocation": "143:10:15",
+        "scope": 22717,
+        "usedErrors": []
+      }
+    ],
+    "license": "GPL-3.0"
+  },
+  "id": 15
+}
