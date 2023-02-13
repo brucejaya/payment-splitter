@@ -6,6 +6,7 @@ import "./PaymentSplitter.sol";
 
 contract PaymentSplitterCloneable is PaymentSplitter {
 
+    // @notice Null arrays to provide to PaymentSplitter constructor 
     address[] nullPayees;
     uint256[] nullShares;
     
