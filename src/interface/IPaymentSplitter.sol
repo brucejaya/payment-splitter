@@ -11,6 +11,8 @@ interface IPaymentSplitter {
     event ERC20PaymentReleased(IERC20 indexed token, address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
 
+    address[] public _payees;
+
     receive() external payable virtual;
     function totalShares() external view returns (uint256);
     function totalReleased() external view returns (uint256);
