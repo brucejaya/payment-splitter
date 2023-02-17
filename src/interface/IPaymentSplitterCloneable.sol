@@ -9,5 +9,8 @@ interface IPaymentSplitterCloneable is IPaymentSplitter {
     function initialize(address[] memory payees, uint256[] memory shares_) external payable;
     function payeesCount() external view returns (uint256);
     function balanceOf(address payee) external view returns (uint256);
-    
+    function balanceOfTokens(address token, address payee) external view returns (uint256);
+
+    function payeesLength() external view returns (uint256);    
+    function payees() external view returns (address[] memory);    
 }

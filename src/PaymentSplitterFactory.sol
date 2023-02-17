@@ -16,17 +16,14 @@ contract PaymentSplitterFactory is Ownable {
 
     uint256 public _tax = 1;
 
-    // @notice An array of payment splitters
-    IPaymentSplitterCloneable[] public _splitters;
-
-    // @notice Mapping of address to index of splitter
-    mapping(address => uint256) public _splittersByAddress;
+    // @notice Mapping from address to splitter interface
+    mapping(address => IPaymentSplitterCloneable) private _splitters;
 
     // @notice Mapping from target address to index of splitters created by the target
-    mapping(address => uint256[]) private _createdSplittersOf;
+    mapping(address => address[]) private _createdSplittersOf;
 
     // @notice Mapping from target address to index of splitters where target is a payee
-    mapping(address => uint256[]) private _registeredSplittersOf; 
+    mapping(address => address[]) private _registeredSplittersOf; 
 
     ////////////////
     // EVENTS
@@ -39,6 +36,8 @@ contract PaymentSplitterFactory is Ownable {
     ////////////////
 
     constructor () {
+        PaymentSplitterCloneable implementation = new PaymentSplitterCloneable();
+        
         // Payees
         address[] memory payees = new address[](1);
         payees[0] = address(this);
@@ -46,8 +45,16 @@ contract PaymentSplitterFactory is Ownable {
         // Shares
         uint256[] memory shares = new uint256[](1);
         shares[0] = 1;
+        
+        implementation.initialize(payees, shares);
 
-        _createSplitter(payees, shares);
+        address implementationAddress = address(implementation);
+
+        _splitters[implementationAddress] = IPaymentSplitterCloneable(payable(implementationAddress));
+
+        _createdSplittersOf[address(this)].push(implementationAddress);
+
+        _registeredSplittersOf[address(this)].push(implementationAddress);
     }
 
     //////////////////////////////////////////////
@@ -85,44 +92,32 @@ contract PaymentSplitterFactory is Ownable {
         internal
         returns (address)
     {
-        // Create new payment splitter
-        address newSplitter = new PaymentSplitterCloneable();
+        address _newSplitterAddress = Clones.clone(splitterImplementation());
 
-        // Push to all splitters 
-        _splitters.push(IPaymentSplitterCloneable(newSplitter));
-
-        // Get index of splitter
-        uint256 index = _splitters.length - 1;
-
-        // Initialise splitter
-        _splitters[index].initialize(payees, shares);
-
-        // Push to splitters by address
-        _splittersByAddress.push(address(_splitters[index]));
-
-        // Push to created splitters
-        _createdSplittersOf[msg.sender].push(index);
-
-        // Push to registered splitters
+        PaymentSplitterCloneable(payable(_newSplitterAddress)).initialize(payees, shares);
+        
+        _splitters[_newSplitterAddress] = IPaymentSplitterCloneable(payable(_newSplitterAddress));
+        
+        _createdSplittersOf[msg.sender].push(_newSplitterAddress);
+        
         for(uint i = 0; i < payees.length; i++) {
-            _registeredSplittersOf[payees[i]].push(index);
+            _registeredSplittersOf[payees[i]].push(_newSplitterAddress);
         }
-
-        return address(_splitters[index]);
+        
+        return address(_newSplitterAddress);
     }
 
     // @notice Release all funds in splitter to all recievers.
     function releaseAllInSplitter(
-        address splitter
+        address payable splitter
     )
         external
     {
-        uint256 index = _splittersByAddress[splitter];
-        
         // For all the payees of the splitter
-        for(uint i = 0; i < _splitters[index]._payees.length; i++) {
+        for(uint i = 0; i < _splitters[splitter].payeesLength(); i++) {
+            
             // Release their funds
-            _splitters[index].release(_splitters[index]._payees[i]);
+            _splitters[splitter].release(payable(_splitters[splitter].payees()[i]));
         }
     }
 
@@ -133,7 +128,7 @@ contract PaymentSplitterFactory is Ownable {
     )
         external
     {
-        _splitters[_splittersByAddress[splitter]].release(receiver);
+        _splitters[splitter].release(receiver);
     }
 
     // @notice Release tokens associated with the address `receiver` from the splitter at `splitter`.
@@ -144,7 +139,7 @@ contract PaymentSplitterFactory is Ownable {
     )
         external
     {
-        _splitters[_splittersByAddress[splitter]].release(token, receiver);
+        _splitters[splitter].releaseTokens(token, receiver);
     }
 
     // @notice Release all funds associated with the address `receiver`.
@@ -168,7 +163,7 @@ contract PaymentSplitterFactory is Ownable {
     {
         // Iterate through registered splitters of address and release funds
         for(uint i = 0; i < _registeredSplittersOf[receiver].length; i++) {
-            _splitters[_registeredSplittersOf[receiver][i]].release(token, receiver);
+            _splitters[_registeredSplittersOf[receiver][i]].releaseTokens(token, receiver);
         }
     }
 
@@ -197,7 +192,7 @@ contract PaymentSplitterFactory is Ownable {
     {
         // Iterate through registered splitters and release funds
         for(uint i = start; i < end; i++) {
-            _splitters[_registeredSplittersOf[receiver][i]].release(token, receiver);
+            _splitters[_registeredSplittersOf[receiver][i]].releaseTokens(token, receiver);
         }
     }
 
@@ -211,7 +206,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (address)
     {
-        return address(_splitters[0]);
+        return _createdSplittersOf[address(this)][0];
     }
 
     // @notice Getter for the number of PaymentSplitters registered where `target` has shares.
@@ -256,7 +251,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256)
     {
-        return PaymentSplitterCloneable(payable(splitter)).shares(account);
+        return _splitters[splitter].shares(account);
     }
 
     // @notice Getter helper for the shares distribution of the splitter at `splitter`.
@@ -267,11 +262,10 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256[] memory)
     {
-        PaymentSplitterCloneable psc = PaymentSplitterCloneable(payable(splitter));
-        uint numPayees = psc.payeesCount();
-        uint256[] memory shares = new uint256[](numPayees);
-        for (uint i = 0; i < numPayees; i++) {
-            shares[i] = psc.shares(psc.payee(i));
+        IPaymentSplitterCloneable splitterInstance = _splitters[splitter];
+        uint256[] memory shares = new uint256[](splitterInstance.payeesLength());
+        for (uint i = 0; i < splitterInstance.payeesLength(); i++) {
+            shares[i] = splitterInstance.shares(splitterInstance.payee(i));
         }
         return shares;
     }
@@ -284,7 +278,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256)
     {
-        return PaymentSplitterCloneable(payable(splitter)).totalShares();
+        return _splitters[splitter].totalShares();
     }
 
     // @notice Getter helper for the payee number `index` of the splitter `splitter`.
@@ -296,7 +290,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (address)
     {
-        return PaymentSplitterCloneable(payable(splitter)).payee(index);
+        return _splitters[splitter].payee(index);
     }
 
     // @notice Getter helper for the payees of the splitter at `splitter`.
@@ -307,13 +301,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (address[] memory)
     {
-        PaymentSplitterCloneable psc = PaymentSplitterCloneable(payable(splitter));
-        uint numPayees = psc.payeesCount();
-        address[] memory payees = new address[](numPayees);
-        for (uint i = 0; i < numPayees; i++) {
-            payees[i] = psc.payee(i);
-        }
-        return payees;
+        return _splitters[splitter].payees();
     }
 
     // @notice Getter helper for the current releaseable funds associated with a specific payee at at `splitter`.
@@ -325,7 +313,20 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256)
     {
-        return PaymentSplitterCloneable(payable(splitter)).balanceOf(account);
+        return _splitters[splitter].balanceOf(account);
+    }
+
+    // @notice Getter helper for the current releaseable tokens associated with a specific payee at at `splitter`.
+    function balanceOfTokens(
+        address splitter,
+        address token,
+        address account
+    )
+        public
+        view
+        returns (uint256)
+    {
+        return _splitters[splitter].balanceOfTokens(token, account);
     }
 
     // @notice Getter helper for the current releaseable funds associated with each payee in the  splitter at `splitter`.
@@ -336,14 +337,29 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256[] memory)
     {
-        PaymentSplitterCloneable psc = PaymentSplitterCloneable(payable(splitter));
-        uint numPayees = psc.payeesCount();
-        uint256[] memory balances_ = new uint256[](numPayees);
-        for (uint i = 0; i < numPayees; i++) {
-            address p = psc.payee(i); 
-            balances_[i] = psc.balanceOf(p);
+        IPaymentSplitterCloneable splitterInstance = _splitters[splitter];
+        uint256[] memory balances = new uint256[](splitterInstance.payeesLength());
+        for (uint i = 0; i < splitterInstance.payeesLength(); i++) {
+            balances[i] = splitterInstance.balanceOf(splitterInstance.payee(i));
         }
-        return balances_;
+        return balances;
+    }
+
+    // @notice Getter helper for the current releaseable tokens associated with each payee in the  splitter at `splitter`.
+    function balancesTokens(
+        address splitter,
+        address token
+    )
+        public
+        view
+        returns (uint256[] memory)
+    {
+        IPaymentSplitterCloneable splitterInstance = _splitters[splitter];
+        uint256[] memory balances = new uint256[](splitterInstance.payeesLength());
+        for (uint i = 0; i < splitterInstance.payeesLength(); i++) {
+            balances[i] = splitterInstance.balanceOfTokens(token, splitterInstance.payee(i));
+        }
+        return balances;
     }
 
     //////////////////////////////////////////////

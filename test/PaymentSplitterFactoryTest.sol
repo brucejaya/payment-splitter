@@ -20,8 +20,10 @@ contract PaymentSplitterFactoryTest is Test {
 
     address[] public _users;
     
-    address internal alice;
-    address internal bob;
+    address payable internal admin;
+
+    address payable internal alice;
+    address payable internal bob;
     
     function setUp() public {
         // Set up contracts
@@ -31,39 +33,50 @@ contract PaymentSplitterFactoryTest is Test {
         
         // Create testing users
         _users = _utils.createUsers(2);
-        alice = _users[0];
-        bob = _users[1];
+
+        admin = payable(_users[0]);
+        alice = payable(_users[1]);
+        bob =   payable(_users[2]);
     }
+
 
     function testPaymentSplitterFactory() public {
         
-        uint256[] memory shares = [1,1];
-        address[] memory payees = [address(alice), address(bob)];
+        // Create address array of payees
+        address[] memory payees = new address[](2);
+        payees[0] = address(alice);
+        payees[1] = address(bob);
         
-        address splitter = _factory.newSplitter(shares, payees);
+        // Create uint256 array of shares with 1 share each
+        uint256[] memory shares = new uint256[](2);
+        shares[0] = 1;
+        shares[1] = 1;
+        
+        // Create new splitter
+        address splitter = _factory.newSplitter(payees, shares);
 
         // Send ETH to payment splitter
         uint256 amount = 1000;
-        alice.send(splitter, amount);
+        payable(splitter).transfer(amount);
 
         // Release funds
-        _factory.release(address(alice), splitter);
-        _factory.release(address(bob), splitter);
+        _factory.release(alice, splitter);
+        _factory.release(bob, splitter);
 
         // Check balances
-        assertEq(alice.balance(), amount / 2);
-        assertEq(bob.balance(), amount / 2);
+        assertEq(alice.balance, amount / 2);
+        assertEq(bob.balance, amount / 2);
 
         // Send tokens to payment splitter
-        _token.transfer(splitter, amount);
+        _token.mint(splitter, amount);
 
         // Release tokens
-        _factory.releaseToken(address(alice), splitter, address(_token));
-        _factory.releaseToken(address(bob), splitter, address(_token));
+        _factory.releaseToken(alice, splitter, address(_token));
+        _factory.releaseToken(bob, splitter, address(_token));
 
         // Check _token balances
-        assertEq(_token.balanceOf(address(alice)), amount / 2);
-        assertEq(_token.balanceOf(address(bob)), amount / 2);
+        assertEq(_token.balanceOf(alice), amount / 2);
+        assertEq(_token.balanceOf(bob), amount / 2);
     }
     
 }

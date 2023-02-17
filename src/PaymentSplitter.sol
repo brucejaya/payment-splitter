@@ -10,7 +10,7 @@ contract PaymentSplitter is Context {
     
     event PayeeAdded(address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
-    event ERC20PaymentReleased(IERC20 indexed token, address to, uint256 amount);
+    event ERC20PaymentReleased(address indexed token, address to, uint256 amount);
     event PaymentReceived(address from, uint256 amount);
 
     uint256 internal _totalShares;
@@ -21,8 +21,8 @@ contract PaymentSplitter is Context {
     
     address[] public _payees;
 
-    mapping(IERC20 => uint256) internal _erc20TotalReleased;
-    mapping(IERC20 => mapping(address => uint256)) internal _erc20Released;
+    mapping(address => uint256) internal _erc20TotalReleased;
+    mapping(address => mapping(address => uint256)) internal _erc20Released;
 
     /**
      * @dev Creates an instance of `PaymentSplitter` where each account in `payees` is assigned the number of shares at
@@ -71,7 +71,7 @@ contract PaymentSplitter is Context {
      * @dev Getter for the total amount of `token` already released. `token` should be the address of an IERC20
      * contract.
      */
-    function totalReleased(IERC20 token) public view returns (uint256) {
+    function totalTokensReleased(address token) public view returns (uint256) {
         return _erc20TotalReleased[token];
     }
 
@@ -93,7 +93,7 @@ contract PaymentSplitter is Context {
      * @dev Getter for the amount of `token` tokens already released to a payee. `token` should be the address of an
      * IERC20 contract.
      */
-    function released(IERC20 token, address account) public view returns (uint256) {
+    function releasedTokens(address token, address account) public view returns (uint256) {
         return _erc20Released[token][account];
     }
 
@@ -128,18 +128,19 @@ contract PaymentSplitter is Context {
      * percentage of the total shares and their previous withdrawals. `token` must be the address of an IERC20
      * contract.
      */
-    function release(IERC20 token, address account) public virtual {
+    function releaseTokens(address token, address account) public virtual {
         require(_shares[account] > 0, "PaymentSplitter: account has no shares");
 
-        uint256 totalReceived = token.balanceOf(address(this)) + totalReleased(token);
-        uint256 payment = _pendingPayment(account, totalReceived, released(token, account));
+        uint256 totalReceived = IERC20(token).balanceOf(address(this)) + totalTokensReleased(token);
+
+        uint256 payment = _pendingPayment(account, totalReceived, releasedTokens(token, account));
 
         require(payment != 0, "PaymentSplitter: account is not due payment");
 
         _erc20Released[token][account] += payment;
         _erc20TotalReleased[token] += payment;
 
-        SafeERC20.safeTransfer(token, account, payment);
+        SafeERC20.safeTransfer(IERC20(token), account, payment);
         emit ERC20PaymentReleased(token, account, payment);
     }
 

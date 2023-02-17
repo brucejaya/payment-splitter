@@ -29,7 +29,7 @@ contract PaymentSplitterCloneable is PaymentSplitter {
     }
 
     // @notice Return number of payees
-    function payeesCount() public view returns (uint256) {
+    function payeesLength() public view returns (uint256) {
         return _payees.length;
     }
 
@@ -46,4 +46,29 @@ contract PaymentSplitterCloneable is PaymentSplitter {
         uint256 payment = _pendingPayment(payee, totalReceived, released(payee));
         return payment;
     }
+
+    // @notice Return release token balance of payee
+    function balanceOfTokens(
+        IERC20 token,
+        address payee
+    )
+        public
+        view
+        returns (uint256)
+    {
+        require(_shares[payee] > 0, "PaymentSplitter: account has no shares");
+        uint256 totalReceived = token.balanceOf(address(this)) + totalTokensReleased(token);
+        uint256 payment = _pendingPayment(payee, totalReceived, released(token, payee));
+        return payment;
+    }
+
+    // @notice Return payees
+
+    function payees()
+        public
+        returns (address[] memory)
+    {
+        return _payees;   
+    }
+    
 }
