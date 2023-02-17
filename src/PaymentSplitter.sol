@@ -100,7 +100,7 @@ contract PaymentSplitter is Context {
     /**
      * @dev Getter for the address of the payee number `index`.
      */
-    function payee(uint256 index) public view returns (address) {
+    function payeeIndex(uint256 index) public view returns (address) {
         return _payees[index];
     }
 

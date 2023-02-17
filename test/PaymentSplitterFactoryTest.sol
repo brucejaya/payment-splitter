@@ -6,30 +6,36 @@ import "forge-std/Test.sol";
 import "forge-std/Vm.sol";
 
 import "../src/PaymentSplitterFactory.sol";
-import "openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+
+import "../src/mocks/IERC20Token.sol";
+import "../src/mocks/ERC20Token.sol";
 
 import "./utils/Utils.sol";
 
 contract PaymentSplitterFactoryTest is Test {
     
-    ERC20 public _token;
+    ERC20Token public _token;
 
     PaymentSplitterFactory public _factory;
     
     Utils public _utils;
-
     address[] public _users;
-    
     address payable internal admin;
-
     address payable internal alice;
     address payable internal bob;
-    
+
+    uint256 _amount = 100;
+
     function setUp() public {
+        
+        // Get utils
+        _utils = new Utils();
+
         // Set up contracts
         _factory = new PaymentSplitterFactory(); 
-        _token = new ERC20("Test", "TT");
-        _utils = new Utils();
+        
+        // Create token instance
+        _token = new ERC20Token();
         
         // Create testing users
         _users = _utils.createUsers(2);
@@ -39,8 +45,8 @@ contract PaymentSplitterFactoryTest is Test {
         bob =   payable(_users[2]);
     }
 
-
-    function testPaymentSplitterFactory() public {
+    // @notice Internal function to create new splitters
+    function _createNewSplitter() internal returns (address) {
         
         // Create address array of payees
         address[] memory payees = new address[](2);
@@ -52,31 +58,73 @@ contract PaymentSplitterFactoryTest is Test {
         shares[0] = 1;
         shares[1] = 1;
         
+        // Create payment splitter
+        address splitter = _factory.newSplitter(
+            payees,
+            shares
+        );
+
+        return splitter;
+    }
+
+    // @notice Test create payment splitter
+    function testNewSplitter() public {
+
         // Create new splitter
-        address splitter = _factory.newSplitter(payees, shares);
+        address splitter = _createNewSplitter(); 
+        
+        // Check payment splitter is not 0x0 address
+        assertTrue(splitter != address(0), "Payment splitter address is 0x0");
+    }
 
-        // Send ETH to payment splitter
-        uint256 amount = 1000;
-        payable(splitter).transfer(amount);
+    // @notice Transfer eth to splitter and test release all
+    function testReleaseAll() public {
+        
+        // Create new splitter
+        address splitter = _createNewSplitter(); 
 
-        // Release funds
-        _factory.release(alice, splitter);
-        _factory.release(bob, splitter);
+        // Send _amount eth to splitter
+        payable(splitter).transfer(_amount);
+        
+        // Release all eth in factory
+        _factory.releaseAll(splitter);
+        
+        // Check alice has (_amount / 2) eth
+        assertTrue(address(alice).balance == (_amount / 2), "Alice does not have (_amount / 2) eth");
+        
+        // Check bob has (_amount / 2) eth
+        assertTrue(address(bob).balance == (_amount / 2), "Bob does not have (_amount / 2) eth");
+        
+        // Check splitter has 0 eth
+        assertTrue(address(splitter).balance == 0, "Splitter does not have 0 eth");
+    }
 
-        // Check balances
-        assertEq(alice.balance, amount / 2);
-        assertEq(bob.balance, amount / 2);
+    // @notice Transfer tokens to splitter and test release all
+    function testReleaseAllTokens() public {
+        
+        // Create new splitter
+        address splitter = _createNewSplitter(); 
 
-        // Send tokens to payment splitter
-        _token.mint(splitter, amount);
+        // Mint _amount tokens to admin
+        _token.mint(admin, _amount);
+        
+        // Approve _amount tokens to splitter
+        _token.approve(splitter, _amount);
+        
+        // Deposit _amount tokens to splitter
+        _token.transferFrom(admin, splitter, _amount);
+        
+        // Release all tokens in factory
+        _factory.releaseAll(splitter);
 
-        // Release tokens
-        _factory.releaseToken(alice, splitter, address(_token));
-        _factory.releaseToken(bob, splitter, address(_token));
-
-        // Check _token balances
-        assertEq(_token.balanceOf(alice), amount / 2);
-        assertEq(_token.balanceOf(bob), amount / 2);
+        // Check alice has (_amount / 2) tokens
+        assertTrue(_token.balanceOf(alice) == (_amount / 2), "Alice does not have (_amount / 2) tokens");
+        
+        // Check bob has (_amount / 2) tokens
+        assertTrue(_token.balanceOf(bob) == (_amount / 2), "Bob does not have (_amount / 2) tokens");
+        
+        // Check splitter has 0 tokens
+        assertTrue(_token.balanceOf(splitter) == 0, "Splitter does not have 0 tokens");
     }
     
 }

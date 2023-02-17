@@ -49,7 +49,7 @@ contract PaymentSplitterCloneable is PaymentSplitter {
 
     // @notice Return release token balance of payee
     function balanceOfTokens(
-        IERC20 token,
+        address token,
         address payee
     )
         public
@@ -57,8 +57,8 @@ contract PaymentSplitterCloneable is PaymentSplitter {
         returns (uint256)
     {
         require(_shares[payee] > 0, "PaymentSplitter: account has no shares");
-        uint256 totalReceived = token.balanceOf(address(this)) + totalTokensReleased(token);
-        uint256 payment = _pendingPayment(payee, totalReceived, released(token, payee));
+        uint256 totalReceived = IERC20(token).balanceOf(address(this)) + totalTokensReleased(token);
+        uint256 payment = _pendingPayment(payee, totalReceived, releasedTokens(token, payee));
         return payment;
     }
 
@@ -66,6 +66,7 @@ contract PaymentSplitterCloneable is PaymentSplitter {
 
     function payees()
         public
+        view
         returns (address[] memory)
     {
         return _payees;   
