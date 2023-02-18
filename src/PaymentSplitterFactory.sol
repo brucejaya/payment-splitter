@@ -47,9 +47,9 @@ contract PaymentSplitterFactory is Ownable {
         
         _splitters[address(implementation)] = implementation;
         
-        _createdSplitters[address(this)].push(address(implementation));
+        _createdSplittersOf[address(this)].push(address(implementation));
 
-        _registeredSplitters[address(this)].push(address(implementation));
+        _registeredSplittersOf[address(this)].push(address(implementation));
     }
 
     //////////////////////////////////////////////
@@ -102,17 +102,23 @@ contract PaymentSplitterFactory is Ownable {
         return address(_newSplitterAddress);
     }
 
-    // @notice Release all funds in splitter to all recievers.
+    // @notice Release all eth in splitter to all recievers.
     function releaseAll(
         address splitter
     )
         external
     {
+        address[] memory payees = _splitters[splitter].payees();
+
+        // Sanity checks
+        require(payees.length > 0, "PaymentSplitterManagerClones: no payees");
+        
         // For all the payees of the splitter
-        for(uint i = 0; i < _splitters[splitter].payeesLength(); i++) {
+        for(uint i = 0; i < payees.length; i++) {
             
             // Release their funds
-            _splitters[splitter].release(payable(_splitters[splitter].payees()[i]));
+            _splitters[splitter].release(payable(payees[i]));
+            
         }
     }
 
@@ -123,22 +129,25 @@ contract PaymentSplitterFactory is Ownable {
     )
         external
     {
+        address[] memory payees = _splitters[splitter].payees();
+        
         // For all the payees of the splitter
-        for(uint i = 0; i < _splitters[splitter].payeesLength(); i++) {
+        for(uint i = 0; i < payees.length; i++) {
             
-            // Release their funds
-            _splitters[splitter].releaseTokens(token, payable(_splitters[splitter].payees()[i]));
+            // Release their eth
+            _splitters[splitter].releaseTokens(token, payees[i]);
+            
         }
     }
 
-    // @notice Release funds associated with the address `receiver` from the splitter at `splitter`.
+    // @notice Release eth associated with the address `receiver` from the splitter at `splitter`.
     function release(
-        address payable receiver,
+        address receiver,
         address splitter
     )
         external
     {
-        _splitters[splitter].release(receiver);
+        _splitters[splitter].release(payable(receiver));
     }
 
     // @notice Release tokens associated with the address `receiver` from the splitter at `splitter`.
@@ -152,7 +161,7 @@ contract PaymentSplitterFactory is Ownable {
         _splitters[splitter].releaseTokens(token, receiver);
     }
 
-    // @notice Release in range funds associated with the address `receiver`.
+    // @notice Release in range eth associated with the address `receiver`.
     function releaseInRange(
         address payable receiver,
         uint start,
@@ -160,9 +169,9 @@ contract PaymentSplitterFactory is Ownable {
     )
         external
     {
-        // Iterate through registered splitters and release funds
+        // Iterate through registered splitters and release eth
         for(uint i = start; i < end; i++) {
-            _splitters[_registeredSplittersOf[receiver][i]].release(receiver);
+            _splitters[_registeredSplittersOf[receiver][i]].release(payable(receiver));
         }
     }
 
@@ -175,7 +184,7 @@ contract PaymentSplitterFactory is Ownable {
     )
         external
     {
-        // Iterate through registered splitters and release funds
+        // Iterate through registered splitters and release eth
         for(uint i = start; i < end; i++) {
             _splitters[_registeredSplittersOf[receiver][i]].releaseTokens(token, receiver);
         }
@@ -184,6 +193,15 @@ contract PaymentSplitterFactory is Ownable {
     //////////////////////////////////////////////
     // GETTERS
     //////////////////////////////////////////////
+    
+    // @notice Getter function for current tax price.
+    function getTax()
+        external
+        view
+        returns (uint256)
+    {
+        return _tax;
+    }
     
     // @notice Getter for the address of the PaymentSplitterCloneable implementation contract.
     function splitterImplementation()
@@ -289,7 +307,7 @@ contract PaymentSplitterFactory is Ownable {
         return _splitters[splitter].payees();
     }
 
-    // @notice Getter helper for the current releaseable funds associated with a specific payee at at `splitter`.
+    // @notice Getter helper for the current releaseable eth associated with a specific payee at at `splitter`.
     function balanceOf(
         address splitter,
         address account
@@ -314,7 +332,7 @@ contract PaymentSplitterFactory is Ownable {
         return _splitters[splitter].balanceOfTokens(token, account);
     }
 
-    // @notice Getter helper for the current releaseable funds associated with each payee in the  splitter at `splitter`.
+    // @notice Getter helper for the current releaseable eth associated with each payee in the  splitter at `splitter`.
     function balances(
         address splitter
     )
