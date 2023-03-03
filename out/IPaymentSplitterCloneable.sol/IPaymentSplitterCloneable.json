@@ -359,7 +359,7 @@
     "balanceOfTokens(address,address)": "72cd383a",
     "initialize(address[],uint256[])": "7fbbe46f",
     "payeeIndex(uint256)": "9ac14e3c",
-    "payees()": "4e8086aa",
+    "getPayees()": "4e8086aa",
     "payeesCount()": "b6e40d6a",
     "payeesLength()": "e919ecad",
     "release(address)": "19165587",

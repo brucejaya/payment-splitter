@@ -2,9 +2,23 @@
 
 pragma solidity ^0.8.6;
 
-import "./IPaymentSplitter.sol";
+interface IPaymentSplitter {
+    
+    event PayeeAdded(address account, uint256 shares);
+    event PaymentReleased(address to, uint256 amount);
+    event ERC20PaymentReleased(address indexed token, address to, uint256 amount);
+    event PaymentReceived(address from, uint256 amount);
 
-interface IPaymentSplitterCloneable is IPaymentSplitter {
+    receive() external payable;
+    function totalShares() external view returns (uint256);
+    function totalReleased() external view returns (uint256);
+    function totalTokensReleased(address token) external view returns (uint256);
+    function shares(address account) external view returns (uint256);
+    function payeeIndex(uint256 index) external view returns (address);
+    function released(address account) external view returns (uint256);
+    function releasedTokens(address token, address account) external view returns (uint256);
+    function release(address payable account) external;
+    function releaseTokens(address token, address account) external;
 
     function initialize(address[] memory payees, uint256[] memory shares_) external payable;
     function payeesCount() external view returns (uint256);
@@ -12,5 +26,5 @@ interface IPaymentSplitterCloneable is IPaymentSplitter {
     function balanceOfTokens(address token, address payee) external view returns (uint256);
 
     function payeesLength() external view returns (uint256);    
-    function payees() external view returns (address[] memory);    
+    function getPayees() external view returns (address[] memory);    
 }

@@ -20,10 +20,10 @@ contract PaymentSplitterFactory is Ownable {
     // @notice Mapping from address to splitter index
     mapping(address => uint256) private _splittersByAddress;
 
-    // @notice Mapping from payee address to index of splitters created by the payee
+    // @notice Mapping from target address to index of splitters created by the target
     mapping(address => address[]) private _createdSplittersOf;
 
-    // @notice Mapping from payee address to index of splitters where payee is a payee
+    // @notice Mapping from target address to index of splitters where target is a payee
     mapping(address => address[]) private _registeredSplittersOf; 
 
     ////////////////
@@ -155,49 +155,49 @@ contract PaymentSplitterFactory is Ownable {
         }
     }
 
-    // @notice Release eth associated with the address `payee` from the splitter at `splitter`.
+    // @notice Release eth associated with the address `receiver` from the splitter at `splitter`.
     function release(
-        address payee,
+        address receiver,
         address splitter
     )
         external
     {
-        _splitters[_splittersByAddress[splitter]].release(payee);
+        _splitters[_splittersByAddress[splitter]].release(receiver);
     }
 
-    // @notice Release tokens associated with the address `payee` from the splitter at `splitter`.
+    // @notice Release tokens associated with the address `receiver` from the splitter at `splitter`.
     function releaseTokens(
         address token,
-        address payee,
+        address receiver,
         address splitter
     )
         external
     {
-        _splitters[_splittersByAddress[splitter]].releaseTokens(token, payee);
+        _splitters[_splittersByAddress[splitter]].releaseTokens(token, receiver);
     }
 
-    // @notice Release funds from all splitters of payee
+    // @notice Release funds from all splitters of receiver
     function releaseAllSplitters(
-        address payee
+        address receiver
     )
         external
     {
-        // Iterate through registered splitters of payee and release eth
-        for(uint i = 0; i < _registeredSplittersOf[payee].length; i++) {
-            _splitters[_splittersByAddress[_registeredSplittersOf[payee][i]]].release(payee);
+        // Iterate through registered splitters of receiver and release eth
+        for(uint i = 0; i < _registeredSplittersOf[receiver].length; i++) {
+            _splitters[_splittersByAddress[_registeredSplittersOf[receiver][i]]].release(receiver);
         }
     }
 
-    // @notice Release tokens from all splitters of payee 
+    // @notice Release tokens from all splitters of receiver 
     function releaseAllSplittersTokens(
         address token,
-        address payee
+        address receiver
     )
         external
     {
-        // Iterate through registered splitters of payee and release eth
-        for(uint i = 0; i < _registeredSplittersOf[payee].length; i++) {
-            _splitters[_splittersByAddress[_registeredSplittersOf[payee][i]]].releaseTokens(token, payee);
+        // Iterate through registered splitters of receiver and release eth
+        for(uint i = 0; i < _registeredSplittersOf[receiver].length; i++) {
+            _splitters[_splittersByAddress[_registeredSplittersOf[receiver][i]]].releaseTokens(token, receiver);
         }
     }
 
@@ -251,38 +251,37 @@ contract PaymentSplitterFactory is Ownable {
         return _createdSplittersOf[address(this)][0];
     }
 
-    // @notice Getter for the number of PaymentSplitters registered where `payee` has shares.
+    // @notice Getter for the number of PaymentSplitters registered where `target` has shares.
     function getRegisteredCountOf(
-        address payee
+        address target
     )
         external
         view
         returns (uint256)
     {
-        address[] memory registerSplitters = _registeredSplittersOf[payee];
-        return registerSplitters.length;
+        return _registeredSplittersOf[target].length;
     }
 
-    // @notice Getter for the addresses of the PaymentSplitters registered where `payee` has shares.
+    // @notice Getter for the addresses of the PaymentSplitters registered where `target` has shares.
     function getRegisteredSplittersOf(
-        address payee
+        address target
     )
         external
         view
         returns (address[] memory)
     {
-        return _registeredSplittersOf[payee];
+        return _registeredSplittersOf[target];
     }
 
-    // @notice Getter for the address of the PaymentSplitters created by `payee`.
+    // @notice Getter for the address of the PaymentSplitters created by `target`.
     function getCreatedSplittersOf(
-        address payee
+        address target
     )
         external
         view
         returns (address[] memory)
     {
-        return _createdSplittersOf[payee];
+        return _createdSplittersOf[target];
     }
 
     // @notice Getter helper for the amount of shares held by an account.
@@ -384,7 +383,7 @@ contract PaymentSplitterFactory is Ownable {
 
     // @notice Set the price of creating a clone
     function setTax(
-        uint256 tax
+        uint tax
     )
         external
         onlyOwner
@@ -394,20 +393,17 @@ contract PaymentSplitterFactory is Ownable {
 
     // @notice Withdraw ether from the contract
     function withdraw(
-        uint256 amount, 
-        address account
+        uint _amount
     )
         external
         onlyOwner
     {
-        require(address(this).balance >= amount);
-        payable(msg.sender).transfer(amount);
+        require(address(this).balance >= _amount);
+        payable(msg.sender).transfer(_amount);
     }
 
     // @notice Withdraw all ether from the contract
-    function withdrawAll(
-        address account
-    )
+    function withdrawAll()
         external
         onlyOwner
     {

@@ -6,8 +6,8 @@ import {Test} from "forge-std/Test.sol";
 contract Utils is Test {
     bytes32 internal nextUser = keccak256(abi.encodePacked("user address"));
 
-    function getNextUserAddress() external returns (address payable) {
-        address payable user = payable(address(uint160(uint256(nextUser))));
+    function getNextUserAddress() external returns (address) {
+        address user = address(uint160(uint256(nextUser)));
         nextUser = keccak256(abi.encodePacked(nextUser));
         return user;
     }
@@ -15,11 +15,11 @@ contract Utils is Test {
     // create users with 100 ETH balance each
     function createUsers(uint256 userNum)
         external
-        returns (address payable[] memory)
+        returns (address[] memory)
     {
-        address payable[] memory users = new address payable[](userNum);
+        address[] memory users = new address[](userNum);
         for (uint256 i = 0; i < userNum; i++) {
-            address payable user = this.getNextUserAddress();
+            address user = this.getNextUserAddress();
             vm.deal(user, 100 ether);
             users[i] = user;
         }
@@ -32,4 +32,6 @@ contract Utils is Test {
         uint256 targetBlock = block.number + numBlocks;
         vm.roll(targetBlock);
     }
+
+    // get balance of user 
 }

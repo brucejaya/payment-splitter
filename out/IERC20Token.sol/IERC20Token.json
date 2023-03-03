@@ -222,23 +222,23 @@
     "transferFrom(address,address,uint256)": "23b872dd"
   },
   "ast": {
-    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/mocks/IERC20Token.sol",
-    "id": 24352,
+    "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/interface/IERC20Token.sol",
+    "id": 24174,
     "exportedSymbols": {
       "IERC20": [
         22146
       ],
       "IERC20Token": [
-        24351
+        24173
       ]
     },
     "nodeType": "SourceUnit",
-    "src": "39:264:21",
+    "src": "39:264:17",
     "nodes": [
       {
-        "id": 24340,
+        "id": 24162,
         "nodeType": "PragmaDirective",
-        "src": "39:23:21",
+        "src": "39:23:17",
         "literals": [
           "solidity",
           "^",
@@ -247,45 +247,45 @@
         ]
       },
       {
-        "id": 24341,
+        "id": 24163,
         "nodeType": "ImportDirective",
-        "src": "66:64:21",
+        "src": "66:64:17",
         "absolutePath": "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol",
         "file": "openzeppelin-contracts/contracts/interfaces/IERC20.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 24352,
+        "scope": 24174,
         "sourceUnit": 21403,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 24351,
+        "id": 24173,
         "nodeType": "ContractDefinition",
-        "src": "134:169:21",
+        "src": "134:169:17",
         "nodes": [
           {
-            "id": 24350,
+            "id": 24172,
             "nodeType": "FunctionDefinition",
-            "src": "242:56:21",
+            "src": "242:56:17",
             "functionSelector": "40c10f19",
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "mint",
-            "nameLocation": "251:4:21",
+            "nameLocation": "251:4:17",
             "parameters": {
-              "id": 24348,
+              "id": 24170,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 24345,
+                  "id": 24167,
                   "mutability": "mutable",
                   "name": "account",
-                  "nameLocation": "264:7:21",
+                  "nameLocation": "264:7:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 24350,
-                  "src": "256:15:21",
+                  "scope": 24172,
+                  "src": "256:15:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -293,10 +293,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 24344,
+                    "id": 24166,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "256:7:21",
+                    "src": "256:7:17",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -307,13 +307,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 24347,
+                  "id": 24169,
                   "mutability": "mutable",
                   "name": "amount",
-                  "nameLocation": "281:6:21",
+                  "nameLocation": "281:6:17",
                   "nodeType": "VariableDeclaration",
-                  "scope": 24350,
-                  "src": "273:14:21",
+                  "scope": 24172,
+                  "src": "273:14:17",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -321,10 +321,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 24346,
+                    "id": 24168,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "273:7:21",
+                    "src": "273:7:17",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -333,15 +333,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "255:33:21"
+              "src": "255:33:17"
             },
             "returnParameters": {
-              "id": 24349,
+              "id": 24171,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "297:0:21"
+              "src": "297:0:17"
             },
-            "scope": 24351,
+            "scope": 24173,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -351,15 +351,15 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 24342,
+              "id": 24164,
               "name": "IERC20",
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22146,
-              "src": "159:6:21"
+              "src": "159:6:17"
             },
-            "id": 24343,
+            "id": 24165,
             "nodeType": "InheritanceSpecifier",
-            "src": "159:6:21"
+            "src": "159:6:17"
           }
         ],
         "canonicalName": "IERC20Token",
@@ -367,16 +367,16 @@
         "contractKind": "interface",
         "fullyImplemented": false,
         "linearizedBaseContracts": [
-          24351,
+          24173,
           22146
         ],
         "name": "IERC20Token",
-        "nameLocation": "144:11:21",
-        "scope": 24352,
+        "nameLocation": "144:11:17",
+        "scope": 24174,
         "usedErrors": []
       }
     ],
     "license": "GPL-3.0"
   },
-  "id": 21
+  "id": 17
 }

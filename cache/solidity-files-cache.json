@@ -592,217 +592,10 @@
         }
       }
     },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitter.sol": {
-      "lastModificationDate": 1676647935776,
-      "contentHash": "0ff3e7b2f29f53d3da24363fd950a47b",
-      "sourceName": "src/PaymentSplitter.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london"
-        }
-      },
-      "imports": [
-        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
-        "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Context.sol"
-      ],
-      "versionRequirement": "^0.8.6",
-      "artifacts": {
-        "PaymentSplitter": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitter.sol/PaymentSplitter.json"
-        }
-      }
-    },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterCloneable.sol": {
-      "lastModificationDate": 1676647887161,
-      "contentHash": "f2335849a950677cb75714bd36b9edc8",
-      "sourceName": "src/PaymentSplitterCloneable.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london"
-        }
-      },
-      "imports": [
-        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
-        "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
-        "src/PaymentSplitter.sol"
-      ],
-      "versionRequirement": "^0.8.6",
-      "artifacts": {
-        "PaymentSplitterCloneable": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterCloneable.sol/PaymentSplitterCloneable.json"
-        }
-      }
-    },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterFactory.sol": {
-      "lastModificationDate": 1676713802880,
-      "contentHash": "7660f2e7b200444ce891501c6dcb1335",
-      "sourceName": "src/PaymentSplitterFactory.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london"
-        }
-      },
-      "imports": [
-        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        "lib/openzeppelin-contracts/contracts/proxy/Clones.sol",
-        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
-        "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
-        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
-        "src/PaymentSplitter.sol",
-        "src/PaymentSplitterCloneable.sol"
-      ],
-      "versionRequirement": "^0.8.6",
-      "artifacts": {
-        "PaymentSplitterFactory": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterFactory.sol/PaymentSplitterFactory.json"
-        }
-      }
-    },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/interface/IPaymentSplitter.sol": {
-      "lastModificationDate": 1676639000263,
-      "contentHash": "38d8ea75d8db3fa1d2549f4cbcc3fe05",
-      "sourceName": "src/interface/IPaymentSplitter.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london"
-        }
-      },
-      "imports": [],
-      "versionRequirement": "^0.8.6",
-      "artifacts": {
-        "IPaymentSplitter": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "IPaymentSplitter.sol/IPaymentSplitter.json"
-        }
-      }
-    },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/interface/IPaymentSplitterCloneable.sol": {
-      "lastModificationDate": 1676556510370,
-      "contentHash": "a72f84cf4165f475d52d7808acdb59d6",
-      "sourceName": "src/interface/IPaymentSplitterCloneable.sol",
-      "solcConfig": {
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "metadata": {
-            "bytecodeHash": "ipfs"
-          },
-          "outputSelection": {
-            "*": {
-              "": [
-                "ast"
-              ],
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ]
-            }
-          },
-          "evmVersion": "london"
-        }
-      },
-      "imports": [
-        "src/interface/IPaymentSplitter.sol"
-      ],
-      "versionRequirement": "^0.8.6",
-      "artifacts": {
-        "IPaymentSplitterCloneable": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "IPaymentSplitterCloneable.sol/IPaymentSplitterCloneable.json"
-        }
-      }
-    },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/mocks/ERC20Token.sol": {
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/ERC20Token.sol": {
       "lastModificationDate": 1676638976622,
       "contentHash": "bfbb0134cba99571082f980595259f45",
-      "sourceName": "src/mocks/ERC20Token.sol",
+      "sourceName": "src/ERC20Token.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -841,10 +634,97 @@
         }
       }
     },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/mocks/IERC20Token.sol": {
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterCloneable.sol": {
+      "lastModificationDate": 1677673921052,
+      "contentHash": "6a3fbb24020ea4038016a39a251bd176",
+      "sourceName": "src/PaymentSplitterCloneable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "PaymentSplitterCloneable": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterCloneable.sol/PaymentSplitterCloneable.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterFactory.sol": {
+      "lastModificationDate": 1677860536678,
+      "contentHash": "8d32e425677d10872ba3d68ee8427f10",
+      "sourceName": "src/PaymentSplitterFactory.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [
+        "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
+        "lib/openzeppelin-contracts/contracts/proxy/Clones.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
+        "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Address.sol",
+        "lib/openzeppelin-contracts/contracts/utils/Context.sol",
+        "src/PaymentSplitterCloneable.sol"
+      ],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "PaymentSplitterFactory": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterFactory.sol/PaymentSplitterFactory.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/interface/IERC20Token.sol": {
       "lastModificationDate": 1676630469493,
       "contentHash": "9e2806aaaca1451d75d178c7e2ab4c76",
-      "sourceName": "src/mocks/IERC20Token.sol",
+      "sourceName": "src/interface/IERC20Token.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -881,10 +761,47 @@
         }
       }
     },
-    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/test/PaymentSplitterFactoryTest.sol": {
-      "lastModificationDate": 1676713721672,
-      "contentHash": "ea840df876a777ae2b76a49b0430d74c",
-      "sourceName": "test/PaymentSplitterFactoryTest.sol",
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/interface/IPaymentSplitterCloneable.sol": {
+      "lastModificationDate": 1677673921044,
+      "contentHash": "64db3ecf7ef68aebd92c8ddf93525aa4",
+      "sourceName": "src/interface/IPaymentSplitterCloneable.sol",
+      "solcConfig": {
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "ipfs"
+          },
+          "outputSelection": {
+            "*": {
+              "": [
+                "ast"
+              ],
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ]
+            }
+          },
+          "evmVersion": "london"
+        }
+      },
+      "imports": [],
+      "versionRequirement": "^0.8.6",
+      "artifacts": {
+        "IPaymentSplitter": {
+          "0.8.14+commit.80d49f37.Linux.gcc": "IPaymentSplitterCloneable.sol/IPaymentSplitter.json"
+        }
+      }
+    },
+    "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/test/PaymentSplitterFactory.t.sol": {
+      "lastModificationDate": 1677860521599,
+      "contentHash": "a50783bc0a40073e62420684ff306bb1",
+      "sourceName": "test/PaymentSplitterFactory.t.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -918,7 +835,6 @@
         "lib/forge-std/src/console.sol",
         "lib/forge-std/src/console2.sol",
         "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        "lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol",
         "lib/openzeppelin-contracts/contracts/proxy/Clones.sol",
         "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol",
         "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol",
@@ -926,23 +842,21 @@
         "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol",
         "lib/openzeppelin-contracts/contracts/utils/Address.sol",
         "lib/openzeppelin-contracts/contracts/utils/Context.sol",
-        "src/PaymentSplitter.sol",
+        "src/ERC20Token.sol",
         "src/PaymentSplitterCloneable.sol",
         "src/PaymentSplitterFactory.sol",
-        "src/mocks/ERC20Token.sol",
-        "src/mocks/IERC20Token.sol",
         "test/utils/Utils.sol"
       ],
       "versionRequirement": "^0.8.13",
       "artifacts": {
         "PaymentSplitterFactoryTest": {
-          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterFactoryTest.sol/PaymentSplitterFactoryTest.json"
+          "0.8.14+commit.80d49f37.Linux.gcc": "PaymentSplitterFactory.t.sol/PaymentSplitterFactoryTest.json"
         }
       }
     },
     "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/test/utils/Utils.sol": {
-      "lastModificationDate": 1676478157818,
-      "contentHash": "2ec3bdacc79cb7e6b5334564cb6bb5e3",
+      "lastModificationDate": 1677841148080,
+      "contentHash": "1da0030e200263aa10cc28acdc733861",
       "sourceName": "test/utils/Utils.sol",
       "solcConfig": {
         "settings": {

@@ -6,7 +6,7 @@ import 'openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol';
 import 'openzeppelin-contracts/contracts/utils/Address.sol';
 import 'openzeppelin-contracts/contracts/utils/Context.sol';
 
-contract PaymentSplitter is Context {
+contract PaymentSplitterCloneable is Context {
     
     event PayeeAdded(address account, uint256 shares);
     event PaymentReleased(address to, uint256 amount);
@@ -25,6 +25,28 @@ contract PaymentSplitter is Context {
     mapping(address => mapping(address => uint256)) internal _erc20Released;
 
     constructor() {}
+
+    /**
+     * @dev Creates an instance of `PaymentSplitter` where each account in `payees` is assigned the number of shares at
+     * the matching position in the `shares` array.
+     *
+     * All addresses in `payees` must be non-zero. Both arrays must have the same non-zero length, and there must be no
+     * duplicates in `payees`.
+     */
+    function initialize(
+		address[] memory payees,
+		uint256[] memory shares_
+	)
+        public
+        payable
+    {
+        require(payees.length == shares_.length, "PaymentSplitter: payees and shares length mismatch");
+        require(payees.length > 0, "PaymentSplitter: no payees");
+
+        for (uint256 i = 0; i < payees.length; i++) {
+            _addPayee(payees[i], shares_[i]);
+        }
+    }
 
     /**
      * @dev The Ether received will be logged with {PaymentReceived} events. Note that these events are not fully
@@ -94,7 +116,7 @@ contract PaymentSplitter is Context {
      * @dev Triggers a transfer to `account` of the amount of Ether they are owed, according to their percentage of the
      * total shares and their previous withdrawals.
      */
-    function release(address payable account) public virtual {
+    function release(address account) public virtual {
         require(_shares[account] > 0, "PaymentSplitter: account has no shares");
 
         uint256 totalReceived = address(this).balance + totalReleased();
@@ -105,7 +127,7 @@ contract PaymentSplitter is Context {
         _released[account] += payment;
         _totalReleased += payment;
 
-        Address.sendValue(account, payment);
+        payable(account).transfer(payment);
         emit PaymentReleased(account, payment);
     }
 
@@ -156,5 +178,48 @@ contract PaymentSplitter is Context {
         _shares[account] = shares_;
         _totalShares = _totalShares + shares_;
         emit PayeeAdded(account, shares_);
+    }
+
+    // @notice Return number of payees
+    function payeesLength() public view returns (uint256) {
+        return _payees.length;
+    }
+
+    // @notice Return releasable balance of payee
+    function balanceOf(
+        address payee
+    )
+        public
+        view
+        returns (uint256)
+    {
+        require(_shares[payee] > 0, "PaymentSplitter: account has no shares");
+        uint256 totalReceived = address(this).balance + totalReleased();
+        uint256 payment = _pendingPayment(payee, totalReceived, released(payee));
+        return payment;
+    }
+
+    // @notice Return release token balance of payee
+    function balanceOfTokens(
+        address token,
+        address payee
+    )
+        public
+        view
+        returns (uint256)
+    {
+        require(_shares[payee] > 0, "PaymentSplitter: account has no shares");
+        uint256 totalReceived = IERC20(token).balanceOf(address(this)) + totalTokensReleased(token);
+        uint256 payment = _pendingPayment(payee, totalReceived, releasedTokens(token, payee));
+        return payment;
+    }
+
+    // @notice Return payees
+    function getPayees()
+        public
+        view
+        returns (address[] memory)
+    {
+        return _payees;   
     }
 }
