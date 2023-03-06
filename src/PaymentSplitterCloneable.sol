@@ -40,8 +40,8 @@ contract PaymentSplitterCloneable is Context {
         public
         payable
     {
-        require(payees.length == shares_.length, "PaymentSplitter: payees and shares length mismatch");
-        require(payees.length > 0, "PaymentSplitter: no payees");
+
+        // Iterate through returning balances
 
         for (uint256 i = 0; i < payees.length; i++) {
             _addPayee(payees[i], shares_[i]);
@@ -212,6 +212,40 @@ contract PaymentSplitterCloneable is Context {
         uint256 totalReceived = IERC20(token).balanceOf(address(this)) + totalTokensReleased(token);
         uint256 payment = _pendingPayment(payee, totalReceived, releasedTokens(token, payee));
         return payment;
+    }
+
+    // @notice Return the releasable balances of all payees
+    function balances() 
+        public
+        view 
+        returns (uint256[] memory)
+    {
+        // Create uint256 array of size payees.length
+        uint256[] memory balances = new uint256[](_payees.length);
+        
+        // Iterate through returning balances
+        for (uint8 i = 0; i < _payees.length; i++) {
+            balances[i] = balanceOf(_payees[i]);
+        }
+        return balances;
+    }
+
+    // @notice Return the releaseable balances of all payees tokens
+    function balancesTokens(
+        address token
+    ) 
+        public
+        view 
+        returns (uint256[] memory)
+    {
+        // Create uint256 array of size payees.length
+        uint256[] memory balances = new uint256[](_payees.length);
+
+        // Iterate through returning balances
+        for (uint8 i = 0; i < _payees.length; i++) {
+            balances[i] = balanceOfTokens(token, _payees[i]);
+        }
+        return balances;
     }
 
     // @notice Return payees

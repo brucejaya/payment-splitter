@@ -635,8 +635,8 @@
       }
     },
     "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterCloneable.sol": {
-      "lastModificationDate": 1677673921052,
-      "contentHash": "6a3fbb24020ea4038016a39a251bd176",
+      "lastModificationDate": 1678100756178,
+      "contentHash": "48c10e337173819fd812ab351587da04",
       "sourceName": "src/PaymentSplitterCloneable.sol",
       "solcConfig": {
         "settings": {
@@ -677,8 +677,8 @@
       }
     },
     "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/src/PaymentSplitterFactory.sol": {
-      "lastModificationDate": 1677860536678,
-      "contentHash": "8d32e425677d10872ba3d68ee8427f10",
+      "lastModificationDate": 1678101770314,
+      "contentHash": "5dd89ff497a8f3a32a64dd35361ac39b",
       "sourceName": "src/PaymentSplitterFactory.sol",
       "solcConfig": {
         "settings": {
@@ -799,8 +799,8 @@
       }
     },
     "/mnt/c/Users/44783/Desktop/PROJECTS/payment-splitter/test/PaymentSplitterFactory.t.sol": {
-      "lastModificationDate": 1677860521599,
-      "contentHash": "a50783bc0a40073e62420684ff306bb1",
+      "lastModificationDate": 1678101776216,
+      "contentHash": "82c2a0b4fb1598ef00a51fe8a3faa19f",
       "sourceName": "test/PaymentSplitterFactory.t.sol",
       "solcConfig": {
         "settings": {

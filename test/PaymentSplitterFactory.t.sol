@@ -260,264 +260,265 @@ contract PaymentSplitterFactoryTest is Test {
     // GETTER FUNCTIONS
     //////////////////////////////////////////////
 
-    // function testGetPayees() public {
+    function testGetPayees() public {
         
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Get payees from splitter
-    //     address[] memory returnedPayees = _factory.getPayees(splitter);
+        // Get payees from splitter
+        address[] memory returnedPayees = _factory.getPayees(splitter);
 
-    //     // Check returned payees is equal to _payees
-    //     for (uint256 i = 0; i < _noPayees; i++) {
-    //         assertTrue(_payees[i] == returnedPayees[i], "Returned payees not equal to _payees");
-    //     }
-    // }
+        // Check returned payees is equal to _payees
+        for (uint256 i = 0; i < _noPayees; i++) {
+            assertTrue(_payees[i] == returnedPayees[i], "Returned payees not equal to _payees");
+        }
+    }
 
-    // function testGetShares() public {
+    function testGetShares() public {
         
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Get shares from splitter
-    //     uint256[] memory returnedShares = _factory.getShares(splitter);
+        // Get shares from splitter
+        uint256[] memory returnedShares = _factory.getShares(splitter);
 
-    //     // Check returned shares is equal to _shares
-    //     for (uint256 i = 0; i < _noPayees; i++) {
-    //         assertTrue(_shares[i] == returnedShares[i], "Returned shares not equal to _shares");
-    //     }
-    // }
+        // Check returned shares is equal to _shares
+        for (uint256 i = 0; i < _noPayees; i++) {
+            assertTrue(_shares[i] == returnedShares[i], "Returned shares not equal to _shares");
+        }
+    }
 
-    // function testGetRegisteredCountOf() public {
+    function testGetRegisteredCountOf() public {
         
-    //     // #TODO generate this dyanmically
-    //     uint256 noSplitters = 3;
+        // #TODO generate this dyanmically
+        uint256 noSplitters = 3;
         
-    //     // Deploy a number of splitters from this address
-    //     for (uint256 i = 0; i < noSplitters; i++) {
+        // Deploy a number of splitters from this address
+        for (uint256 i = 0; i < noSplitters; i++) {
 
-    //         // Create new splitter
-    //         _factory.newSplitter{value: _tax}(_payees, _shares); 
-    //     }
+            // Create new splitter
+            _factory.newSplitter{value: _tax}(_payees, _shares); 
+        }
 
-    //     // Get registered count of splitter
-    //     uint256 registeredCountOf = _factory.getRegisteredCountOf(_payees[0]);
+        // Get registered count of splitter
+        uint256 registeredCountOf = _factory.getRegisteredCountOf(_payees[0]);
 
-    //     // Check registered count is greater than zero
-    //     assertTrue(registeredCountOf > 0, "Registered count of splitter is not greater than zero");
+        // Check registered count is greater than zero
+        assertTrue(registeredCountOf > 0, "Registered count of splitter is not greater than zero");
 
-    //     // Check registered count of splitter is equal to noSplitters
-    //     assertTrue(registeredCountOf == noSplitters, "Registered count of splitter is not equal to noSplitters");
+        // Check registered count of splitter is equal to noSplitters
+        assertTrue(registeredCountOf == noSplitters, "Registered count of splitter is not equal to noSplitters");
         
-    // }
+    }
 
-    // function testGetRegisteredSplittersOf() public {
+    function testGetRegisteredSplittersOf() public {
 
-    //     // #TODO generate this dynamically
-    //     uint256 noSplitters = 3;
+        // #TODO generate this dynamically
+        uint256 noSplitters = 3;
 
-    //     // Create empty address array of size noSplitters
-    //     address[] memory splitters = new address[](noSplitters);
+        // Create empty address array of size noSplitters
+        address[] memory splitters = new address[](noSplitters);
         
-    //     // Deploy a number of splitters from this address
-    //     for (uint256 i = 0; i < noSplitters; i++) {
+        // Deploy a number of splitters from this address
+        for (uint256 i = 0; i < noSplitters; i++) {
 
-    //         // Create new splitter and add splitter to array
-    //         splitters[i] = _factory.newSplitter{value: _tax}(_payees, _shares); 
-    //     }
+            // Create new splitter and add splitter to array
+            splitters[i] = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        }
 
-    //     // Get registered splitters of splitter
-    //     address[] memory registeredSplittersOf = _factory.getRegisteredSplittersOf(_payees[0]);
+        // Get registered splitters of splitter
+        address[] memory registeredSplittersOf = _factory.getRegisteredSplittersOf(_payees[0]);
 
-    //     // Check arrays are of equal size
-    //     assertTrue(registeredSplittersOf.length == splitters.length, "Registered splitters of splitter is not equal to splitters");
+        // Check arrays are of equal size
+        assertTrue(registeredSplittersOf.length == splitters.length, "Registered splitters of splitter is not equal to splitters");
 
-    //     // Check registered splitters of splitter is equal to splitters
-    //     for (uint256 i = 0; i < noSplitters; i++) {
-    //         assertTrue(registeredSplittersOf[i] == splitters[i], "Registered splitters of splitter is not equal to splitters");
-    //     }
+        // Check registered splitters of splitter is equal to splitters
+        for (uint256 i = 0; i < noSplitters; i++) {
+            assertTrue(registeredSplittersOf[i] == splitters[i], "Registered splitters of splitter is not equal to splitters");
+        }
+    }
+
+    function testGetCreatedSplittersOf() public {
+
+        // #TODO generate this dynamically
+        uint256 noSplitters = 3;
+
+        // Create empty address array of size noSplitters
+        address[] memory splitters = new address[](noSplitters);
         
-    // }
+        // Deploy a number of splitters from this address
+        for (uint256 i = 0; i < noSplitters; i++) {
 
-    // function testGetCreatedSplittersOf() public {
+            // Create new splitter and add splitter to array
+            splitters[i] = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        }
 
-    //     // #TODO generate this dynamically
-    //     uint256 noSplitters = 3;
+        // Get created splitters of splitter
+        address[] memory createdSplittersOf = _factory.getCreatedSplittersOf(address(this));
 
-    //     // Create empty address array of size noSplitters
-    //     address[] memory splitters = new address[](noSplitters);
-        
-    //     // Deploy a number of splitters from this address
-    //     for (uint256 i = 0; i < noSplitters; i++) {
+        // Check arrays are of equal size
+        assertTrue(createdSplittersOf.length == splitters.length, "Created splitters of splitter is not equal to splitters");
 
-    //         // Create new splitter and add splitter to array
-    //         splitters[i] = _factory.newSplitter{value: _tax}(_payees, _shares); 
-    //     }
+        // Check created splitters of splitter is equal to splitters
+        for (uint256 i = 0; i < noSplitters; i++) {
+            assertTrue(createdSplittersOf[i] == splitters[i], "Created splitters of splitter is not equal to splitters");
+        }
+    }
 
-    //     // Get created splitters of splitter
-    //     address[] memory createdSplittersOf = _factory.getCreatedSplittersOf(address(this));
+    function testGetSharesOfAccount() public {
 
-    //     // Check arrays are of equal size
-    //     assertTrue(createdSplittersOf.length == splitters.length, "Created splitters of splitter is not equal to splitters");
+        // #TODO make this dynamic: (uint256(4)) ?
+        uint256 noShares = 3;
 
-    //     // Check created splitters of splitter is equal to splitters
-    //     for (uint256 i = 0; i < noSplitters; i++) {
-    //         assertTrue(createdSplittersOf[i] == splitters[i], "Created splitters of splitter is not equal to splitters");
-    //     }
-    // }
+        // Add to shares array 
+        _shares[0] = noShares;
 
-    // function testGetSharesOfAccount() public {
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // #TODO make this dynamic: (uint256(4)) ?
-    //     uint256 noShares = 3;
+        // Get shares of account
+        uint256 sharesOfAccount = _factory.getSharesOfAccount(splitter, _payees[0]);
 
-    //     // Add to shares array 
-    //     _shares[0] = noShares;
+        // Check shares of account is equal to noShares
+        assertTrue(sharesOfAccount == noShares, "Shares of account is not equal to noShares");
+    }
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+    function testGetTotalShares() public {
 
-    //     // Get shares of account
-    //     uint256 sharesOfAccount = _factory.getSharesOfAccount(splitter, _payees[0]);
+        // #TODO make this dynamic: (uint256(4)) ?
+        // Iterate through shares adding to total
+        uint256 totalShares;
+        for (uint256 i = 0; i < _shares.length; i++) {
+            totalShares += _shares[i];
+        }
 
-    //     // Check shares of account is equal to noShares
-    //     assertTrue(sharesOfAccount == noShares, "Shares of account is not equal to noShares");
-    // }
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    // function testGetTotalShares() public {
+        // Check total shares is equal to noShares
+        assertTrue(totalShares == _factory.getTotalShares(splitter), "Total shares is not equal to noShares");
+    }
 
-    //     // #TODO make this dynamic: (uint256(4)) ?
-    //     // Iterate through shares adding to total
-    //     uint256 totalShares;
-    //     for (uint256 i = 0; i < _shares.length; i++) {
-    //         totalShares += _shares[i];
-    //     }
+    function testGetPayeeIndex() public {
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Check total shares is equal to noShares
-    //     assertTrue(totalShares == _factory.getTotalShares(splitter), "Total shares is not equal to noShares");
-    // }
+        // Iterate through payees
+        for (uint256 i = 0; i < _noPayees; i++) {
 
-    // function testGetPayeeIndex() public {
+            // Get payee index
+            address payee = _factory.getPayeeIndex(splitter, i);
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+            // Check payee index is equal to i
+            assertTrue(payee == _payees[i], "Payee index is not the same as payee");
+        }
+    }
 
-    //     // Iterate through payees
-    //     for (uint256 i = 0; i < _noPayees; i++) {
+    function testGetBalanceOf() public {
 
-    //         // Get payee index
-    //         address payee = _factory.getPayeeIndex(splitter, i);
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //         // Check payee index is equal to i
-    //         assertTrue(payee == _payees[i], "Payee index is not the same as payee");
-    //     }
+        // Send funds to splitter
+        payable(splitter).transfer(_amount);
 
-    // }
+        // Get balance of splitter
+        uint256 balanceOf = _factory.getBalanceOf(splitter, _payees[0]);
 
-    // function testGetBalanceOf() public {
+        // Check balance of user is starting balance + share of funds
+        assertTrue((_amount / _payees.length) == balanceOf, "Balance of splitter is not equal to zero");
+    }
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+    function testGetBalanceOfTokens() public {
 
-    //     // Get balance of splitter
-    //     uint256 balanceOf = _factory.getBalanceOf(splitter);
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Check balance of splitter is equal to zero
-    //     assertTrue(balanceOf == 0, "Balance of splitter is not equal to zero");
-    // }
+        // Mint _amount tokens to _admin
+        _token.mint(address(this), _amount);
 
-    // function testGetBalanceOfTokens() public {
+        // Send tokens to splitter
+        _token.transfer(splitter, _amount);
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // Get balance of user
+        uint256 balanceOf = _factory.getBalanceOfTokens(splitter, address(_token), _payees[0]);
 
-    //     // Get balance of splitter
-    //     uint256 balanceOf = _factory.getBalanceOfTokens(splitter);
-
-    //     // Check balance of splitter is equal to zero
-    //     assertTrue(balanceOf == 0, "Balance of splitter is not equal to zero");
-    // }
+        // Check balance of user is equal to their shares
+        assertTrue(balanceOf == (_amount / _payees.length), "Balance of splitter is not equal to zero");
+    }
     
-    // function testGetBalances() public {
+    function testGetBalances() public {
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Get balance of splitter
-    //     uint256[] memory balances = _factory.getBalances(splitter);
+        // Send funds to splitter
+        payable(splitter).transfer(_amount);
 
-    //     // Check balance of splitter is equal to zero
-    //     assertTrue(balances.length == 0, "Balance of splitter is not equal to zero");
-    // }
+        // Get balance of splitter
+        uint256[] memory balances = _factory.getBalances(splitter);
 
-    // function testGetBalancesTokens() public {
+        // Iterate through balances checking for appropriate amount
+        for (uint256 i = 0; i < balances.length; i++) {
+            assertTrue(balances[i] == (_amount / _payees.length), "Balance of payee is not equal to share");
+        }
+    }
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+    function testGetBalancesTokens() public {
 
-    //     // Get balance of splitter
-    //     uint256[] memory balances = _factory.getBalancesTokens(splitter);
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Check balance of splitter is equal to zero
-    //     assertTrue(balances.length == 0, "Balance of splitter is not equal to zero");
-    // }
+        // Mint _amount tokens to _admin
+        _token.mint(address(this), _amount);
 
-    // function testSetTax() public {
+        // Send tokens to splitter
+        _token.transfer(splitter, _amount);
+        
+        // Get balance of splitter
+        uint256[] memory balances = _factory.getBalancesTokens(splitter, address(_token));
+        
+        // Iterate through balances checking for appropriate amount
+        for (uint256 i = 0; i < balances.length; i++) {
+            assertTrue(balances[i] == (_amount / _payees.length), "Balance of payee is not equal to share");            
+        }
+    }
 
-    //     // Create new splitter
-    //     address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
+    function testSetTax() public {
 
-    //     // Set tax
-    //     _factory.setTax(splitter, 10);
+        // Create new splitter
+        address splitter = _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     // Get tax
-    //     uint256 tax = _factory.getTax(splitter);
+        // Set tax
+        _factory.setTax(10 ether);
 
-    //     // Check tax is equal to 10
-    //     assertTrue(tax == 10, "Tax is not equal to 10");
-    // }
+        // Get tax
+        uint256 tax = _factory.getTax();
 
-    // function testWithdraw() public {
+        // Check tax is equal to 10
+        assertTrue(tax == 10 ether, "Tax is not equal to 10");
+    }
 
-    //     uint256 noSplitters = 4;
+    function withdraw() public {
 
-    //     // For range create splitters and withdraw
-    //     for (uint256 i = 0; i < noSplitters; i++) {
+        // Get starting balance for _payees[0]
+        uint256 startingBalance = address(_payees[0]).balance;
 
-    //         // Create new splitter
-    //         _factory.newSplitter{value: _tax}(_payees, _shares); 
+        // For range create splitters
+        uint256 noSplitters = 4;
+        for (uint256 i = 0; i < noSplitters; i++) {
 
-    //     }
+            // Create new splitter
+            _factory.newSplitter{value: _tax}(_payees, _shares); 
 
-    //     uint256 amount = (_tax * noSplitters) / 2;
+        }
 
-    //     // Withdraw funds from splitter
-    //     _factory.withdraw(amount, _users[0]);
+        // Withdraw funds from splitter
+        _factory.withdraw(_payees[0]);
 
-    //     // Check balance of splitter is equal to withdrawn amount
-    //     assertTrue(_users[0].balance == amount, "Balance of splitter is not equal to zero");
-    // }
-
-    // function withdrawAll() public {
-
-    //     uint256 noSplitters = 4;
-
-    //     // For range create splitters and withdraw
-    //     for (uint256 i = 0; i < noSplitters; i++) {
-
-    //         // Create new splitter
-    //         _factory.newSplitter{value: _tax}(_payees, _shares); 
-
-    //     }
-
-    //     // Withdraw funds from splitter
-    //     _factory.withdrawAll(amount, _users[0]);
-
-    //     // Check the balance of _users[0] is equal to _tax * noSplitters
-    //     assertTrue(_users[0].balance == (_tax * noSplitters), "Balance of splitter is not equal to zero");
-    // }
+        // Check the balance of _payees[0] is equal to _tax * noSplitters
+        assertTrue(address(_payees[0]).balance == (_tax * noSplitters), "Balance of splitter is not equal to zero");
+    }
 
 }

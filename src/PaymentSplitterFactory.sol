@@ -353,12 +353,7 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256[] memory)
     {
-        PaymentSplitterCloneable splitterInstance = _splitters[_splittersByAddress[splitter]];
-        uint256[] memory balances = new uint256[](splitterInstance.payeesLength());
-        for (uint i = 0; i < splitterInstance.payeesLength(); i++) {
-            balances[i] = splitterInstance.balanceOf(splitterInstance.payeeIndex(i));
-        }
-        return balances;
+        return _splitters[_splittersByAddress[splitter]].balances();
     }
 
     // @notice Getter helper for the current releaseable tokens associated with each payee in the  splitter at `splitter`.
@@ -370,12 +365,8 @@ contract PaymentSplitterFactory is Ownable {
         view
         returns (uint256[] memory)
     {
-        PaymentSplitterCloneable splitterInstance = _splitters[_splittersByAddress[splitter]];
-        uint256[] memory balances = new uint256[](splitterInstance.payeesLength());
-        for (uint i = 0; i < splitterInstance.payeesLength(); i++) {
-            balances[i] = splitterInstance.balanceOfTokens(token, splitterInstance.payeeIndex(i));
-        }
-        return balances;
+        return _splitters[_splittersByAddress[splitter]].balancesTokens(address(token));
+
     }
 
     //////////////////////////////////////////////
@@ -392,20 +383,8 @@ contract PaymentSplitterFactory is Ownable {
         _tax = tax;
     }
 
-    // @notice Withdraw ether from the contract
-    function withdraw(
-        uint256 amount, 
-        address account
-    )
-        external
-        onlyOwner
-    {
-        require(address(this).balance >= amount);
-        payable(msg.sender).transfer(amount);
-    }
-
     // @notice Withdraw all ether from the contract
-    function withdrawAll(
+    function withdraw(
         address account
     )
         external
