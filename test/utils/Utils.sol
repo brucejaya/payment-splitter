@@ -33,5 +33,4 @@ contract Utils is Test {
         vm.roll(targetBlock);
     }
 
-    // get balance of user 
 }
